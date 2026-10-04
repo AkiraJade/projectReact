@@ -1,0 +1,289 @@
+/* DOSNOVENTA AUTHENTICATION PAGES (LOGIN & REGISTER) */
+
+.ds-auth-page {
+  min-height: 100vh;
+  background-color: var(--ds-bg-base);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding-top: 72px; /* Smooth clearance beneath fixed Navbar */
+}
+
+.ds-auth-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  flex: 1;
+  min-height: calc(100vh - 72px);
+}
+
+.ds-auth-reverse .ds-auth-grid {
+  grid-template-columns: 1fr 1.1fr;
+}
+
+/* Image column */
+.ds-auth-photo-panel {
+  position: relative;
+  background-color: #0d0f12;
+  overflow: hidden;
+  border-right: 1px solid var(--ds-border-light);
+}
+
+.ds-auth-reverse .ds-auth-photo-panel {
+  order: 2;
+  border-right: none;
+  border-left: 1px solid var(--ds-border-light);
+}
+
+.ds-auth-photo-wrapper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.ds-auth-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(25%) contrast(110%) brightness(0.8);
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ds-auth-photo-panel:hover .ds-auth-photo {
+  transform: scale(1.03);
+}
+
+.ds-auth-photo-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(10, 11, 13, 0.2) 0%,
+    rgba(10, 11, 13, 0.85) 100%
+  );
+  display: flex;
+  align-items: flex-end;
+  padding: clamp(2rem, 5vw, 4.5rem);
+}
+
+.ds-auth-photo-heading {
+  font-family: var(--ds-font-display);
+  font-size: clamp(1.8rem, 3.2vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--ds-text-primary);
+  margin-top: 0.8rem;
+  line-height: 1.05;
+}
+
+/* Form column */
+.ds-auth-form-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(2.5rem, 5vw, 5rem) clamp(1.5rem, 5vw, 4.5rem);
+  background-color: var(--ds-bg-base);
+}
+
+.ds-auth-reverse .ds-auth-form-panel {
+  order: 1;
+}
+
+.ds-auth-form-box {
+  width: 100%;
+  max-width: 460px;
+}
+
+.ds-auth-header {
+  margin-bottom: 2.5rem;
+}
+
+.ds-auth-title {
+  font-family: var(--ds-font-display);
+  font-size: clamp(2rem, 3vw, 2.7rem);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  color: var(--ds-text-primary);
+  margin-top: 0.5rem;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+}
+
+.ds-auth-subtitle {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.88rem;
+  color: var(--ds-text-secondary);
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+
+/* Form items */
+.ds-password-toggle {
+  position: absolute;
+  right: 1rem;
+  top: 2.2rem;
+  background: transparent;
+  border: none;
+  color: var(--ds-text-muted);
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  padding: 0.3rem 0.5rem;
+  transition: color var(--ds-transition-fast);
+}
+
+.ds-password-toggle:hover {
+  color: var(--ds-text-primary);
+}
+
+.ds-auth-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: -0.5rem;
+  margin-bottom: 1.8rem;
+}
+
+.ds-auth-link {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--ds-text-secondary);
+  text-decoration: none;
+  transition: color var(--ds-transition-fast);
+}
+
+.ds-auth-link:hover {
+  color: var(--ds-text-primary);
+}
+
+.ds-auth-divider {
+  display: flex;
+  align-items: center;
+  margin: 2rem 0;
+  gap: 1rem;
+}
+
+.ds-auth-divider::before,
+.ds-auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--ds-border-light);
+}
+
+.ds-auth-divider span {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: var(--ds-text-muted);
+}
+
+.ds-auth-socials {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.ds-social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.85rem;
+  background: rgba(18, 20, 23, 0.6);
+  border: 1px solid var(--ds-border-light);
+  color: var(--ds-text-primary);
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--ds-transition-fast);
+}
+
+.ds-social-btn:hover {
+  border-color: var(--ds-border-active);
+  background: var(--ds-bg-surface-elevated);
+}
+
+.ds-auth-footer-prompt {
+  text-align: center;
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.8rem;
+  color: var(--ds-text-secondary);
+  margin-top: 1.5rem;
+}
+
+.ds-auth-footer-link {
+  color: var(--ds-text-primary);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  margin-left: 0.5rem;
+  border-bottom: 1px solid var(--ds-text-primary);
+  padding-bottom: 1px;
+  transition: opacity var(--ds-transition-fast);
+}
+
+.ds-auth-footer-link:hover {
+  opacity: 0.7;
+}
+
+/* Checkbox styling */
+.ds-checkbox-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 1.8rem;
+}
+
+.ds-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--ds-border-active);
+  background: transparent;
+  margin-top: 2px;
+  cursor: pointer;
+  display: inline-grid;
+  place-content: center;
+  transition: all var(--ds-transition-fast);
+}
+
+.ds-checkbox:checked {
+  background: var(--ds-text-primary);
+  border-color: var(--ds-text-primary);
+}
+
+.ds-checkbox:checked::before {
+  content: '✓';
+  color: var(--ds-bg-base);
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.ds-checkbox-label {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.75rem;
+  color: var(--ds-text-secondary);
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+@media (max-width: 960px) {
+  .ds-auth-grid,
+  .ds-auth-reverse .ds-auth-grid {
+    grid-template-columns: 1fr;
+  }
+  .ds-auth-photo-panel {
+    display: none;
+  }
+  .ds-auth-form-panel {
+    min-height: calc(100vh - 75px);
+  }
+}

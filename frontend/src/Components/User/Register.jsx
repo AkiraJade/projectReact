@@ -1,186 +1,243 @@
-import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import MetaData from '../Layout/MetaData'
-import axios from 'axios'
-
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { register, clearErrors } from '../../actions/userActions';
+import AuthLayout from './AuthLayout';
+import MetaData from '../Layout/MetaData';
+import { toast } from 'react-toastify';
 
 const Register = () => {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    agreeTerms: false,
+  });
 
-    const [user, setUser] = useState({
-        name: '',
-        email: '',
-        password: '',
-    })
+  const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState({});
 
-    const { name, email, password } = user;
+  const { firstName, lastName, email, password, confirmPassword, agreeTerms } = formData;
 
-    const [avatar, setAvatar] = useState('')
-    const [avatarPreview, setAvatarPreview] = useState('/images/default_avatar.jpg')
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-    const [error, setError] = useState('')
-    const [loading, setLoading] = useState(true)
+  const { isAuthenticated, error, loading } = useSelector((state) => state.auth || {});
 
-
-    let navigate = useNavigate()
-    // useEffect(() => {
-    //     if (isAuthenticated) {
-    //         navigate('/')
-    //     }
-
-    //     if (error) {
-    //         console.log(error)
-    //         dispatch(clearErrors());
-
-    //     }
-
-    // }, [error, navigate, isAuthenticated])
-
-    const submitHandler = (e) => {
-        e.preventDefault();
-
-        const formData = new FormData();
-        formData.set('name', name);
-        formData.set('email', email);
-        formData.set('password', password);
-        formData.set('avatar', avatar);
-
-        register(formData)
+  useEffect(() => {
+    if (isAuthenticated) {
+      toast.success('Welcome to the brotherhood.');
+      navigate('/');
     }
 
-    const onChange = e => {
-        if (e.target.name === 'avatar') {
+    if (error) {
+      toast.error(error);
+      dispatch(clearErrors());
+    }
+  }, [isAuthenticated, error, dispatch, navigate]);
 
-            const reader = new FileReader();
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
 
-            reader.onload = () => {
-                if (reader.readyState === 2) {
-                    setAvatarPreview(reader.result)
-                    setAvatar(reader.result)
-                }
-            }
+  const validate = () => {
+    const errs = {};
+    if (!firstName.trim()) errs.firstName = 'FIRST NAME IS REQUIRED';
+    if (!lastName.trim()) errs.lastName = 'LAST NAME IS REQUIRED';
 
-            reader.readAsDataURL(e.target.files[0])
-
-        } else {
-            setUser({ ...user, [e.target.name]: e.target.value })
-        }
+    if (!email.trim()) {
+      errs.email = 'EMAIL ADDRESS IS REQUIRED';
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      errs.email = 'VALID EMAIL FORMAT REQUIRED';
     }
 
-    const register = async (userData) => {
-        console.log(userData)
-        try {
-            const config = {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            }
-
-            const { data } = await axios.post(`http://localhost:4001/api/v1/register`, userData, config)
-            console.log(data.user)
-
-            setLoading(false)
-            setUser(data.user)
-            navigate('/')
-
-        } catch (error) {
-            setLoading(false)
-            setUser(null)
-            setError(error.response.data.message)
-            console.log(error.response.data.message)
-        }
+    if (!password) {
+      errs.password = 'PASSWORD IS REQUIRED';
+    } else if (password.length < 6) {
+      errs.password = 'MINIMUM 6 CHARACTERS REQUIRED';
     }
 
+    if (password !== confirmPassword) {
+      errs.confirmPassword = 'PASSWORDS DO NOT MATCH';
+    }
 
+    if (!agreeTerms) {
+      errs.agreeTerms = 'YOU MUST AGREE TO TERMS & PRIVACY POLICY';
+    }
 
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
 
-    return (
-        <>
+  const submitHandler = (e) => {
+    e.preventDefault();
+    if (validate()) {
+      const fullName = `${firstName.trim()} ${lastName.trim()}`;
+      // Prepare form data for user registration
+      const registrationData = new FormData();
+      registrationData.set('name', fullName);
+      registrationData.set('email', email);
+      registrationData.set('password', password);
 
-            <MetaData title={'Register User'} />
+      dispatch(register(registrationData));
+    }
+  };
 
-            <div className="row wrapper">
-                <div className="col-10 col-lg-5">
-                    <form className="shadow-lg" onSubmit={submitHandler} encType='multipart/form-data'>
-                        <h1 className="mb-3">Register</h1>
+  return (
+    <>
+      <MetaData title="JOIN THE BROTHERHOOD — DOSNOVENTA®" />
 
-                        <div className="form-group">
-                            <label htmlFor="email_field">Name</label>
-                            <input
-                                type="name"
-                                id="name_field"
-                                className="form-control"
-                                name='name'
-                                value={name}
-                                onChange={onChange}
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="email_field">Email</label>
-                            <input
-                                type="email"
-                                id="email_field"
-                                className="form-control"
-                                name='email'
-                                value={email}
-                                onChange={onChange}
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="password_field">Password</label>
-                            <input
-                                type="password"
-                                id="password_field"
-                                className="form-control"
-                                name='password'
-                                value={password}
-                                onChange={onChange}
-                            />
-                        </div>
-
-                        <div className='form-group'>
-                            <label htmlFor='avatar_upload'>Avatar</label>
-                            <div className='d-flex align-items-center'>
-                                <div>
-                                    <figure className='avatar mr-3 item-rtl'>
-                                        <img
-                                            src={avatarPreview}
-                                            className='rounded-circle'
-                                            alt='Avatar Preview'
-                                        />
-                                    </figure>
-                                </div>
-                                <div className='custom-file'>
-                                    <input
-                                        type='file'
-                                        name='avatar'
-                                        className='custom-file-input'
-                                        id='customFile'
-                                        accept="images/*"
-                                        onChange={onChange}
-                                    />
-                                    <label className='custom-file-label' htmlFor='customFile'>
-                                        Choose Avatar
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <button
-                            id="register_button"
-                            type="submit"
-                            className="btn btn-block py-3"
-                        // disabled={loading ? false : true}
-                        >
-                            REGISTER
-                        </button>
-                    </form>
-                </div>
+      <AuthLayout
+        title="JOIN THE BROTHERHOOD."
+        subtitle="Become part of the global underground cycling syndicate. Gain priority access to limited frame drops."
+        imageSide="right"
+      >
+        <form onSubmit={submitHandler} noValidate>
+          {/* First & Last Name */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <div className="ds-form-group">
+              <label className="ds-label" htmlFor="firstName">
+                FIRST NAME
+              </label>
+              <input
+                type="text"
+                id="firstName"
+                name="firstName"
+                className={`ds-input ${errors.firstName ? 'ds-input-error' : ''}`}
+                placeholder="Marc"
+                value={firstName}
+                onChange={handleChange}
+              />
+              {errors.firstName && <span className="ds-error-text">{errors.firstName}</span>}
             </div>
 
-        </>
-    )
-}
+            <div className="ds-form-group">
+              <label className="ds-label" htmlFor="lastName">
+                LAST NAME
+              </label>
+              <input
+                type="text"
+                id="lastName"
+                name="lastName"
+                className={`ds-input ${errors.lastName ? 'ds-input-error' : ''}`}
+                placeholder="Roca"
+                value={lastName}
+                onChange={handleChange}
+              />
+              {errors.lastName && <span className="ds-error-text">{errors.lastName}</span>}
+            </div>
+          </div>
 
-export default Register
+          {/* Email */}
+          <div className="ds-form-group">
+            <label className="ds-label" htmlFor="register-email">
+              EMAIL ADDRESS
+            </label>
+            <input
+              type="email"
+              id="register-email"
+              name="email"
+              className={`ds-input ${errors.email ? 'ds-input-error' : ''}`}
+              placeholder="rider@dosnoventabikes.com"
+              value={email}
+              onChange={handleChange}
+              autoComplete="email"
+            />
+            {errors.email && <span className="ds-error-text">{errors.email}</span>}
+          </div>
+
+          {/* Password */}
+          <div className="ds-form-group">
+            <label className="ds-label" htmlFor="register-password">
+              PASSWORD
+            </label>
+            <input
+              type={showPassword ? 'text' : 'password'}
+              id="register-password"
+              name="password"
+              className={`ds-input ${errors.password ? 'ds-input-error' : ''}`}
+              placeholder="Minimum 6 characters"
+              value={password}
+              onChange={handleChange}
+              autoComplete="new-password"
+            />
+            <button
+              type="button"
+              className="ds-password-toggle"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? 'HIDE' : 'SHOW'}
+            </button>
+            {errors.password && <span className="ds-error-text">{errors.password}</span>}
+          </div>
+
+          {/* Confirm Password */}
+          <div className="ds-form-group">
+            <label className="ds-label" htmlFor="confirmPassword">
+              CONFIRM PASSWORD
+            </label>
+            <input
+              type={showPassword ? 'text' : 'password'}
+              id="confirmPassword"
+              name="confirmPassword"
+              className={`ds-input ${errors.confirmPassword ? 'ds-input-error' : ''}`}
+              placeholder="Repeat password"
+              value={confirmPassword}
+              onChange={handleChange}
+              autoComplete="new-password"
+            />
+            {errors.confirmPassword && (
+              <span className="ds-error-text">{errors.confirmPassword}</span>
+            )}
+          </div>
+
+          {/* Terms checkbox */}
+          <div className="ds-checkbox-group">
+            <input
+              type="checkbox"
+              id="agreeTerms"
+              name="agreeTerms"
+              className="ds-checkbox"
+              checked={agreeTerms}
+              onChange={handleChange}
+            />
+            <label htmlFor="agreeTerms" className="ds-checkbox-label">
+              I AGREE TO THE DOSNOVENTA TERMS OF SERVICE AND PRIVACY POLICY.
+            </label>
+          </div>
+          {errors.agreeTerms && (
+            <span className="ds-error-text" style={{ marginTop: '-1rem', marginBottom: '1.2rem' }}>
+              {errors.agreeTerms}
+            </span>
+          )}
+
+          {/* Submit CTA */}
+          <button
+            type="submit"
+            className="ds-btn"
+            style={{ width: '100%' }}
+            disabled={loading}
+          >
+            {loading ? 'CREATING ACCOUNT...' : 'CREATE ACCOUNT →'}
+          </button>
+
+          {/* Bottom link to Login */}
+          <div className="ds-auth-footer-prompt">
+            ALREADY HAVE AN ACCOUNT?
+            <Link to="/login" className="ds-auth-footer-link">
+              LOG IN →
+            </Link>
+          </div>
+        </form>
+      </AuthLayout>
+    </>
+  );
+};
+
+export default Register;

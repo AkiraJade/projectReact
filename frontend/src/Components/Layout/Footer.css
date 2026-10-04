@@ -1,0 +1,135 @@
+/* DOSNOVENTA EDITORIAL FOOTER */
+
+.ds-footer {
+  background-color: var(--ds-bg-base);
+  border-top: 1px solid var(--ds-border-light);
+  padding: clamp(4rem, 8vw, 7rem) 0 3rem;
+  margin-top: auto;
+  position: relative;
+}
+
+.ds-footer-top {
+  display: grid;
+  grid-template-columns: 1.2fr 2fr;
+  gap: clamp(2rem, 5vw, 6rem);
+  padding-bottom: clamp(3rem, 6vw, 5rem);
+  border-bottom: 1px solid var(--ds-border-light);
+}
+
+.ds-footer-brand-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.ds-footer-wordmark {
+  font-family: var(--ds-font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  color: var(--ds-text-primary);
+}
+
+.ds-footer-statement {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.82rem;
+  line-height: 1.6;
+  letter-spacing: 0.08em;
+  color: var(--ds-text-muted);
+  max-width: 380px;
+}
+
+.ds-footer-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.ds-footer-heading {
+  display: block;
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--ds-text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.ds-footer-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.ds-footer-list a {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  color: var(--ds-text-muted);
+  text-decoration: none;
+  transition: color var(--ds-transition-fast);
+}
+
+.ds-footer-list a:hover {
+  color: var(--ds-text-primary);
+}
+
+.ds-footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 2rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.ds-footer-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  color: var(--ds-text-muted);
+}
+
+.ds-footer-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  color: var(--ds-text-secondary);
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--ds-border-light);
+}
+
+.ds-indicator-dot {
+  width: 6px;
+  height: 6px;
+  background-color: var(--ds-accent-red);
+  border-radius: 50%;
+}
+
+@media (max-width: 900px) {
+  .ds-footer-top {
+    grid-template-columns: 1fr;
+  }
+  .ds-footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .ds-footer-grid {
+    grid-template-columns: 1fr;
+  }
+  .ds-footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

@@ -9,7 +9,7 @@ import axios from 'axios';
 
 
 
-import Header from './Components/Layout/Header'
+import Navbar from './Components/Layout/Navbar'
 import Footer from './Components/Layout/Footer'
 import Home from './Components/Home'
 import ProductDetails from './Components/Product/ProductDetails'
@@ -115,7 +115,7 @@ function App() {
 
 
       <Router>
-        <Header cartItems={state.cartItems} />
+        <Navbar cartItems={state.cartItems} />
         <Routes>
           <Route path="/" element={<Home />} exact="true" />
           <Route path="/product/:id" element={<ProductDetails cartItems={state.cartItems} addItemToCart={addItemToCart} />} exact="true" />
@@ -134,15 +134,7 @@ function App() {
           <Route path="/success" element={<OrderSuccess />} />
           <Route path="/orders/me" element={<ListOrders />} />
           <Route path="/order/:id" element={<OrderDetails />} />
-          {/* <Route path="/dashboard" element={<Dashboard />} /> */}
 
-          {/* <Route path="/admin/products" element={<ProductsList />} /> */}
-          {/* <Route path="/admin/product" element={<NewProduct />} /> */}
-          {/* <Route
-            path="/admin/orders"
-            element={<OrdersList />}
-
-          /> */}
           <Route
             path="/admin/order/:id"
             element={<ProcessOrder />} />
@@ -193,10 +185,9 @@ function App() {
                 <ProductReviews />
               </ProtectedRoute>} />
         </Routes>
+        <Footer />
       </Router>
-
-      <Footer />
-      <ToastContainer />
+      <ToastContainer theme="dark" />
     </>
   )
 }

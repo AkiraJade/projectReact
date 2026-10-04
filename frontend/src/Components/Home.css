@@ -1,0 +1,774 @@
+/* ==========================================================================
+   DOSNOVENTA LANDING PAGE STYLES (HOME)
+   Cinematic, Asymmetrical, High-End Cycling Editorial
+   ========================================================================== */
+
+.ds-landing-wrapper {
+  background-color: var(--ds-bg-base);
+  color: var(--ds-text-primary);
+  width: 100%;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* --------------------------------------------------------------------------
+   1. HERO SECTION
+   -------------------------------------------------------------------------- */
+.ds-hero-section {
+  position: relative;
+  height: 100vh;
+  min-height: 720px;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+
+.ds-hero-bg-container {
+  position: absolute;
+  top: -8%;
+  left: 0;
+  width: 100%;
+  height: 116%;
+  z-index: 1;
+  will-change: transform;
+}
+
+/* Bicycle visibility enhancements: lifted contrast & clarity of tubing and drivetrain while preserving deep darks */
+.ds-hero-bg-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 42%;
+  filter: grayscale(12%) contrast(128%) brightness(0.88);
+}
+
+/* Subtle, deliberate vignette so the bike stays visibly recognizable through the frame */
+.ds-hero-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+      ellipse at 50% 50%,
+      rgba(10, 11, 13, 0.15) 0%,
+      rgba(10, 11, 13, 0.6) 75%,
+      rgba(10, 11, 13, 0.88) 100%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(10, 11, 13, 0.55) 0%,
+      rgba(10, 11, 13, 0.05) 30%,
+      rgba(10, 11, 13, 0.1) 65%,
+      rgba(10, 11, 13, 0.92) 100%
+    );
+}
+
+.ds-hero-content-layer {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding-bottom: clamp(1.75rem, 4vh, 3.25rem);
+}
+
+.ds-hero-inner {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.2rem, 2.5vh, 2.75rem);
+}
+
+/* Hero Metadata with clear primary/secondary/tertiary hierarchy */
+.ds-hero-meta-tag {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.ds-hero-tertiary-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  color: var(--ds-text-muted);
+  opacity: 0.8;
+}
+
+.ds-hero-headline-block {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.ds-hero-title-wrapper {
+  width: 100%;
+  max-width: 100%;
+  overflow: visible;
+  line-height: 1;
+  display: block;
+}
+
+/* Responsive SVG heading: Guaranteed to span the container width with exact letter fitting on ALL screens */
+.ds-hero-svg-title {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 6px 24px rgba(0, 0, 0, 0.75));
+  pointer-events: none;
+}
+
+.ds-hero-svg-text {
+  font-family: var(--ds-font-display);
+  font-weight: 800;
+  font-size: 114px;
+  fill: var(--ds-text-primary);
+  text-transform: uppercase;
+}
+
+.ds-hero-sub-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 1.25rem;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+.ds-hero-statement {
+  font-family: var(--ds-font-grotesk);
+  font-size: clamp(0.85rem, 1.4vw, 1.15rem);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--ds-text-primary);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.ds-hero-cta {
+  font-size: 0.78rem;
+  padding: 0.95rem 2rem;
+  letter-spacing: 0.12em;
+}
+
+/* Bottom Hero Technical Documentation & Scroll Cue */
+.ds-hero-bottom-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-top: 1.4rem;
+  border-top: 1px solid rgba(246, 245, 241, 0.1);
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.ds-hero-specs-group {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(1.5rem, 4vw, 4.5rem);
+  flex-wrap: wrap;
+}
+
+.ds-hero-spec-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.ds-hero-spec-item .editorial-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  color: var(--ds-text-muted);
+}
+
+.ds-spec-val {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--ds-text-primary);
+}
+
+/* Subtle Scroll Cue */
+.ds-hero-scroll-cue {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  color: var(--ds-text-muted);
+  text-transform: uppercase;
+  user-select: none;
+}
+
+.ds-scroll-arrow {
+  color: var(--ds-accent-red);
+  font-size: 0.85rem;
+  animation: floatArrow 2.4s ease-in-out infinite;
+}
+
+@keyframes floatArrow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2. INTRODUCTION SECTION (MANIFESTO)
+   -------------------------------------------------------------------------- */
+.ds-intro-section {
+  padding: clamp(6rem, 12vw, 12rem) 0;
+  background-color: var(--ds-bg-base);
+  border-bottom: 1px solid var(--ds-border-light);
+}
+
+.ds-intro-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: clamp(2rem, 6vw, 6rem);
+}
+
+.ds-intro-label-col {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.ds-intro-vertical-line {
+  width: 1px;
+  height: 120px;
+  background: var(--ds-border-light);
+}
+
+.ds-intro-statement-col {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.ds-intro-heading {
+  font-family: var(--ds-font-display);
+  font-size: clamp(2.5rem, 5.5vw, 5.2rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  color: var(--ds-text-primary);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.ds-intro-body-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: flex-start;
+}
+
+.ds-intro-paragraph {
+  font-family: var(--ds-font-body);
+  font-size: clamp(1rem, 1.3vw, 1.25rem);
+  line-height: 1.7;
+  color: var(--ds-text-secondary);
+  margin: 0;
+}
+
+.ds-intro-coords {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  color: var(--ds-text-muted);
+}
+
+.ds-accent-dot-active {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--ds-text-primary);
+  font-weight: 700;
+}
+
+.ds-accent-dot-active::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--ds-accent-red);
+}
+
+/* --------------------------------------------------------------------------
+   3. BRAND VISUAL SECTION (ASYMMETRICAL GALLERY)
+   -------------------------------------------------------------------------- */
+.ds-brand-visuals-section {
+  padding: clamp(5rem, 10vw, 9rem) 0;
+  background-color: var(--ds-bg-surface);
+  position: relative;
+  overflow: hidden;
+}
+
+.ds-visuals-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3.5rem;
+}
+
+.ds-asymmetric-gallery {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  grid-gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: center;
+}
+
+.ds-gallery-item {
+  position: relative;
+}
+
+.ds-gallery-item-1 {
+  grid-column: 1 / 2;
+  grid-row: 1 / 3;
+}
+
+.ds-gallery-item-2 {
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+}
+
+.ds-gallery-item-3 {
+  grid-column: 2 / 3;
+  grid-row: 2 / 3;
+  margin-top: 1.5rem;
+}
+
+.ds-gallery-img-box {
+  position: relative;
+  overflow: hidden;
+  background: #0d0e12;
+}
+
+.ds-gallery-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  filter: grayscale(30%) contrast(110%);
+  transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
+}
+
+.ds-gallery-img-box:hover .ds-gallery-img {
+  transform: scale(1.04);
+  filter: grayscale(0%) contrast(110%);
+}
+
+.ds-gallery-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.5rem;
+  background: linear-gradient(to top, rgba(10, 11, 13, 0.95), transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.ds-gallery-title {
+  font-family: var(--ds-font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ds-text-primary);
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   4. FEATURED BIKE SHOWCASE (DOSNOVENTA BARCELONA)
+   -------------------------------------------------------------------------- */
+.ds-featured-bike-section {
+  padding: clamp(6rem, 12vw, 11rem) 0;
+  background-color: var(--ds-bg-base);
+  position: relative;
+  border-bottom: 1px solid var(--ds-border-light);
+}
+
+.ds-bike-showcase {
+  position: relative;
+}
+
+.ds-bike-giant-number {
+  position: absolute;
+  top: -6rem;
+  left: -2rem;
+  font-family: var(--ds-font-display);
+  font-size: clamp(8rem, 22vw, 24rem);
+  font-weight: 800;
+  color: rgba(246, 245, 241, 0.025);
+  line-height: 0.8;
+  user-select: none;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ds-bike-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: center;
+}
+
+.ds-bike-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.ds-bike-name {
+  font-family: var(--ds-font-display);
+  font-size: clamp(3rem, 6.5vw, 6rem);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  color: var(--ds-text-primary);
+  margin: 0;
+}
+
+.ds-bike-tagline {
+  display: flex;
+  gap: 1.5rem;
+  font-family: var(--ds-font-grotesk);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--ds-accent-red);
+}
+
+.ds-bike-desc {
+  font-family: var(--ds-font-body);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--ds-text-secondary);
+  margin: 0;
+}
+
+.ds-bike-specs-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--ds-border-light);
+  border-bottom: 1px solid var(--ds-border-light);
+}
+
+.ds-bike-spec {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.ds-bike-spec strong {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.88rem;
+  color: var(--ds-text-primary);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.ds-bike-actions {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.ds-bike-hero-visual {
+  position: relative;
+}
+
+.ds-bike-image-wrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 72%;
+  overflow: hidden;
+  background: radial-gradient(circle at center, #181b21 0%, #0a0b0d 70%);
+  border: 1px solid var(--ds-border-light);
+}
+
+.ds-bike-main-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ds-bike-hero-visual:hover .ds-bike-main-img {
+  transform: scale(1.05);
+}
+
+/* --------------------------------------------------------------------------
+   5. CULTURE SECTION (THE WORLD OF DOSNOVENTA)
+   -------------------------------------------------------------------------- */
+.ds-culture-section {
+  padding: clamp(6rem, 11vw, 10rem) 0 5rem;
+  background-color: var(--ds-bg-base);
+}
+
+.ds-culture-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin-bottom: 4rem;
+  max-width: 680px;
+}
+
+.ds-culture-title {
+  font-family: var(--ds-font-display);
+  font-size: clamp(2.4rem, 5vw, 4.4rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  color: var(--ds-text-primary);
+  margin: 0;
+}
+
+.ds-culture-desc {
+  font-family: var(--ds-font-body);
+  font-size: 1rem;
+  color: var(--ds-text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.ds-cities-wrapper {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  width: 100%;
+  border-top: 1px solid var(--ds-border-light);
+  border-bottom: 1px solid var(--ds-border-light);
+}
+
+.ds-city-card {
+  position: relative;
+  height: clamp(340px, 45vh, 480px);
+  overflow: hidden;
+  border-right: 1px solid var(--ds-border-light);
+}
+
+.ds-city-card:last-child {
+  border-right: none;
+}
+
+.ds-city-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(80%) brightness(0.65);
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ds-city-card:hover .ds-city-img {
+  filter: grayscale(0%) brightness(0.85);
+  transform: scale(1.06);
+}
+
+.ds-city-overlay {
+  position: absolute;
+  inset: 0;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: linear-gradient(to top, rgba(10, 11, 13, 0.9) 0%, transparent 60%);
+}
+
+.ds-city-number {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  color: var(--ds-accent-red);
+  font-weight: 700;
+}
+
+.ds-city-name {
+  font-family: var(--ds-font-display);
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--ds-text-primary);
+  margin: 0 0 0.35rem 0;
+}
+
+.ds-city-tag {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  color: var(--ds-text-secondary);
+}
+
+/* --------------------------------------------------------------------------
+   6. FINAL CTA (RIDE YOUR CITY)
+   -------------------------------------------------------------------------- */
+.ds-final-cta-section {
+  position: relative;
+  padding: clamp(7rem, 15vw, 13rem) 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.ds-final-cta-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.ds-final-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(35%) contrast(120%) brightness(0.4);
+}
+
+.ds-final-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at center,
+    rgba(10, 11, 13, 0.5) 0%,
+    rgba(10, 11, 13, 0.92) 100%
+  );
+}
+
+.ds-final-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  max-width: 820px;
+}
+
+.ds-final-title {
+  font-family: var(--ds-font-display);
+  font-size: clamp(3rem, 8vw, 7.5rem);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  color: var(--ds-text-primary);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.ds-final-subtitle {
+  font-family: var(--ds-font-body);
+  font-size: clamp(0.95rem, 1.4vw, 1.2rem);
+  color: var(--ds-text-secondary);
+  max-width: 580px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.ds-final-btn-group {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* --------------------------------------------------------------------------
+   RESPONSIVE DESIGN ADAPTATIONS
+   -------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .ds-intro-layout {
+    grid-template-columns: 1fr;
+  }
+  .ds-intro-vertical-line {
+    display: none;
+  }
+  .ds-intro-body-row {
+    grid-template-columns: 1fr;
+  }
+  .ds-bike-grid {
+    grid-template-columns: 1fr;
+  }
+  .ds-cities-wrapper {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .ds-city-card {
+    border-bottom: 1px solid var(--ds-border-light);
+  }
+}
+
+@media (max-width: 768px) {
+  .ds-hero-section {
+    min-height: 100svh;
+  }
+  .ds-hero-bg-image {
+    object-position: center 48%;
+  }
+  .ds-hero-title {
+    font-size: clamp(2.4rem, 11.2vw, 4.8rem);
+    letter-spacing: -0.035em;
+  }
+  .ds-hero-bottom-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
+  }
+  .ds-hero-specs-group {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    width: 100%;
+  }
+  .ds-hero-scroll-cue {
+    align-self: flex-start;
+  }
+  .ds-asymmetric-gallery {
+    grid-template-columns: 1fr;
+  }
+  .ds-gallery-item-1,
+  .ds-gallery-item-2,
+  .ds-gallery-item-3 {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    margin-top: 0;
+  }
+  .ds-bike-specs-list {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .ds-cities-wrapper {
+    grid-template-columns: 1fr;
+  }
+  .ds-city-card {
+    border-right: none;
+    height: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ds-hero-specs-group {
+    grid-template-columns: 1fr;
+  }
+  .ds-hero-sub-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.2rem;
+  }
+  .ds-hero-cta-wrap,
+  .ds-hero-cta {
+    width: 100%;
+  }
+}
