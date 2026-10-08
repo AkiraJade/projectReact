@@ -44,6 +44,10 @@
 }
 
 /* Base resets & typography override */
+html {
+  scroll-behavior: smooth;
+}
+
 html,
 body {
   background-color: var(--ds-bg-base) !important;
@@ -306,6 +310,56 @@ body {
   }
 }
 
-.anim-reveal {
-  animation: fadeInSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.ds-btn .ds-arrow {
+  display: inline-block;
+  transition: transform var(--ds-transition-fast);
 }
+
+.ds-btn:hover .ds-arrow {
+  transform: translateX(8px);
+}
+
+/* Scroll Progress Indicator Line (Subtle Right Edge) */
+.ds-scroll-progress-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 2px;
+  height: 100vh;
+  z-index: 1001;
+  pointer-events: none;
+  background: rgba(246, 245, 241, 0.05);
+}
+
+.ds-scroll-progress-bar {
+  width: 100%;
+  background: var(--ds-accent-red);
+  height: 0%;
+  transition: height 0.06s linear;
+  box-shadow: 0 0 6px rgba(217, 45, 32, 0.8);
+}
+
+/* Reduced Motion Accessibility Override */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .ds-hero-bg-container,
+  .ds-hero-title-wrapper,
+  .ds-scroll-progress-container,
+  .ds-gallery-img {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+

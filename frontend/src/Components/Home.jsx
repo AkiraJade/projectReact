@@ -1,34 +1,124 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import MetaData from './Layout/MetaData';
 import './Home.css';
 
 const Home = () => {
   const [scrollY, setScrollY] = useState(0);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
+  const [heroMounted, setHeroMounted] = useState(false);
 
+  const heroSectionRef = useRef(null);
+  const galleryRef = useRef(null);
+  const bikeSectionRef = useRef(null);
+
+  // Smooth scroll & parallax tracking via RAF
   useEffect(() => {
+    let animationFrameId;
+
     const handleScroll = () => {
-      setScrollY(window.scrollY);
+      animationFrameId = requestAnimationFrame(() => {
+        const currentScrollY = window.scrollY;
+        setScrollY(currentScrollY);
+
+        // Calculate scroll progress percentage (0 - 100%)
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        if (docHeight > 0) {
+          const progress = (currentScrollY / docHeight) * 100;
+          setScrollProgress(Math.min(Math.max(progress, 0), 100));
+        }
+      });
     };
+
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    handleScroll(); // Initial check
+
+    // Trigger initial hero reveal animation sequence
+    const timer = setTimeout(() => {
+      setHeroMounted(true);
+    }, 50);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      cancelAnimationFrame(animationFrameId);
+      clearTimeout(timer);
+    };
+  }, []);
+
+  // Subtle Mouse Parallax (Desktop Only)
+  const handleMouseMove = (e) => {
+    if (window.innerWidth < 1024) return;
+    const { clientX, clientY } = e;
+    const { innerWidth, innerHeight } = window;
+    const x = (clientX / innerWidth - 0.5) * 10; // -5px to 5px shift
+    const y = (clientY / innerHeight - 0.5) * 10;
+    setMouseOffset({ x, y });
+  };
+
+  const handleMouseLeave = () => {
+    setMouseOffset({ x: 0, y: 0 });
+  };
+
+  // IntersectionObserver for scroll-triggered section reveals
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px 0px -8% 0px',
+      threshold: 0.15,
+    };
+
+    const handleIntersect = (entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-revealed');
+          observer.unobserve(entry.target);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(handleIntersect, observerOptions);
+    const revealElements = document.querySelectorAll('.ds-scroll-reveal');
+    revealElements.forEach((el) => observer.observe(el));
+
+    return () => {
+      revealElements.forEach((el) => observer.unobserve(el));
+      observer.disconnect();
+    };
   }, []);
 
   return (
     <div className="ds-landing-wrapper">
       <MetaData title="DOSNOVENTA® — Fixed Gear Bicycles & Precision Frames" />
 
+      {/* Vertical Scroll Progress Indicator Line (Subtle Right Margin) */}
+      <div className="ds-scroll-progress-container" aria-hidden="true">
+        <div
+          className="ds-scroll-progress-bar"
+          style={{ height: `${scrollProgress}%` }}
+        ></div>
+      </div>
+
       {/* =========================================================================
           1. HERO SECTION (Full-screen cinematic, Barcelona urban, asymmetrical)
           ========================================================================= */}
-      <section className="ds-hero-section">
-        {/* Parallax Hero Background Container */}
+      <section
+        className={`ds-hero-section ${heroMounted ? 'is-loaded' : ''}`}
+        ref={heroSectionRef}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+      >
+        {/* Parallax Hero Background Container with Mouse Offset & Scroll Scale */}
         <div
           className="ds-hero-bg-container"
-          style={{ transform: `translateY(${scrollY * 0.22}px)` }}
+          style={{
+            transform: `translate3d(${mouseOffset.x * -0.4}px, ${scrollY * 0.18 + mouseOffset.y * -0.4}px, 0) scale(${
+              1.04 - Math.min(scrollY * 0.00025, 0.04)
+            })`,
+          }}
         >
           <img
-            src="https://images.unsplash.com/photo-1485965120184-e220f721d03e?auto=format&fit=crop&w=2400&q=95"
+            src="/images/Dosnoventa_Cover_Soulgoods_02.webp"
             alt="Dosnoventa Fixed Gear Bicycle in Urban Environment"
             className="ds-hero-bg-image"
           />
@@ -38,17 +128,21 @@ const Home = () => {
         {/* Hero Content Overlay */}
         <div className="ds-hero-content-layer">
           <div className="ds-container-wide ds-hero-inner">
-            {/* Top metadata tags with explicit hierarchy */}
-            <div className="ds-hero-meta-tag anim-reveal">
-              <span className="editorial-badge">BARCELONA // ATELIER 2026</span>
+            {/* Top metadata tag */}
+            <div className="ds-hero-meta-tag hero-stagger-1">
               <span className="editorial-label ds-hero-tertiary-label">
                 TRACK-PROVEN / URBAN MASTERY
               </span>
             </div>
 
-            {/* Massive Display Title - responsive to fit 85-92% of viewport without overflow */}
-            <div className="ds-hero-headline-block">
-              <div className="ds-hero-title-wrapper">
+            {/* Massive Display Title - Layered Parallax & Responsive viewBox fit */}
+            <div className="ds-hero-headline-block hero-stagger-2">
+              <div
+                className="ds-hero-title-wrapper"
+                style={{
+                  transform: `translate3d(${mouseOffset.x * 0.3}px, ${scrollY * 0.28 + mouseOffset.y * 0.3}px, 0)`,
+                }}
+              >
                 <svg
                   className="ds-hero-svg-title"
                   viewBox="0 0 1200 130"
@@ -69,11 +163,11 @@ const Home = () => {
                 </svg>
               </div>
 
-              <div className="ds-hero-sub-row">
+              <div className="ds-hero-sub-row hero-stagger-3">
                 <p className="ds-hero-statement">
                   FIXED. FAST. UNCOMPROMISING.
                 </p>
-                <div className="ds-hero-cta-wrap">
+                <div className="ds-hero-cta-wrap hero-stagger-4">
                   <a href="#featured-bike" className="ds-btn ds-hero-cta">
                     EXPLORE THE LINEUP <span className="ds-arrow">→</span>
                   </a>
@@ -82,7 +176,7 @@ const Home = () => {
             </div>
 
             {/* Bottom Hero Bar with accurate Barcelona technical documentation & subtle scroll cue */}
-            <div className="ds-hero-bottom-bar">
+            <div className="ds-hero-bottom-bar hero-stagger-5">
               <div className="ds-hero-specs-group">
                 <div className="ds-hero-spec-item">
                   <span className="editorial-label">FRAME</span>
@@ -100,7 +194,7 @@ const Home = () => {
 
               {/* Subtle Scroll Cue */}
               <div className="ds-hero-scroll-cue">
-                <span className="ds-scroll-label">01 / 06 &nbsp; SCROLL TO DISCOVER</span>
+                <span className="ds-scroll-label">SCROLL TO DISCOVER</span>
                 <span className="ds-scroll-arrow">↓</span>
               </div>
             </div>
@@ -111,11 +205,11 @@ const Home = () => {
       {/* =========================================================================
           2. INTRODUCTION SECTION (Large editorial statement & high negative space)
           ========================================================================= */}
-      <section className="ds-intro-section">
+      <section className="ds-intro-section ds-scroll-reveal ds-reveal-up">
         <div className="ds-container">
           <div className="ds-intro-layout">
             <div className="ds-intro-label-col">
-              <span className="editorial-label">01 // MANIFESTO</span>
+              <span className="editorial-label">MANIFESTO</span>
               <div className="ds-intro-vertical-line"></div>
             </div>
 
@@ -130,11 +224,6 @@ const Home = () => {
                   precision metallurgy, and riders who demand zero compromise. Every weld, taper, and
                   angle is tuned for unrelenting urban velocity.
                 </p>
-                <div className="ds-intro-coords">
-                  <span>LAT 41.3879° N</span>
-                  <span>LON 2.1699° E</span>
-                  <span className="ds-accent-dot-active">BARCELONA HQ</span>
-                </div>
               </div>
             </div>
           </div>
@@ -144,21 +233,23 @@ const Home = () => {
       {/* =========================================================================
           3. BRAND VISUAL SECTION (Asymmetrical, overlapping editorial photo essay)
           ========================================================================= */}
-      <section className="ds-brand-visuals-section" id="stories">
+      <section className="ds-brand-visuals-section" id="stories" ref={galleryRef}>
         <div className="ds-container-wide">
-          <div className="ds-visuals-header">
-            <span className="editorial-badge">THE ARCHIVES</span>
+          <div className="ds-visuals-header ds-scroll-reveal ds-reveal-up">
             <span className="editorial-label">STREET CULTURE & VELODROME ROOTS</span>
           </div>
 
           <div className="ds-asymmetric-gallery">
-            {/* Visual 1: Large primary urban bike shot */}
-            <div className="ds-gallery-item ds-gallery-item-1">
+            {/* Visual 1: Large primary urban bike shot (Shift Left) */}
+            <div className="ds-gallery-item ds-gallery-item-1 ds-scroll-reveal ds-reveal-left">
               <div className="ds-gallery-img-box">
                 <img
-                  src="https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?auto=format&fit=crop&w=1200&q=85"
+                  src="/images/681065536_18577870018017218_4219711511448520074_n.jpg"
                   alt="Dosnoventa Frame Detail"
                   className="ds-gallery-img"
+                  style={{
+                    transform: `translateY(${Math.max(0, Math.min((scrollY - 1000) * 0.08, 40))}px) scale(1.02)`,
+                  }}
                 />
                 <div className="ds-gallery-caption">
                   <span className="editorial-label">BARCELONA / 2012</span>
@@ -167,13 +258,16 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Visual 2: Medium offset urban rider in motion */}
-            <div className="ds-gallery-item ds-gallery-item-2">
+            {/* Visual 2: Medium offset urban rider in motion (Shift Right) */}
+            <div className="ds-gallery-item ds-gallery-item-2 ds-scroll-reveal ds-reveal-right">
               <div className="ds-gallery-img-box">
                 <img
-                  src="https://images.unsplash.com/photo-1502680390469-be75c86b636f?auto=format&fit=crop&w=1000&q=85"
+                  src="/images/681284752_18577870027017218_3411028472816611521_n.jpg"
                   alt="Fixed Gear Urban Night Riding"
                   className="ds-gallery-img"
+                  style={{
+                    transform: `translateY(${Math.max(0, Math.min((scrollY - 1100) * -0.06, 30))}px) scale(1.02)`,
+                  }}
                 />
                 <div className="ds-gallery-caption">
                   <span className="editorial-label">FIXED GEAR / URBAN CULTURE</span>
@@ -182,13 +276,16 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Visual 3: Small offset cockpit and carbon engineering detail */}
-            <div className="ds-gallery-item ds-gallery-item-3">
+            {/* Visual 3: Small offset cockpit and carbon engineering detail (Shift Left) */}
+            <div className="ds-gallery-item ds-gallery-item-3 ds-scroll-reveal ds-reveal-left">
               <div className="ds-gallery-img-box">
                 <img
-                  src="https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?auto=format&fit=crop&w=1000&q=85"
+                  src="/images/683865055_18577869997017218_391512738857703560_n.jpg"
                   alt="Precision Fixed Gear Componentry"
                   className="ds-gallery-img"
+                  style={{
+                    transform: `translateY(${Math.max(0, Math.min((scrollY - 1300) * 0.07, 35))}px) scale(1.02)`,
+                  }}
                 />
                 <div className="ds-gallery-caption">
                   <span className="editorial-label">THE BROTHERHOOD</span>
@@ -203,16 +300,12 @@ const Home = () => {
       {/* =========================================================================
           4. FEATURED BIKE INTRODUCTION (Dosnoventa Barcelona showcase)
           ========================================================================= */}
-      <section className="ds-featured-bike-section" id="bikes">
+      <section className="ds-featured-bike-section" id="bikes" ref={bikeSectionRef}>
         <div className="ds-container-wide">
           <div className="ds-bike-showcase" id="featured-bike">
-            {/* Background Big Number */}
-            <div className="ds-bike-giant-number">01</div>
-
             <div className="ds-bike-grid">
               {/* Bike Editorial Information */}
-              <div className="ds-bike-info">
-                <div className="editorial-badge">ICONIC FLAGSHIP BUILD</div>
+              <div className="ds-bike-info ds-scroll-reveal ds-reveal-up">
                 <h2 className="ds-bike-name">BARCELONA</h2>
                 <div className="ds-bike-tagline">
                   <span>STEEL.</span>
@@ -226,16 +319,17 @@ const Home = () => {
                   unmatched ride quality that only artisanal steel geometry delivers.
                 </p>
 
-                <div className="ds-bike-specs-list">
-                  <div className="ds-bike-spec">
+                {/* Staggered Technical Specification Reveal */}
+                <div className="ds-bike-specs-list ds-scroll-reveal ds-reveal-stagger-specs">
+                  <div className="ds-bike-spec spec-item-1">
                     <span className="editorial-label">FRAME WEIGHT</span>
                     <strong>1,690 G</strong>
                   </div>
-                  <div className="ds-bike-spec">
+                  <div className="ds-bike-spec spec-item-2">
                     <span className="editorial-label">TIRE CLEARANCE</span>
                     <strong>700 X 28C</strong>
                   </div>
-                  <div className="ds-bike-spec">
+                  <div className="ds-bike-spec spec-item-3">
                     <span className="editorial-label">ORIGIN</span>
                     <strong>HANDMADE IN ITALY</strong>
                   </div>
@@ -250,10 +344,10 @@ const Home = () => {
               </div>
 
               {/* Dominant Bicycle Image */}
-              <div className="ds-bike-hero-visual">
+              <div className="ds-bike-hero-visual ds-scroll-reveal ds-reveal-right">
                 <div className="ds-bike-image-wrapper">
                   <img
-                    src="https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?auto=format&fit=crop&w=1600&q=90"
+                    src="/images/Dosnoventa_company_x.webp"
                     alt="Dosnoventa Barcelona Fixed Gear Bike"
                     className="ds-bike-main-img"
                   />
@@ -270,8 +364,8 @@ const Home = () => {
           ========================================================================= */}
       <section className="ds-culture-section" id="world">
         <div className="ds-container">
-          <div className="ds-culture-header">
-            <span className="editorial-label">02 // GLOBAL EXPEDITIONS</span>
+          <div className="ds-culture-header ds-scroll-reveal ds-reveal-up">
+            <span className="editorial-label">GLOBAL EXPEDITIONS</span>
             <h2 className="ds-culture-title">THE WORLD OF DOSNOVENTA</h2>
             <p className="ds-culture-desc">
               From alleycats in Tokyo to crit races in Brooklyn, the Dosnoventa crew leaves tire
@@ -280,55 +374,51 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Global Cities Cards Layout */}
-        <div className="ds-cities-wrapper">
-          <div className="ds-city-card">
+        {/* Global Cities Cards Layout with staggered entrance */}
+        <div className="ds-cities-wrapper ds-scroll-reveal ds-reveal-stagger-cards">
+          <div className="ds-city-card city-card-1">
             <img
-              src="https://images.unsplash.com/photo-1539037116277-4db20889f2d4?auto=format&fit=crop&w=900&q=80"
+              src="/images/743072442_1409502627900168_5996516535864156955_n.jpg"
               alt="Barcelona Streets"
               className="ds-city-img"
             />
             <div className="ds-city-overlay">
-              <span className="ds-city-number">01</span>
               <h3 className="ds-city-name">BARCELONA</h3>
               <span className="ds-city-tag">MEDITERRANEAN ROOTS</span>
             </div>
           </div>
 
-          <div className="ds-city-card">
+          <div className="ds-city-card city-card-2">
             <img
-              src="https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=900&q=80"
+              src="/images/750585957_1635177937575716_5452436604089229346_n.jpg"
               alt="Tokyo Neon Fixed Gear"
               className="ds-city-img"
             />
             <div className="ds-city-overlay">
-              <span className="ds-city-number">02</span>
               <h3 className="ds-city-name">TOKYO</h3>
               <span className="ds-city-tag">SHIBUYA CRITERIUM</span>
             </div>
           </div>
 
-          <div className="ds-city-card">
+          <div className="ds-city-card city-card-3">
             <img
-              src="https://images.unsplash.com/photo-1580655653885-65763b2597d0?auto=format&fit=crop&w=900&q=80"
+              src="/images/751842550_1358990196371380_4773847609190568757_n.jpg"
               alt="Los Angeles Concrete River"
               className="ds-city-img"
             />
             <div className="ds-city-overlay">
-              <span className="ds-city-number">03</span>
               <h3 className="ds-city-name">LOS ANGELES</h3>
               <span className="ds-city-tag">DOWNTOWN PURSUIT</span>
             </div>
           </div>
 
-          <div className="ds-city-card">
+          <div className="ds-city-card city-card-4">
             <img
-              src="https://images.unsplash.com/photo-1590559899731-a382839e5549?auto=format&fit=crop&w=900&q=80"
+              src="/images/753733308_1664608384623728_2511696803900945541_n.jpg"
               alt="Osaka Night Riding"
               className="ds-city-img"
             />
             <div className="ds-city-overlay">
-              <span className="ds-city-number">04</span>
               <h3 className="ds-city-name">OSAKA</h3>
               <span className="ds-city-tag">DOTONBORI SPRINT</span>
             </div>
@@ -339,18 +429,20 @@ const Home = () => {
       {/* =========================================================================
           6. FINAL CALL TO ACTION (Ride Your City)
           ========================================================================= */}
-      <section className="ds-final-cta-section">
+      <section className="ds-final-cta-section ds-scroll-reveal ds-reveal-up">
         <div className="ds-final-cta-bg">
           <img
-            src="https://images.unsplash.com/photo-1517649763962-0c623266ddc0?auto=format&fit=crop&w=2000&q=85"
+            src="/images/Dosnoventa_Cover_Soulgoods_02-1.webp"
             alt="Ride Your City"
             className="ds-final-bg-img"
+            style={{
+              transform: `scale(${1.06 - Math.min((scrollY - 3000) * 0.0001, 0.06)})`,
+            }}
           />
           <div className="ds-final-overlay"></div>
         </div>
 
         <div className="ds-container ds-final-content">
-          <span className="editorial-badge">CLAIM YOUR MACHINE</span>
           <h2 className="ds-final-title">RIDE YOUR CITY.</h2>
           <p className="ds-final-subtitle">
             Join the international fraternity of track bike riders. Precision geometries, handcrafted frames,

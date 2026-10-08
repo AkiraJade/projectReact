@@ -56,10 +56,6 @@ const Footer = () => {
             <span>© {new Date().getFullYear()} DOSNOVENTA BICYCLES S.L. ALL RIGHTS RESERVED.</span>
             <span>BARCELONA — TOKYO — LOS ANGELES — SEOUL</span>
           </div>
-          <div className="ds-footer-badge">
-            <span className="ds-indicator-dot"></span>
-            <span>PRECISION ENGINEERING — 100% FIXED</span>
-          </div>
         </div>
       </div>
     </footer>

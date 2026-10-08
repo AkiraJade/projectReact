@@ -12,7 +12,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   1. HERO SECTION
+   1. HERO SECTION & CINEMATIC MOTION
    -------------------------------------------------------------------------- */
 .ds-hero-section {
   position: relative;
@@ -26,12 +26,13 @@
 
 .ds-hero-bg-container {
   position: absolute;
-  top: -8%;
+  top: -12%;
   left: 0;
   width: 100%;
-  height: 116%;
+  height: 124%;
   z-index: 1;
   will-change: transform;
+  transition: transform 0.15s ease-out;
 }
 
 /* Bicycle visibility enhancements: lifted contrast & clarity of tubing and drivetrain while preserving deep darks */
@@ -41,6 +42,12 @@
   object-fit: cover;
   object-position: center 42%;
   filter: grayscale(12%) contrast(128%) brightness(0.88);
+  opacity: 0;
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ds-hero-section.is-loaded .ds-hero-bg-image {
+  opacity: 1;
 }
 
 /* Subtle, deliberate vignette so the bike stays visibly recognizable through the frame */
@@ -75,6 +82,48 @@
   gap: clamp(1.2rem, 2.5vh, 2.75rem);
 }
 
+/* Hero Staggered Reveal Initial Animation */
+.hero-stagger-1,
+.hero-stagger-2,
+.hero-stagger-3,
+.hero-stagger-4,
+.hero-stagger-5 {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.ds-hero-section.is-loaded .hero-stagger-1 {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.2s;
+}
+
+.ds-hero-section.is-loaded .hero-stagger-2 {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.4s;
+}
+
+.ds-hero-section.is-loaded .hero-stagger-3 {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.6s;
+}
+
+.ds-hero-section.is-loaded .hero-stagger-4 {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.75s;
+}
+
+.ds-hero-section.is-loaded .hero-stagger-5 {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.9s;
+}
+
 /* Hero Metadata with clear primary/secondary/tertiary hierarchy */
 .ds-hero-meta-tag {
   display: flex;
@@ -102,6 +151,8 @@
   overflow: visible;
   line-height: 1;
   display: block;
+  will-change: transform;
+  transition: transform 0.15s ease-out;
 }
 
 /* Responsive SVG heading: Guaranteed to span the container width with exact letter fitting on ALL screens */
@@ -211,6 +262,94 @@
   50% {
     transform: translateY(4px);
   }
+}
+
+/* --------------------------------------------------------------------------
+   SCROLL REVEALS & SECTION ANIMATIONS (IntersectionObserver)
+   -------------------------------------------------------------------------- */
+.ds-scroll-reveal {
+  opacity: 0;
+  will-change: opacity, transform;
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ds-reveal-up {
+  transform: translateY(40px);
+}
+
+.ds-reveal-left {
+  transform: translateX(-35px);
+}
+
+.ds-reveal-right {
+  transform: translateX(35px);
+}
+
+.ds-reveal-scale {
+  transform: scale(0.94);
+}
+
+.ds-scroll-reveal.is-revealed {
+  opacity: 1;
+  transform: translate(0) scale(1);
+}
+
+/* Staggered specs reveal in Featured Bike section */
+.ds-reveal-stagger-specs .spec-item-1,
+.ds-reveal-stagger-specs .spec-item-2,
+.ds-reveal-stagger-specs .spec-item-3 {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ds-reveal-stagger-specs.is-revealed .spec-item-1 {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.1s;
+}
+
+.ds-reveal-stagger-specs.is-revealed .spec-item-2 {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.25s;
+}
+
+.ds-reveal-stagger-specs.is-revealed .spec-item-3 {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.4s;
+}
+
+/* Staggered city cards reveal */
+.ds-reveal-stagger-cards .ds-city-card {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ds-reveal-stagger-cards.is-revealed .city-card-1 {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.1s;
+}
+
+.ds-reveal-stagger-cards.is-revealed .city-card-2 {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.22s;
+}
+
+.ds-reveal-stagger-cards.is-revealed .city-card-3 {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.34s;
+}
+
+.ds-reveal-stagger-cards.is-revealed .city-card-4 {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.46s;
 }
 
 /* --------------------------------------------------------------------------
@@ -355,11 +494,11 @@
   display: block;
   object-fit: cover;
   filter: grayscale(30%) contrast(110%);
-  transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
+  will-change: transform;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
 }
 
 .ds-gallery-img-box:hover .ds-gallery-img {
-  transform: scale(1.04);
   filter: grayscale(0%) contrast(110%);
 }
 
@@ -392,6 +531,7 @@
   background-color: var(--ds-bg-base);
   position: relative;
   border-bottom: 1px solid var(--ds-border-light);
+  overflow: hidden;
 }
 
 .ds-bike-showcase {
@@ -410,6 +550,7 @@
   user-select: none;
   pointer-events: none;
   z-index: 0;
+  will-change: transform;
 }
 
 .ds-bike-grid {
@@ -506,6 +647,7 @@
   height: 100%;
   object-fit: cover;
   transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
 }
 
 .ds-bike-hero-visual:hover .ds-bike-main-img {
@@ -571,6 +713,7 @@
   object-fit: cover;
   filter: grayscale(80%) brightness(0.65);
   transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, filter;
 }
 
 .ds-city-card:hover .ds-city-img {
@@ -636,6 +779,8 @@
   height: 100%;
   object-fit: cover;
   filter: grayscale(35%) contrast(120%) brightness(0.4);
+  will-change: transform;
+  transition: transform 0.2s ease-out;
 }
 
 .ds-final-overlay {

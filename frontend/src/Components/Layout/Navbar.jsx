@@ -38,30 +38,25 @@ const Navbar = ({ cartItems = [] }) => {
     <>
       <header className={`ds-navbar ${scrolled ? 'ds-navbar-scrolled' : ''}`}>
         <div className="ds-navbar-container">
-          {/* LEFT: DOSNOVENTA wordmark + subtle brand metadata */}
+          {/* LEFT: DOSNOVENTA wordmark */}
           <div className="ds-navbar-brand">
             <Link to="/" className="ds-logo-link">
               <span className="ds-brand-name">DOSNOVENTA</span>
-              <span className="ds-brand-city">BCN / EST. 2012</span>
             </Link>
           </div>
 
-          {/* CENTER: BIKES, WORLD, STORIES, SHOP (clean editorial, no item active on home) */}
+          {/* CENTER: BIKES, WORLD, STORIES, SHOP */}
           <nav className="ds-navbar-links" aria-label="Main Navigation">
             <Link to="/#bikes" className="ds-nav-item">
-              <span className="ds-nav-index">01</span>
               <span className="ds-nav-label">BIKES</span>
             </Link>
             <Link to="/#world" className="ds-nav-item">
-              <span className="ds-nav-index">02</span>
               <span className="ds-nav-label">WORLD</span>
             </Link>
             <Link to="/#stories" className="ds-nav-item">
-              <span className="ds-nav-index">03</span>
               <span className="ds-nav-label">STORIES</span>
             </Link>
             <Link to="/#catalog" className="ds-nav-item">
-              <span className="ds-nav-index">04</span>
               <span className="ds-nav-label">SHOP</span>
             </Link>
           </nav>
@@ -115,16 +110,16 @@ const Navbar = ({ cartItems = [] }) => {
         <div className="ds-mobile-drawer-inner">
           <div className="ds-mobile-links">
             <Link to="/#bikes" className="ds-mobile-link" onClick={() => setMobileMenuOpen(false)}>
-              <span className="ds-nav-index">01</span> BIKES
+              BIKES
             </Link>
             <Link to="/#world" className="ds-mobile-link" onClick={() => setMobileMenuOpen(false)}>
-              <span className="ds-nav-index">02</span> WORLD
+              WORLD
             </Link>
             <Link to="/#stories" className="ds-mobile-link" onClick={() => setMobileMenuOpen(false)}>
-              <span className="ds-nav-index">03</span> STORIES
+              STORIES
             </Link>
             <Link to="/#catalog" className="ds-mobile-link" onClick={() => setMobileMenuOpen(false)}>
-              <span className="ds-nav-index">04</span> SHOP
+              SHOP
             </Link>
           </div>
 

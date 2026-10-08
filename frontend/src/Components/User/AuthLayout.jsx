@@ -10,7 +10,7 @@ const AuthLayout = ({ children, title, subtitle, imageSide = 'left' }) => {
         <div className="ds-auth-photo-panel">
           <div className="ds-auth-photo-wrapper">
             <img
-              src="https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?auto=format&fit=crop&w=1600&q=85"
+              src="/images/Dosnoventa_company_x.webp"
               alt="Dosnoventa Track Fixed Gear"
               className="ds-auth-photo"
             />

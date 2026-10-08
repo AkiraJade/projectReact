@@ -81,32 +81,34 @@
   letter-spacing: 0.16em;
   color: var(--ds-text-secondary);
   text-decoration: none;
-  transition: all var(--ds-transition-fast);
+  transition: color 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   display: inline-flex;
   align-items: baseline;
   gap: 0.35rem;
   padding: 0.35rem 0.5rem;
   border: 1px solid transparent;
   outline: none;
+  position: relative;
 }
 
 .ds-nav-index {
   font-size: 0.62rem;
   color: var(--ds-text-muted);
   font-weight: 400;
-  transition: color var(--ds-transition-fast);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), color 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .ds-nav-item:hover,
 .ds-nav-item:focus-visible {
   color: var(--ds-text-primary);
-  border-color: rgba(246, 245, 241, 0.2);
+  border-color: rgba(246, 245, 241, 0.18);
   background: rgba(246, 245, 241, 0.03);
 }
 
 .ds-nav-item:hover .ds-nav-index,
 .ds-nav-item:focus-visible .ds-nav-index {
   color: var(--ds-accent-red);
+  transform: translateX(2px);
 }
 
 /* Actions */
