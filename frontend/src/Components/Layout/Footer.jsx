@@ -19,10 +19,9 @@ const Footer = () => {
             <div className="ds-footer-nav-col">
               <span className="ds-footer-heading">NAVIGATION</span>
               <ul className="ds-footer-list">
-                <li><Link to="/#bikes">BIKES</Link></li>
-                <li><Link to="/#world">WORLD</Link></li>
-                <li><Link to="/#stories">STORIES</Link></li>
                 <li><Link to="/#catalog">SHOP</Link></li>
+                <li><Link to="/#stories">STORIES</Link></li>
+                <li><Link to="/#world">COMPANY</Link></li>
                 <li><a href="#dealers">DEALERS</a></li>
                 <li><a href="#contact">CONTACT</a></li>
               </ul>

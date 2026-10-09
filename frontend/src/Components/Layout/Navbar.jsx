@@ -45,19 +45,16 @@ const Navbar = ({ cartItems = [] }) => {
             </Link>
           </div>
 
-          {/* CENTER: BIKES, WORLD, STORIES, SHOP */}
+          {/* CENTER: SHOP, STORIES, COMPANY */}
           <nav className="ds-navbar-links" aria-label="Main Navigation">
-            <Link to="/#bikes" className="ds-nav-item">
-              <span className="ds-nav-label">BIKES</span>
-            </Link>
-            <Link to="/#world" className="ds-nav-item">
-              <span className="ds-nav-label">WORLD</span>
+            <Link to="/#catalog" className="ds-nav-item">
+              <span className="ds-nav-label">Shop</span>
             </Link>
             <Link to="/#stories" className="ds-nav-item">
-              <span className="ds-nav-label">STORIES</span>
+              <span className="ds-nav-label">Stories</span>
             </Link>
-            <Link to="/#catalog" className="ds-nav-item">
-              <span className="ds-nav-label">SHOP</span>
+            <Link to="/#world" className="ds-nav-item">
+              <span className="ds-nav-label">Company</span>
             </Link>
           </nav>
 
@@ -109,17 +106,14 @@ const Navbar = ({ cartItems = [] }) => {
       <div className={`ds-mobile-drawer ${mobileMenuOpen ? 'is-open' : ''}`}>
         <div className="ds-mobile-drawer-inner">
           <div className="ds-mobile-links">
-            <Link to="/#bikes" className="ds-mobile-link" onClick={() => setMobileMenuOpen(false)}>
-              BIKES
-            </Link>
-            <Link to="/#world" className="ds-mobile-link" onClick={() => setMobileMenuOpen(false)}>
-              WORLD
+            <Link to="/#catalog" className="ds-mobile-link" onClick={() => setMobileMenuOpen(false)}>
+              Shop
             </Link>
             <Link to="/#stories" className="ds-mobile-link" onClick={() => setMobileMenuOpen(false)}>
-              STORIES
+              Stories
             </Link>
-            <Link to="/#catalog" className="ds-mobile-link" onClick={() => setMobileMenuOpen(false)}>
-              SHOP
+            <Link to="/#world" className="ds-mobile-link" onClick={() => setMobileMenuOpen(false)}>
+              Company
             </Link>
           </div>
 
