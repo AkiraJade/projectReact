@@ -48,13 +48,13 @@ const Navbar = ({ cartItems = [] }) => {
           {/* CENTER: SHOP, STORIES, COMPANY */}
           <nav className="ds-navbar-links" aria-label="Main Navigation">
             <Link to="/#catalog" className="ds-nav-item">
-              <span className="ds-nav-label">Shop</span>
+              <span className="ds-nav-label">SHOP</span>
             </Link>
             <Link to="/#stories" className="ds-nav-item">
-              <span className="ds-nav-label">Stories</span>
+              <span className="ds-nav-label">STORIES</span>
             </Link>
             <Link to="/#world" className="ds-nav-item">
-              <span className="ds-nav-label">Company</span>
+              <span className="ds-nav-label">COMPANY</span>
             </Link>
           </nav>
 
@@ -107,13 +107,13 @@ const Navbar = ({ cartItems = [] }) => {
         <div className="ds-mobile-drawer-inner">
           <div className="ds-mobile-links">
             <Link to="/#catalog" className="ds-mobile-link" onClick={() => setMobileMenuOpen(false)}>
-              Shop
+              SHOP
             </Link>
             <Link to="/#stories" className="ds-mobile-link" onClick={() => setMobileMenuOpen(false)}>
-              Stories
+              STORIES
             </Link>
             <Link to="/#world" className="ds-mobile-link" onClick={() => setMobileMenuOpen(false)}>
-              Company
+              COMPANY
             </Link>
           </div>
 
