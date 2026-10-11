@@ -22,6 +22,31 @@
   max-width: 900px;
 }
 
+.ds-shop-masthead-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.ds-shop-meta-dot {
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 0.75rem;
+}
+
+.ds-shop-published-pill {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0.25rem 0.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  text-transform: uppercase;
+}
+
 .ds-shop-title {
   font-family: var(--ds-font-display);
   font-size: clamp(2.5rem, 6.5vw, 5.5rem);
@@ -189,6 +214,57 @@
   border-color: var(--ds-text-primary);
 }
 
+.ds-shop-stock-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.ds-stock-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.ds-stock-checkbox:checked {
+  background: #ffffff;
+  border-color: #ffffff;
+}
+
+.ds-stock-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  width: 4px;
+  height: 7px;
+  border: solid #0a0a0a;
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg);
+}
+
+.ds-stock-toggle-label {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  transition: color 0.2s ease;
+}
+
+.ds-shop-stock-toggle:hover .ds-stock-toggle-label {
+  color: #ffffff;
+}
+
 /* 3. Product Grid Section */
 .ds-shop-grid-section {
   padding: clamp(2.5rem, 5vw, 4.5rem) 0 clamp(4rem, 8vw, 6rem);
@@ -351,3 +427,55 @@
     align-items: stretch;
   }
 }
+
+/* Skeleton Loading Grid */
+.ds-shop-skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.ds-skeleton-card {
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ds-skeleton-image {
+  width: 100%;
+  aspect-ratio: 16 / 11;
+  background: #181818;
+  animation: skeletonPulse 1.5s infinite ease-in-out;
+}
+
+.ds-skeleton-bar {
+  background: #202020;
+  border-radius: 2px;
+  animation: skeletonPulse 1.5s infinite ease-in-out;
+}
+
+.ds-sk-title {
+  height: 18px;
+  width: 75%;
+}
+
+.ds-sk-sub {
+  height: 12px;
+  width: 50%;
+}
+
+.ds-sk-price {
+  height: 16px;
+  width: 35%;
+  margin-top: 0.5rem;
+}
+
+@keyframes skeletonPulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 0.85; }
+  100% { opacity: 0.5; }
+}
+

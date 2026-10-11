@@ -76,10 +76,25 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #ff3344;
-  background: rgba(255, 51, 68, 0.1);
-  border: 1px solid rgba(255, 51, 68, 0.3);
   padding: 0.25rem 0.5rem;
+}
+
+.ds-card-stock-tag.ds-stock-soldout {
+  color: #888888;
+  background: rgba(30, 30, 30, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.ds-card-stock-tag.ds-stock-low {
+  color: #ff4d4d;
+  background: rgba(255, 51, 68, 0.15);
+  border: 1px solid rgba(255, 51, 68, 0.35);
+}
+
+.ds-card-stock-tag.ds-stock-available {
+  color: #38ef7d;
+  background: rgba(56, 239, 125, 0.12);
+  border: 1px solid rgba(56, 239, 125, 0.25);
 }
 
 .ds-card-content {

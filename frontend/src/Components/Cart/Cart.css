@@ -1,0 +1,456 @@
+/* =========================================================================
+   DOSNOVENTA CART PAGE — STYLES
+   ========================================================================= */
+
+.ds-cart-page {
+  background-color: var(--ds-bg-dark, #0a0a0a);
+  color: var(--ds-text-light, #f5f5f5);
+  min-height: 100vh;
+  padding-bottom: 7rem;
+}
+
+/* 1. Header Section */
+.ds-cart-header-section {
+  padding: 5rem 0 2.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ds-cart-page-title {
+  font-family: var(--ds-font-primary, 'Druk Wide', 'Cabinet Grotesk', -apple-system, BlinkMacSystemFont, sans-serif);
+  font-size: clamp(2.5rem, 5.5vw, 4.5rem);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  margin: 0.75rem 0 0;
+  color: #ffffff;
+}
+
+/* 2. Main Section */
+.ds-cart-main-section {
+  padding-top: 3rem;
+}
+
+/* 3. Empty State */
+.ds-cart-empty-state {
+  text-align: center;
+  padding: 6rem 2rem;
+  border: 1px dashed rgba(255, 255, 255, 0.14);
+  max-width: 680px;
+  margin: 2rem auto;
+  background: #111111;
+}
+
+.ds-cart-empty-icon {
+  font-size: 3.5rem;
+  color: rgba(255, 255, 255, 0.25);
+  display: block;
+  margin-bottom: 1.5rem;
+}
+
+.ds-cart-empty-title {
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.ds-cart-empty-sub {
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.65);
+  max-width: 480px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.6;
+}
+
+.ds-cart-empty-cta {
+  display: inline-flex;
+}
+
+/* 4. 2-Column Layout Grid */
+.ds-cart-layout-grid {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 3.5rem;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .ds-cart-layout-grid {
+    grid-template-columns: 1fr 340px;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 860px) {
+  .ds-cart-layout-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 5. Left Column: Item List */
+.ds-cart-items-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.ds-cart-items-meta-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 1.5rem;
+}
+
+.ds-items-count-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+}
+
+.ds-continue-shopping-link {
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  font-weight: 700;
+  color: #ffffff;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.ds-continue-shopping-link:hover {
+  opacity: 0.75;
+}
+
+.ds-cart-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.ds-cart-item-row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 1.75rem;
+  padding: 1.75rem;
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: border-color 0.25s ease;
+}
+
+.ds-cart-item-row:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 580px) {
+  .ds-cart-item-row {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    padding: 1.25rem;
+  }
+}
+
+.ds-cart-thumb-box {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: #181818;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ds-cart-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.ds-cart-thumb-box:hover .ds-cart-thumb-img {
+  transform: scale(1.06);
+}
+
+.ds-cart-item-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.ds-cart-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.6rem;
+}
+
+.ds-cart-item-title {
+  font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.ds-cart-item-title a {
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.ds-cart-item-title a:hover {
+  color: #cccccc;
+}
+
+.ds-cart-remove-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  transition: color 0.2s ease;
+}
+
+.ds-cart-remove-btn:hover {
+  color: #ff4d4d;
+}
+
+.ds-cart-item-specs {
+  display: flex;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.ds-cart-spec-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+}
+
+.ds-cart-stock-notice {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: #38ef7d;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+/* Stepper and Price Row */
+.ds-cart-stepper-price-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.ds-cart-unit-price {
+  display: flex;
+  flex-direction: column;
+}
+
+.ds-unit-price-label {
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  margin-bottom: 0.2rem;
+}
+
+.ds-cart-unit-price strong {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Quantity Stepper */
+.ds-cart-stepper-container {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #0a0a0a;
+}
+
+.ds-stepper-btn {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.ds-stepper-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.ds-stepper-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.ds-stepper-val {
+  min-width: 36px;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ffffff;
+  padding: 0 0.4rem;
+}
+
+.ds-cart-item-subtotal {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.ds-subtotal-label {
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  margin-bottom: 0.2rem;
+}
+
+.ds-subtotal-val {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+/* 6. Right Column: Sticky Summary */
+.ds-cart-summary-column {
+  position: sticky;
+  top: calc(var(--ds-nav-height, 72px) + 2rem);
+}
+
+.ds-cart-summary-card {
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2.25rem 2rem;
+}
+
+.ds-summary-title {
+  font-size: 1.25rem;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  margin: 0 0 1.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 1rem;
+}
+
+.ds-summary-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+.ds-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.82rem;
+}
+
+.ds-summary-label {
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.ds-summary-value {
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.ds-free-badge {
+  color: #38ef7d;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  font-weight: 800;
+}
+
+.ds-summary-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 0.5rem 0;
+}
+
+.ds-summary-total-row {
+  padding-top: 0.5rem;
+}
+
+.ds-total-label {
+  font-size: 0.92rem;
+  letter-spacing: 0.15em;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.ds-total-value {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #ffffff;
+}
+
+.ds-checkout-btn {
+  width: 100%;
+  text-align: center;
+  padding: 1.1rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.18em;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.ds-summary-perks {
+  margin-top: 2rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.ds-perk-item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.ds-perk-icon {
+  color: #38ef7d;
+  font-weight: 900;
+}

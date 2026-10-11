@@ -15,6 +15,9 @@ import Navbar from './Components/Layout/Navbar'
 import Footer from './Components/Layout/Footer'
 import Home from './Components/Home'
 import Shop from './Components/Product/Shop'
+import Stories from './Components/Stories/Stories'
+import StoryDetail from './Components/Stories/StoryDetail'
+import Company from './Components/Company/Company'
 import ProductDetails from './Components/Product/ProductDetails'
 import Register from './Components/User/Register'
 import Login from './Components/User/Login'
@@ -140,6 +143,9 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/shop" element={<Shop />} />
             <Route path="/catalog" element={<Shop />} />
+            <Route path="/stories" element={<Stories />} />
+            <Route path="/stories/:slug" element={<StoryDetail />} />
+            <Route path="/company" element={<Company />} />
             <Route path="/product/:id" element={<ProductDetails cartItems={state.cartItems} addItemToCart={addItemToCart} />} />
             <Route path="/search/:keyword" element={<Home />} />
             <Route path="/login" element={<Login />} />

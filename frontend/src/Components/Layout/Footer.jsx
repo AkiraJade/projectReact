@@ -20,8 +20,8 @@ const Footer = () => {
               <span className="ds-footer-heading">NAVIGATION</span>
               <ul className="ds-footer-list">
                 <li><Link to="/shop">SHOP</Link></li>
-                <li><Link to="/#stories">STORIES</Link></li>
-                <li><Link to="/#world">COMPANY</Link></li>
+                <li><Link to="/stories">STORIES</Link></li>
+                <li><Link to="/company">COMPANY</Link></li>
                 <li><a href="#dealers">DEALERS</a></li>
                 <li><a href="#contact">CONTACT</a></li>
               </ul>

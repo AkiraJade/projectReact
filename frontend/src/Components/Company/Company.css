@@ -1,0 +1,288 @@
+/* =========================================================================
+   DOSNOVENTA COMPANY / ATELIER PAGE — STYLES
+   ========================================================================= */
+
+.ds-company-page {
+  background-color: var(--ds-bg-dark, #0a0a0a);
+  color: var(--ds-text-light, #f5f5f5);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* 1. HERO OPENING */
+.ds-company-hero {
+  padding: 6rem 0 3rem;
+  position: relative;
+}
+
+.ds-company-hero-content {
+  max-width: 900px;
+  margin-bottom: 4rem;
+}
+
+.ds-company-hero-title {
+  font-family: var(--ds-font-primary, 'Druk Wide', 'Cabinet Grotesk', -apple-system, BlinkMacSystemFont, sans-serif);
+  font-size: clamp(2.8rem, 6.5vw, 5.5rem);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  margin: 1rem 0 1.75rem;
+  color: #ffffff;
+}
+
+.ds-company-hero-lead {
+  font-size: clamp(1.15rem, 1.8vw, 1.4rem);
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 300;
+}
+
+.ds-company-hero-banner {
+  position: relative;
+  width: 100%;
+  max-height: 600px;
+  overflow: hidden;
+  background: #111;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ds-company-banner-img {
+  width: 100%;
+  height: 520px;
+  object-fit: cover;
+  object-position: center 35%;
+  filter: brightness(0.85);
+  display: block;
+}
+
+.ds-company-banner-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(10, 10, 10, 0.2), rgba(10, 10, 10, 0.6));
+  pointer-events: none;
+}
+
+.ds-company-banner-caption {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+}
+
+/* 2. ATELIER METRICS */
+.ds-company-metrics-section {
+  padding: 4.5rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: #0d0d0d;
+}
+
+.ds-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+
+@media (max-width: 900px) {
+  .ds-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .ds-metrics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ds-metric-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0;
+}
+
+.ds-metric-number {
+  font-size: clamp(2.5rem, 4vw, 3.8rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.ds-metric-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.ds-metric-sub {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0;
+}
+
+/* 3. THREE PHILOSOPHY PILLARS */
+.ds-company-philosophy-section {
+  padding: 5rem 0 2rem;
+}
+
+.ds-philosophy-row {
+  padding: 5rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ds-philosophy-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 4.5rem;
+  align-items: center;
+}
+
+.ds-philosophy-row-reverse .ds-philosophy-grid {
+  grid-template-columns: 1fr 1.1fr;
+}
+
+.ds-philosophy-row-reverse .ds-philosophy-text-col {
+  order: 2;
+}
+
+.ds-philosophy-row-reverse .ds-philosophy-img-col {
+  order: 1;
+}
+
+@media (max-width: 900px) {
+  .ds-philosophy-grid,
+  .ds-philosophy-row-reverse .ds-philosophy-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+  .ds-philosophy-row-reverse .ds-philosophy-text-col {
+    order: 1;
+  }
+  .ds-philosophy-row-reverse .ds-philosophy-img-col {
+    order: 2;
+  }
+}
+
+.ds-philosophy-index {
+  display: inline-block;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 0.85rem;
+  font-weight: 600;
+}
+
+.ds-philosophy-heading {
+  font-size: clamp(2rem, 3.8vw, 3.2rem);
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  line-height: 1.05;
+  margin-bottom: 1.5rem;
+  color: #ffffff;
+}
+
+.ds-philosophy-body {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 1.25rem;
+  font-weight: 300;
+}
+
+.ds-philosophy-highlights {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ds-highlight-item {
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.ds-philosophy-img-frame {
+  position: relative;
+  overflow: hidden;
+  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ds-philosophy-img {
+  width: 100%;
+  height: 480px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: brightness(0.9);
+}
+
+.ds-philosophy-img-frame:hover .ds-philosophy-img {
+  transform: scale(1.04);
+  filter: brightness(1);
+}
+
+.ds-philosophy-img-badge {
+  position: absolute;
+  bottom: 1.25rem;
+  left: 1.25rem;
+  background: rgba(10, 10, 10, 0.85);
+  color: #ffffff;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  text-transform: uppercase;
+  backdrop-filter: blur(6px);
+}
+
+/* 4. CLOSING CTA BANNER */
+.ds-company-closing-cta {
+  background: #111111;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 6.5rem 0;
+  text-align: center;
+}
+
+.ds-company-cta-title {
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  margin: 1rem 0 1.25rem;
+  color: #ffffff;
+}
+
+.ds-company-cta-desc {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.7);
+  max-width: 600px;
+  margin: 0 auto 2.5rem;
+  font-weight: 300;
+}
+
+.ds-company-cta-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}

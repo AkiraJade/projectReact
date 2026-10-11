@@ -50,10 +50,10 @@ const Navbar = ({ cartItems = [] }) => {
             <Link to="/shop" className="ds-nav-item">
               <span className="ds-nav-label">SHOP</span>
             </Link>
-            <Link to="/#stories" className="ds-nav-item">
+            <Link to="/stories" className="ds-nav-item">
               <span className="ds-nav-label">STORIES</span>
             </Link>
-            <Link to="/#world" className="ds-nav-item">
+            <Link to="/company" className="ds-nav-item">
               <span className="ds-nav-label">COMPANY</span>
             </Link>
           </nav>
@@ -109,10 +109,10 @@ const Navbar = ({ cartItems = [] }) => {
             <Link to="/shop" className="ds-mobile-link" onClick={() => setMobileMenuOpen(false)}>
               SHOP
             </Link>
-            <Link to="/#stories" className="ds-mobile-link" onClick={() => setMobileMenuOpen(false)}>
+            <Link to="/stories" className="ds-mobile-link" onClick={() => setMobileMenuOpen(false)}>
               STORIES
             </Link>
-            <Link to="/#world" className="ds-mobile-link" onClick={() => setMobileMenuOpen(false)}>
+            <Link to="/company" className="ds-mobile-link" onClick={() => setMobileMenuOpen(false)}>
               COMPANY
             </Link>
           </div>

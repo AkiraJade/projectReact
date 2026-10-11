@@ -2,17 +2,21 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './ProductCard.css';
 
-const ProductCard = ({ product, onQuickAdd }) => {
+const ProductCard = ({ product }) => {
   if (!product) return null;
 
   const mainImage = product.images?.[0]?.url || '/images/Dosnoventa_company_x.webp';
   const formattedPrice = new Intl.NumberFormat('de-DE', {
     style: 'currency',
     currency: 'EUR',
+    maximumFractionDigits: 0,
   }).format(product.price);
 
+  const isOutOfStock = product.stock <= 0;
+  const isLowStock = product.stock > 0 && product.stock <= 5;
+
   return (
-    <div className="ds-product-card">
+    <div className={`ds-product-card ${isOutOfStock ? 'is-out-of-stock' : ''}`}>
       <Link to={`/product/${product._id}`} className="ds-card-media-link">
         <div className="ds-card-media-wrapper">
           <img
@@ -23,8 +27,12 @@ const ProductCard = ({ product, onQuickAdd }) => {
           />
           <div className="ds-card-badge-row">
             <span className="ds-card-category-tag">{product.category}</span>
-            {product.stock <= 5 && product.stock > 0 && (
-              <span className="ds-card-stock-tag">LIMITED STOCK</span>
+            {isOutOfStock ? (
+              <span className="ds-card-stock-tag ds-stock-soldout">SOLD OUT</span>
+            ) : isLowStock ? (
+              <span className="ds-card-stock-tag ds-stock-low">LOW STOCK ({product.stock} LEFT)</span>
+            ) : (
+              <span className="ds-card-stock-tag ds-stock-available">IN STOCK</span>
             )}
           </div>
         </div>
@@ -49,7 +57,7 @@ const ProductCard = ({ product, onQuickAdd }) => {
           </div>
 
           <Link to={`/product/${product._id}`} className="ds-card-inspect-btn">
-            INSPECT <span className="ds-card-arrow">→</span>
+            {isOutOfStock ? 'VIEW ARCHIVE' : 'INSPECT'} <span className="ds-card-arrow">→</span>
           </Link>
         </div>
       </div>
