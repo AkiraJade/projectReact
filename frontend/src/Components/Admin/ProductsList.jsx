@@ -131,37 +131,22 @@ const ProductsList = () => {
     }));
 
     return (
-        <>
-            <MetaData title={'All Products'} />
-            <div className="row">
-                <div className="col-12 col-md-2">
-                    <Sidebar />
+        <div className="ds-card">
+            <MetaData title={'All Products — DOSNOVENTA'} />
+            {loading ? <Loader /> : (
+                <div style={{ width: '100%', minHeight: 450 }}>
+                    <DataGrid
+                        rows={rows}
+                        columns={columns}
+                        pageSize={10}
+                        rowsPerPageOptions={[5, 10, 25]}
+                        disableSelectionOnClick
+                        getRowId={(row) => row.id}
+                        showToolbar
+                    />
                 </div>
-
-                <div className="col-12 col-md-10">
-                    <>
-                        <h1 className="my-5">All Products</h1>
-
-                        {loading ? <Loader /> : (
-                            <div style={{ width: '100%' }}>
-                                <DataGrid
-                                    rows={rows}
-                                    columns={columns}
-
-                                    pageSize={5}
-                                    rowsPerPageOptions={[5, 10, 25]}
-                                    disableSelectionOnClick
-                                    getRowId={(row) => row.id}
-                                    showToolbar
-                                />
-                            </div>
-                        )}
-
-                    </>
-                </div>
-            </div>
-
-        </>
+            )}
+        </div>
     )
 }
 

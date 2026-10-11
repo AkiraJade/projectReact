@@ -28,6 +28,8 @@ import Payment from './Components/Cart/Payment';
 import OrderSuccess from './Components/Cart/OrderSuccess';
 import ListOrders from './Components/Order/ListOrders';
 import OrderDetails from './Components/Order/OrderDetails';
+import PublicLayout from './Components/Layout/PublicLayout';
+import AdminLayout from './Components/Admin/Layout/AdminLayout';
 import Dashboard from './Components/Admin/Dashboard';
 import ProductsList from './Components/Admin/ProductsList';
 import NewProduct from './Components/Admin/NewProduct';
@@ -126,109 +128,44 @@ function App() {
 
 
       <Router>
-        <Navbar cartItems={state.cartItems} />
         <Routes>
-          <Route path="/" element={<Home />} exact="true" />
-          <Route path="/shop" element={<Shop />} exact="true" />
-          <Route path="/catalog" element={<Shop />} exact="true" />
-          <Route path="/product/:id" element={<ProductDetails cartItems={state.cartItems} addItemToCart={addItemToCart} />} exact="true" />
-          <Route path="/search/:keyword" element={<Home />} exact="true" />
-          <Route path="/login" element={<Login />} exact="true" />
-          <Route path="/register" element={<Register exact="true" />} />
-          <Route path="/password/forgot" element={<ForgotPassword />} exact="true" />
-          <Route path="/password/reset/:token" element={<NewPassword />} exact="true" />
-          <Route path="/me" element={<ProtectedRoute><Profile /></ProtectedRoute>} exact="true" />
-          <Route path="/me/update" element={<ProtectedRoute><UpdateProfile /></ProtectedRoute>} exact="true" />
-          <Route path="/password/update" element={<ProtectedRoute><UpdatePassword /></ProtectedRoute>} />
-          <Route path="/cart" element={<Cart cartItems={state.cartItems} addItemToCart={addItemToCart} removeItemFromCart={removeItemFromCart} />} exact="true" />
-          <Route path="/shipping" element={<ProtectedRoute><Shipping shipping={state.shippingInfo} saveShippingInfo={saveShippingInfo} /></ProtectedRoute>} />
-          <Route path="/confirm" element={<ProtectedRoute><ConfirmOrder cartItems={state.cartItems} shippingInfo={state.shippingInfo} /></ProtectedRoute>} />
-          <Route path="/payment" element={<ProtectedRoute><Payment cartItems={state.cartItems} shippingInfo={state.shippingInfo} clearCart={clearCart} /></ProtectedRoute>} />
-          <Route path="/success" element={<ProtectedRoute><OrderSuccess /></ProtectedRoute>} />
-          <Route path="/orders/me" element={<ProtectedRoute><ListOrders /></ProtectedRoute>} />
-          <Route path="/order/:id" element={<ProtectedRoute><OrderDetails /></ProtectedRoute>} />
+          {/* Public Storefront Shell (Single-Row Navbar + Content + Footer) */}
+          <Route element={<PublicLayout cartItems={state.cartItems} />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/shop" element={<Shop />} />
+            <Route path="/catalog" element={<Shop />} />
+            <Route path="/product/:id" element={<ProductDetails cartItems={state.cartItems} addItemToCart={addItemToCart} />} />
+            <Route path="/search/:keyword" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/password/forgot" element={<ForgotPassword />} />
+            <Route path="/password/reset/:token" element={<NewPassword />} />
+            <Route path="/me" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route path="/me/update" element={<ProtectedRoute><UpdateProfile /></ProtectedRoute>} />
+            <Route path="/password/update" element={<ProtectedRoute><UpdatePassword /></ProtectedRoute>} />
+            <Route path="/cart" element={<Cart cartItems={state.cartItems} addItemToCart={addItemToCart} removeItemFromCart={removeItemFromCart} />} />
+            <Route path="/shipping" element={<ProtectedRoute><Shipping shipping={state.shippingInfo} saveShippingInfo={saveShippingInfo} /></ProtectedRoute>} />
+            <Route path="/confirm" element={<ProtectedRoute><ConfirmOrder cartItems={state.cartItems} shippingInfo={state.shippingInfo} /></ProtectedRoute>} />
+            <Route path="/payment" element={<ProtectedRoute><Payment cartItems={state.cartItems} shippingInfo={state.shippingInfo} clearCart={clearCart} /></ProtectedRoute>} />
+            <Route path="/success" element={<ProtectedRoute><OrderSuccess /></ProtectedRoute>} />
+            <Route path="/orders/me" element={<ProtectedRoute><ListOrders /></ProtectedRoute>} />
+            <Route path="/order/:id" element={<ProtectedRoute><OrderDetails /></ProtectedRoute>} />
+          </Route>
 
-          <Route
-            path="/admin/order/:id"
-            element={
-              <ProtectedRoute isAdmin={true}>
-                <ProcessOrder />
-              </ProtectedRoute>
-            } />
-          <Route
-            path="/admin/users"
-            element={
-              <ProtectedRoute isAdmin={true}>
-                <UsersList />
-              </ProtectedRoute>
-            } />
-          <Route
-            path="/admin/user/:id"
-            element={
-              <ProtectedRoute isAdmin={true}>
-                <UpdateUser />
-              </ProtectedRoute>
-            } />
-
-          <Route
-            path="/admin/products"
-            element={
-              <ProtectedRoute isAdmin={true}>
-                <ProductsList />
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
-            path="/admin/product"
-            element={
-              <ProtectedRoute isAdmin={true}>
-                <NewProduct />
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
-            path="/admin/orders"
-            element={
-              <ProtectedRoute isAdmin={true}>
-                <OrdersList />
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute isAdmin={true}>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute isAdmin={true}>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/product/:id"
-            element={
-              <ProtectedRoute isAdmin={true}>
-                <UpdateProduct />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/reviews"
-            element={
-              <ProtectedRoute isAdmin={true} >
-                <ProductReviews />
-              </ProtectedRoute>} />
+          {/* Dedicated Admin Shell (Slim Rail Sidebar + Admin Header + No Public Navbar/Footer) */}
+          <Route element={<ProtectedRoute isAdmin={true}><AdminLayout /></ProtectedRoute>}>
+            <Route path="/admin" element={<Dashboard />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/admin/products" element={<ProductsList />} />
+            <Route path="/admin/product" element={<NewProduct />} />
+            <Route path="/admin/product/:id" element={<UpdateProduct />} />
+            <Route path="/admin/orders" element={<OrdersList />} />
+            <Route path="/admin/order/:id" element={<ProcessOrder />} />
+            <Route path="/admin/users" element={<UsersList />} />
+            <Route path="/admin/user/:id" element={<UpdateUser />} />
+            <Route path="/admin/reviews" element={<ProductReviews />} />
+          </Route>
         </Routes>
-        <Footer />
       </Router>
       <ToastContainer theme="dark" />
     </>

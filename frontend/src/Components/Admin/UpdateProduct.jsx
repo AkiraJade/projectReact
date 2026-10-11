@@ -128,17 +128,11 @@ const UpdateProduct = () => {
         })
     }
     return (
-        <>
-            <MetaData title={'Update Product'} />
-            <div className="row">
-                <div className="col-12 col-md-2">
-                    <Sidebar />
-                </div>
-                <div className="col-12 col-md-10">
-                    <>
-                        <div className="wrapper my-5">
-                            <form className="shadow-lg" onSubmit={submitHandler} encType='multipart/form-data'>
-                                <h1 className="mb-4">Update Product</h1>
+        <div className="ds-card" style={{ maxWidth: 800, margin: '0 auto' }}>
+            <MetaData title={'Update Product — DOSNOVENTA'} />
+            <div className="wrapper py-3">
+                <form onSubmit={submitHandler} encType='multipart/form-data'>
+                    <h2 className="mb-4 font-weight-bold">Update Product</h2>
                                 <div className="form-group">
                                     <label htmlFor="name_field">Name</label>
                                     <input
@@ -235,10 +229,7 @@ const UpdateProduct = () => {
                                 </button>
                             </form>
                         </div>
-                    </>
-                </div>
-            </div>
-        </>
+        </div>
     )
 }
 

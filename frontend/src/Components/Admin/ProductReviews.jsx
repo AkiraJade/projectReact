@@ -139,16 +139,10 @@ const ProductReviews = () => {
 
 
     return (
-        <>
-            <MetaData title={'Product Reviews'} />
-            <div className="row">
-                <div className="col-12 col-md-2">
-                    <Sidebar />
-                </div>
-                <div className="col-12 col-md-10">
-                    <>
-                        <div className="row justify-content-center mt-5">
-                            <div className="col-5">
+        <div className="ds-card">
+            <MetaData title={'Product Reviews — DOSNOVENTA'} />
+            <div className="row justify-content-center my-4">
+                <div className="col-12 col-md-6">
                                 <form onSubmit={submitHandler}>
                                     <div className="form-group">
                                         <label htmlFor="productId_field">Enter Product ID</label>
@@ -182,12 +176,9 @@ const ProductReviews = () => {
                                 showToolbar
                             />
                         ) : (
-                            <p className="mt-5 text-center">No Reviews.</p>
+                            <p className="mt-5 text-center text-muted">No Reviews found for this product.</p>
                         )}
-                    </>
-                </div>
-            </div>
-        </>
+        </div>
     )
 }
 

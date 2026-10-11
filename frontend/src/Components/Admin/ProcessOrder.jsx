@@ -75,19 +75,12 @@ const ProcessOrder = () => {
     }
 
     const shippingDetails = shippingInfo && `${shippingInfo.address}, ${shippingInfo.city}, ${shippingInfo.postalCode}, ${shippingInfo.country}`
-    const isPaid = paymentInfo && paymentInfo.status === 'succeeded' ? true : false
     return (
-        <>
-            <MetaData title={`Process Order # ${order && order._id}`} />
-            <div className="row">
-                <div className="col-12 col-md-2">
-                    <Sidebar />
-                </div>
-                <div className="col-12 col-md-10">
-                    <>
-                        {loading ? <Loader /> : (
-                            <div className="row d-flex justify-content-around">
-                                <div className="col-12 col-lg-7 order-details">
+        <div className="ds-card">
+            <MetaData title={`Fulfillment — Order #${order?._id || ''}`} />
+            {loading ? <Loader /> : (
+                <div className="row d-flex justify-content-around">
+                    <div className="col-12 col-lg-7 order-details">
                                     <h2 className="my-5">Order # {order._id}</h2>
                                     <h4 className="mb-4">Shipping Info</h4>
                                     <p><b>Name:</b> {user && user.name}</p>
@@ -146,10 +139,7 @@ const ProcessOrder = () => {
                                 </div>
                             </div>
                         )}
-                    </>
-                </div>
-            </div>
-        </>
+        </div>
     )
 }
 export default ProcessOrder

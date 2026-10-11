@@ -352,9 +352,53 @@ exports.customerSales = async (req, res, next) => {
     }
 };
 
-// Admin Metrics: Sales per month
+// Admin Metrics: Sales per month or range
 exports.salesPerMonth = async (req, res, next) => {
     try {
+        const { days } = req.query;
+
+        if (days) {
+            const numDays = Math.min(Math.max(parseInt(days) || 30, 1), 365);
+            const startDate = new Date();
+            startDate.setDate(startDate.getDate() - numDays);
+            startDate.setHours(0, 0, 0, 0);
+
+            const dailyAgg = await Order.aggregate([
+                {
+                    $match: {
+                        orderStatus: { $ne: 'Cancelled' },
+                        createdAt: { $gte: startDate }
+                    }
+                },
+                {
+                    $group: {
+                        _id: {
+                            year: { $year: "$createdAt" },
+                            month: { $month: "$createdAt" },
+                            day: { $dayOfMonth: "$createdAt" }
+                        },
+                        total: { $sum: "$totalPrice" },
+                        count: { $sum: 1 }
+                    }
+                },
+                { $sort: { "_id.year": 1, "_id.month": 1, "_id.day": 1 } }
+            ]);
+
+            const months = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const salesData = dailyAgg.map(item => ({
+                date: `${months[item._id.month]} ${item._id.day}`,
+                total: Number(item.total.toFixed(2)),
+                orders: item.count
+            }));
+
+            return res.status(200).json({
+                success: true,
+                range: `${numDays}D`,
+                salesData,
+                salesPerMonth: salesData
+            });
+        }
+
         const salesPerMonth = await Order.aggregate([
             {
                 $match: {

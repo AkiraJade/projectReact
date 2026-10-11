@@ -121,33 +121,22 @@ const UsersList = () => {
     }));
 
     return (
-        <>
-            <MetaData title={'All Users'} />
-            <div className="row">
-                <div className="col-12 col-md-2">
-                    <Sidebar />
+        <div className="ds-card">
+            <MetaData title={'Registered Riders — DOSNOVENTA'} />
+            {loading ? <Loader /> : (
+                <div style={{ width: '100%', minHeight: 450 }}>
+                    <DataGrid
+                        rows={rows}
+                        columns={columns}
+                        pageSize={10}
+                        rowsPerPageOptions={[5, 10, 25]}
+                        disableSelectionOnClick
+                        getRowId={(row) => row.id}
+                        showToolbar
+                    />
                 </div>
-                <div className="col-12 col-md-10">
-                    <>
-                        <h1 className="my-5">All Users</h1>
-                        {loading ? <Loader /> : (
-                            <div style={{ width: '100%' }}>
-                                <DataGrid
-                                    rows={rows}
-                                    columns={columns}
-
-                                    pageSize={5}
-                                    rowsPerPageOptions={[5, 10, 25]}
-                                    disableSelectionOnClick
-                                    getRowId={(row) => row.id}
-                                    showToolbar
-                                />
-                            </div>
-                        )}
-                    </>
-                </div>
-            </div>
-        </>
+            )}
+        </div>
     )
 }
 

@@ -1,0 +1,677 @@
+/* ==========================================================================
+   DOSNOVENTA PREMIUM MINIMALIST ADMIN DASHBOARD STYLES
+   ========================================================================== */
+
+:root {
+  --ds-admin-bg: #F8F9FA;
+  --ds-admin-surface: #FFFFFF;
+  --ds-admin-border: #EAECF0;
+  --ds-admin-border-subtle: #F2F4F7;
+  --ds-admin-text-main: #111827;
+  --ds-admin-text-muted: #6B7280;
+  --ds-admin-text-light: #9CA3AF;
+  --ds-admin-accent: #C83226;
+  --ds-admin-accent-hover: #B3261B;
+  --ds-admin-accent-subtle: #FEF2F2;
+  --ds-admin-radius-card: 12px;
+  --ds-admin-radius-sm: 8px;
+  --ds-admin-rail-width: 68px;
+}
+
+/* 1. Independent Admin Shell */
+.ds-admin-shell {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--ds-admin-bg);
+  color: var(--ds-admin-text-main);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* 2. Left Slim Navigation Rail (Desktop ~68px) */
+.ds-admin-rail {
+  width: var(--ds-admin-rail-width);
+  min-width: var(--ds-admin-rail-width);
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  background-color: var(--ds-admin-surface);
+  border-right: 1px solid var(--ds-admin-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0 16px 0;
+  z-index: 100;
+  box-sizing: border-box;
+}
+
+.ds-admin-rail-brand {
+  margin-bottom: 24px;
+}
+
+.ds-rail-logo-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  color: var(--ds-admin-text-main);
+  transition: transform 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+}
+
+.ds-rail-logo-link:hover {
+  color: var(--ds-admin-accent);
+  transform: scale(1.05);
+}
+
+.ds-admin-rail-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  align-items: center;
+  flex: 1;
+}
+
+.ds-admin-rail-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  align-items: center;
+  padding-top: 16px;
+  border-top: 1px solid var(--ds-admin-border-subtle);
+}
+
+.ds-rail-item {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  color: #64748B;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  text-decoration: none;
+  position: relative;
+}
+
+.ds-rail-item:hover {
+  color: var(--ds-admin-text-main);
+  background-color: #F1F5F9;
+}
+
+.ds-rail-item-active {
+  color: var(--ds-admin-accent) !important;
+  background-color: var(--ds-admin-accent-subtle) !important;
+}
+
+.ds-rail-logout-btn {
+  color: #94A3B8;
+}
+
+.ds-rail-logout-btn:hover {
+  color: #DC2626;
+  background-color: #FEF2F2;
+}
+
+.ds-rail-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* 3. Main Application Body */
+.ds-admin-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background-color: var(--ds-admin-bg);
+}
+
+/* 4. Top Admin Header */
+.ds-admin-header {
+  background-color: var(--ds-admin-surface);
+  border-bottom: 1px solid var(--ds-admin-border);
+  padding: 16px 32px;
+  position: sticky;
+  top: 0;
+  z-index: 90;
+}
+
+.ds-admin-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.ds-admin-hamburger {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--ds-admin-text-main);
+  cursor: pointer;
+  padding: 6px;
+  margin-right: 12px;
+  border-radius: 6px;
+}
+
+.ds-admin-header-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ds-admin-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--ds-admin-text-main);
+  letter-spacing: -0.015em;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.ds-admin-subtitle {
+  font-size: 13px;
+  color: var(--ds-admin-text-muted);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.ds-admin-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.ds-btn-add-product {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--ds-admin-accent);
+  color: #FFFFFF !important;
+  font-size: 13.5px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: var(--ds-admin-radius-sm);
+  text-decoration: none;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+  box-shadow: 0 1px 2px rgba(200, 50, 38, 0.2);
+}
+
+.ds-btn-add-product:hover {
+  background-color: var(--ds-admin-accent-hover);
+  color: #FFFFFF !important;
+  transform: translateY(-1px);
+}
+
+.ds-admin-profile-pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--ds-admin-border);
+  background-color: #F3F4F6;
+  text-decoration: none;
+  overflow: hidden;
+  transition: border-color 0.15s ease;
+}
+
+.ds-admin-profile-pill:hover {
+  border-color: #9CA3AF;
+}
+
+.ds-admin-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ds-admin-avatar-initials {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #374151;
+}
+
+/* 5. Page Content Container */
+.ds-admin-content-pane {
+  padding: 28px 32px 48px 32px;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* 6. Dashboard Grid Cards */
+.ds-dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.8fr 1fr;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.ds-card {
+  background-color: var(--ds-admin-surface);
+  border: 1px solid var(--ds-admin-border);
+  border-radius: var(--ds-admin-radius-card);
+  padding: 22px 24px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+  box-sizing: border-box;
+}
+
+/* Large Gross Sales Card */
+.ds-card-primary-sales {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.ds-card-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ds-admin-text-muted);
+  margin-bottom: 6px;
+}
+
+.ds-metric-hero-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--ds-admin-text-main);
+  letter-spacing: -0.02em;
+  margin: 0 0 4px 0;
+}
+
+.ds-metric-subtext {
+  font-size: 12px;
+  color: var(--ds-admin-text-light);
+  margin: 0 0 12px 0;
+}
+
+.ds-sparkline-wrap {
+  width: 100%;
+  height: 52px;
+  margin-bottom: 16px;
+}
+
+.ds-card-divider {
+  height: 1px;
+  background-color: var(--ds-admin-border-subtle);
+  border: none;
+  margin: 16px 0;
+}
+
+.ds-supporting-metrics-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.ds-sub-metric {
+  flex: 1;
+}
+
+.ds-sub-metric-label {
+  font-size: 12.5px;
+  color: var(--ds-admin-text-muted);
+  margin-bottom: 4px;
+}
+
+.ds-sub-metric-val {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ds-admin-text-main);
+}
+
+/* Stacked Right Cards */
+.ds-cards-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ds-stacked-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 18px 20px;
+}
+
+.ds-stacked-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.ds-stacked-card-icon {
+  color: #94A3B8;
+  display: flex;
+  align-items: center;
+}
+
+.ds-stacked-card-val {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ds-admin-text-main);
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+
+.ds-pill-alert {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
+  margin-top: 6px;
+}
+
+.ds-pill-amber {
+  background-color: #FEF3C7;
+  color: #D97706;
+}
+
+/* 7. Sales Overview Chart Card */
+.ds-chart-card {
+  margin-bottom: 24px;
+}
+
+.ds-chart-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 16px;
+}
+
+.ds-chart-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ds-admin-text-main);
+  margin: 0 0 2px 0;
+}
+
+.ds-chart-subtitle {
+  font-size: 13px;
+  color: var(--ds-admin-text-muted);
+  margin: 0;
+}
+
+.ds-range-control {
+  display: inline-flex;
+  background-color: #F1F5F9;
+  border-radius: 8px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.ds-range-btn {
+  border: none;
+  background: transparent;
+  color: #64748B;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ds-range-btn:hover {
+  color: var(--ds-admin-text-main);
+}
+
+.ds-range-btn-active {
+  background-color: #FFFFFF;
+  color: var(--ds-admin-text-main);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.ds-chart-container {
+  width: 100%;
+  height: 280px;
+}
+
+/* Custom Tooltip */
+.ds-chart-tooltip {
+  background-color: #FFFFFF;
+  border: 1px solid var(--ds-admin-border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+}
+
+.ds-chart-tooltip-date {
+  font-size: 11.5px;
+  color: var(--ds-admin-text-muted);
+  margin-bottom: 4px;
+}
+
+.ds-chart-tooltip-val {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ds-admin-accent);
+}
+
+/* 8. Recent Orders Table Card */
+.ds-orders-card {
+  margin-bottom: 24px;
+}
+
+.ds-orders-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.ds-orders-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ds-admin-text-main);
+  margin: 0;
+}
+
+.ds-orders-view-all {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ds-admin-accent);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.15s ease;
+}
+
+.ds-orders-view-all:hover {
+  color: var(--ds-admin-accent-hover);
+  text-decoration: underline;
+}
+
+.ds-orders-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.ds-order-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--ds-admin-border-subtle);
+  transition: background-color 0.15s ease;
+}
+
+.ds-order-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.ds-order-row-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.ds-order-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #F1F5F9;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.ds-order-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ds-order-code {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ds-admin-text-main);
+  text-decoration: none;
+}
+
+.ds-order-code:hover {
+  color: var(--ds-admin-accent);
+}
+
+.ds-order-customer {
+  font-size: 12px;
+  color: var(--ds-admin-text-muted);
+}
+
+.ds-order-row-right {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.ds-order-date {
+  font-size: 12.5px;
+  color: var(--ds-admin-text-muted);
+}
+
+.ds-order-amount {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ds-admin-text-main);
+  min-width: 80px;
+  text-align: right;
+}
+
+/* Status Pills */
+.ds-status-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 12px;
+  min-width: 86px;
+  text-align: center;
+}
+
+.ds-status-processing {
+  background-color: #FFF7ED;
+  color: #C2410C;
+  border: 1px solid #FFEDD5;
+}
+
+.ds-status-assembled {
+  background-color: #EFF6FF;
+  color: #1D4ED8;
+  border: 1px solid #DBEAFE;
+}
+
+.ds-status-delivered {
+  background-color: #ECFDF5;
+  color: #047857;
+  border: 1px solid #D1FAE5;
+}
+
+.ds-status-cancelled {
+  background-color: #FEF2F2;
+  color: #B91C1C;
+  border: 1px solid #FEE2E2;
+}
+
+/* Responsive Rules */
+@media (max-width: 1024px) {
+  .ds-dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  .ds-admin-content-pane {
+    padding: 20px 24px 36px 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .ds-admin-rail {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    transition: left 0.25s ease-in-out;
+  }
+  
+  .ds-admin-rail-open {
+    left: 0;
+  }
+
+  .ds-admin-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 99;
+  }
+
+  .ds-admin-hamburger {
+    display: flex;
+  }
+
+  .ds-admin-header {
+    padding: 12px 16px;
+  }
+
+  .ds-admin-content-pane {
+    padding: 16px;
+  }
+
+  .ds-order-row-right {
+    gap: 12px;
+  }
+
+  .ds-order-date {
+    display: none;
+  }
+}
