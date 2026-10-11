@@ -98,11 +98,20 @@ function App() {
   }
   // localStorage.setItem('cartItems', JSON.stringify(state.cartItems))
   const removeItemFromCart = async (id) => {
+    const updatedCart = state.cartItems.filter(i => i.product !== id);
     setState({
       ...state,
-      cartItems: state.cartItems.filter(i => i.product !== id)
+      cartItems: updatedCart
     })
-    localStorage.setItem('cartItems', JSON.stringify(state.cartItems))
+    localStorage.setItem('cartItems', JSON.stringify(updatedCart))
+  }
+
+  const clearCart = () => {
+    setState({
+      ...state,
+      cartItems: []
+    })
+    localStorage.removeItem('cartItems')
   }
 
   const saveShippingInfo = async (data) => {
@@ -128,24 +137,38 @@ function App() {
           <Route path="/register" element={<Register exact="true" />} />
           <Route path="/password/forgot" element={<ForgotPassword />} exact="true" />
           <Route path="/password/reset/:token" element={<NewPassword />} exact="true" />
-          <Route path="/me" element={<Profile />} exact="true" />
-          <Route path="/me/update" element={<UpdateProfile />} exact="true" />
-          <Route path="/password/update" element={<UpdatePassword />} />
+          <Route path="/me" element={<ProtectedRoute><Profile /></ProtectedRoute>} exact="true" />
+          <Route path="/me/update" element={<ProtectedRoute><UpdateProfile /></ProtectedRoute>} exact="true" />
+          <Route path="/password/update" element={<ProtectedRoute><UpdatePassword /></ProtectedRoute>} />
           <Route path="/cart" element={<Cart cartItems={state.cartItems} addItemToCart={addItemToCart} removeItemFromCart={removeItemFromCart} />} exact="true" />
-          <Route path="/shipping" element={<Shipping shipping={state.shippingInfo} saveShippingInfo={saveShippingInfo} />} />
-          <Route path="/confirm" element={<ConfirmOrder cartItems={state.cartItems} shippingInfo={state.shippingInfo} />} />
-          <Route path="/payment" element={<Payment cartItems={state.cartItems} shippingInfo={state.shippingInfo} />} />
-          <Route path="/success" element={<OrderSuccess />} />
-          <Route path="/orders/me" element={<ListOrders />} />
-          <Route path="/order/:id" element={<OrderDetails />} />
+          <Route path="/shipping" element={<ProtectedRoute><Shipping shipping={state.shippingInfo} saveShippingInfo={saveShippingInfo} /></ProtectedRoute>} />
+          <Route path="/confirm" element={<ProtectedRoute><ConfirmOrder cartItems={state.cartItems} shippingInfo={state.shippingInfo} /></ProtectedRoute>} />
+          <Route path="/payment" element={<ProtectedRoute><Payment cartItems={state.cartItems} shippingInfo={state.shippingInfo} clearCart={clearCart} /></ProtectedRoute>} />
+          <Route path="/success" element={<ProtectedRoute><OrderSuccess /></ProtectedRoute>} />
+          <Route path="/orders/me" element={<ProtectedRoute><ListOrders /></ProtectedRoute>} />
+          <Route path="/order/:id" element={<ProtectedRoute><OrderDetails /></ProtectedRoute>} />
 
           <Route
             path="/admin/order/:id"
-            element={<ProcessOrder />} />
+            element={
+              <ProtectedRoute isAdmin={true}>
+                <ProcessOrder />
+              </ProtectedRoute>
+            } />
           <Route
             path="/admin/users"
-            element={<UsersList />} />
-          <Route path="/admin/user/:id" element={<UpdateUser />} />
+            element={
+              <ProtectedRoute isAdmin={true}>
+                <UsersList />
+              </ProtectedRoute>
+            } />
+          <Route
+            path="/admin/user/:id"
+            element={
+              <ProtectedRoute isAdmin={true}>
+                <UpdateUser />
+              </ProtectedRoute>
+            } />
 
           <Route
             path="/admin/products"

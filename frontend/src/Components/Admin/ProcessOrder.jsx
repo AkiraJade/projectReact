@@ -7,7 +7,7 @@ import Sidebar from './SideBar'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios'
-import { getToken } from '../../Utils/helpers'
+import { getToken, getAdminConfig } from '../../Utils/helpers'
 
 const ProcessOrder = () => {
 
@@ -31,35 +31,27 @@ const ProcessOrder = () => {
 
     const getOrderDetails = async (id) => {
         try {
-            const config = {
-                headers: {
-
-                    'Authorization': `Bearer ${getToken()}`
-                }
-            }
-
+            const config = getAdminConfig();
             const { data } = await axios.get(`${import.meta.env.VITE_API}/order/${id}`, config)
             setOrder(data.order)
+            setStatus(data.order.orderStatus)
             setLoading(false)
         } catch (error) {
-            setError(error.response.data.message)
+            setError(error.response?.data?.message || error.message)
+            setLoading(false)
         }
     }
     const updateOrder = async (id, formData) => {
-
         try {
-            const config = {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${getToken()}`
-                }
-            }
+            const config = getAdminConfig();
+            config.headers = {
+                ...config.headers,
+                'Content-Type': 'application/json'
+            };
             const { data } = await axios.put(`${import.meta.env.VITE_API}/admin/order/${id}`, formData, config)
             setIsUpdated(data.success)
-
-
         } catch (error) {
-            setError(error.response.data.message)
+            setError(error.response?.data?.message || error.message)
         }
     }
 
@@ -120,7 +112,7 @@ const ProcessOrder = () => {
                                                 </div>
 
                                                 <div className="col-5 col-lg-5">
-                                                    <Link to={`/products/${item.product}`}>{item.name}</Link>
+                                                    <Link to={`/product/${item.product}`}>{item.name}</Link>
                                                 </div>
                                                 <div className="col-4 col-lg-2 mt-4 mt-lg-0">
                                                     <p>${item.price}</p>
@@ -143,8 +135,9 @@ const ProcessOrder = () => {
                                             onChange={(e) => setStatus(e.target.value)}
                                         >
                                             <option value="Processing">Processing</option>
-                                            <option value="Shipped">Shipped</option>
+                                            <option value="Assembled">Assembled</option>
                                             <option value="Delivered">Delivered</option>
+                                            <option value="Cancelled">Cancelled</option>
                                         </select>
                                     </div>
                                     <button className="btn btn-primary btn-block" onClick={() => updateOrderHandler(order._id)}>

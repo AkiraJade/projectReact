@@ -1,113 +1,92 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import MetaData from '../Layout/MetaData'
 import CheckoutSteps from './CheckoutSteps'
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { getToken } from '../../Utils/helpers';
+import { getAdminConfig } from '../../Utils/helpers';
 
-
-
-const Payment = ({ cartItems, shippingInfo }) => {
-    const [loading, setLoading] = useState(true)
+const Payment = ({ cartItems, shippingInfo, clearCart }) => {
+    const [submitting, setSubmitting] = useState(false)
     let navigate = useNavigate();
-    // useEffect(() => {
-    // }, [])
-
-    const order = {
-        orderItems: cartItems,
-        shippingInfo
-    }
 
     const orderInfo = JSON.parse(sessionStorage.getItem('orderInfo'));
-    if (orderInfo) {
-        order.itemsPrice = orderInfo.itemsPrice
-        order.shippingPrice = orderInfo.shippingPrice
-        order.taxPrice = orderInfo.taxPrice
-        order.totalPrice = orderInfo.totalPrice
-    }
-
-    const createOrder = async (order) => {
-        console.log(order)
-        try {
-            const config = {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${getToken()}`
-                }
-            }
-            const { data } = await axios.post(`${import.meta.env.VITE_API}/order/new`, order, config)
-            // setIsUpdated(data.success)
-            setLoading(false)
-            toast.success('order created', {
-                position: toast.POSITION.BOTTOM_RIGHT
-            });
-
-            // sessionStorage.removeItem('orderInfo')
-            // navigate('/success')
-
-        } catch (error) {
-            toast.error(error.response.data.message, {
-                position: toast.POSITION.BOTTOM_RIGHT
-            });
-        }
-    }
 
     const submitHandler = async (e) => {
         e.preventDefault();
-        document.querySelector('#pay_btn').disabled = true;
-        order.paymentInfo = {
-            id: 'pi_1DpdYh2eZvKYlo2CYIynhU32',
-            status: 'succeeded'
+        setSubmitting(true);
+
+        const order = {
+            orderItems: cartItems,
+            shippingInfo,
+            paymentInfo: {
+                id: 'COD-' + Date.now(),
+                status: 'pending'
+            }
+        };
+
+        try {
+            const config = getAdminConfig();
+            config.headers = {
+                ...config.headers,
+                'Content-Type': 'application/json'
+            };
+
+            const { data } = await axios.post(`${import.meta.env.VITE_API}/order/new`, order, config);
+
+            if (data.success) {
+                toast.success('Order placed successfully!', {
+                    position: 'bottom-right'
+                });
+                sessionStorage.removeItem('orderInfo');
+                if (clearCart) {
+                    clearCart();
+                }
+                navigate('/success');
+            }
+        } catch (error) {
+            setSubmitting(false);
+            const message = error.response?.data?.message || error.message;
+            toast.error(message, {
+                position: 'bottom-right'
+            });
         }
-        createOrder(order)
-        navigate('/success')
-    }
+    };
 
     return (
         <>
-            <MetaData title={'Payment'} />
+            <MetaData title={'Payment — DOSNOVENTA®'} />
             <CheckoutSteps shipping confirmOrder payment />
             <div className="row wrapper">
                 <div className="col-10 col-lg-5">
                     <form className="shadow-lg" onSubmit={submitHandler}>
-                        <h1 className="mb-4">Card Info</h1>
-                        <div className="form-group">
-                            <label htmlFor="card_num_field">Card Number</label>
-                            <input
-                                type="text"
-                                id="card_num_field"
-                                className="form-control"
-
-                            />
+                        <h1 className="mb-4">Order Checkout</h1>
+                        
+                        <div className="alert alert-dark mb-4" role="alert" style={{ background: '#17191d', border: '1px solid #2a2d34', color: '#f6f5f1' }}>
+                            <h6 className="alert-heading font-weight-bold">PAYMENT METHOD: CASH ON DELIVERY / ATELIER DISPATCH</h6>
+                            <p className="mb-0 small text-muted">
+                                Standard courier and freight delivery with payment settlement upon arrival. To confirm direct atelier bank transfers, contact our Barcelona Concierge.
+                            </p>
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="card_exp_field">Card Expiry</label>
+                            <label htmlFor="notes_field">Order Notes / Delivery Instructions (Optional)</label>
                             <input
                                 type="text"
-                                id="card_exp_field"
+                                id="notes_field"
                                 className="form-control"
-
+                                placeholder="E.g., Gate code, call before delivery"
                             />
                         </div>
 
-                        <div className="form-group">
-                            <label htmlFor="card_cvc_field">Card CVC</label>
-                            <input
-                                type="text"
-                                id="card_cvc_field"
-                                className="form-control"
-
-                            />
-                        </div>
                         <button
                             id="pay_btn"
                             type="submit"
                             className="btn btn-block py-3"
+                            disabled={submitting || !cartItems || cartItems.length === 0}
                         >
-                            Pay {` - ${orderInfo && orderInfo.totalPrice}`}
+                            {submitting ? 'RESERVING INVENTORY & PLACING ORDER...' : `CONFIRM ORDER — $${orderInfo?.totalPrice || '0.00'}`}
                         </button>
 
                     </form>
