@@ -26,6 +26,14 @@ import {
 //     orderReducer,
 //  } from './reducers/orderReducers';
 
+let savedUser = null;
+try {
+    const rawUser = typeof window !== 'undefined' ? sessionStorage.getItem('user') : null;
+    savedUser = rawUser ? JSON.parse(rawUser) : null;
+} catch (e) {
+    savedUser = null;
+}
+
 let initialState = {
     cart: {
         cartItems: localStorage.getItem('cartItems')
@@ -35,9 +43,12 @@ let initialState = {
             ? JSON.parse(localStorage.getItem('shippingInfo'))
             : {}
     },
-    user: {},
-    auth: {},
-
+    user: savedUser || {},
+    auth: {
+        user: savedUser || {},
+        isAuthenticated: !!savedUser,
+        loading: false
+    },
 }
 
 

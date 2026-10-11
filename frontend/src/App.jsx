@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import store from './store';
+import { loadUser } from './actions/userActions';
 import './App.css'
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -52,6 +54,10 @@ function App() {
       ? JSON.parse(localStorage.getItem('shippingInfo'))
       : {},
   })
+
+  useEffect(() => {
+    store.dispatch(loadUser());
+  }, []);
 
   const addItemToCart = async (id, quantity) => {
     // console.log(id, quantity)

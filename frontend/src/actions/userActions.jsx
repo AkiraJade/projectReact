@@ -111,14 +111,27 @@ export const logout = () => async (dispatch) => {
 
 export const loadUser = () => async (dispatch) => {
     try {
+        let token = null;
+        try {
+            const rawToken = typeof window !== 'undefined' ? sessionStorage.getItem('token') : null;
+            token = rawToken ? JSON.parse(rawToken) : null;
+        } catch (e) {}
+
         const config = {
             headers: {
                 'Content-Type': 'application/json',
             },
             withCredentials: true,
         }
+        if (token) {
+            config.headers['Authorization'] = `Bearer ${token}`;
+        }
+
         dispatch({ type: LOAD_USER_REQUEST })
-        const { data } = await axios.get(`${import.meta.env.VITE_API}/me`,config)
+        const { data } = await axios.get(`${import.meta.env.VITE_API}/me`, config)
+        if (data.user && typeof window !== 'undefined') {
+            sessionStorage.setItem('user', JSON.stringify(data.user));
+        }
         dispatch({
             type: LOAD_USER_SUCCESS,
             payload: data.user
@@ -126,7 +139,7 @@ export const loadUser = () => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: LOAD_USER_FAIL,
-            payload: error.response.data.message
+            payload: error?.response?.data?.message || error.message
         })
     }
 }
