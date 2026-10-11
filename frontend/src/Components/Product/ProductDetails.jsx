@@ -1,285 +1,314 @@
-import React, { useState, useEffect } from 'react'
-import { useParams, } from 'react-router-dom'
-import MetaData from '../Layout/MetaData'
-import { Carousel } from 'react-bootstrap'
+import React, { useState, useEffect, useMemo } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getProductDetails, clearErrors } from '../../actions/productActions';
+import { DOSNOVENTA_CATALOG } from '../../data/dosnoventaProducts';
+import MetaData from '../Layout/MetaData';
+import './ProductDetails.css';
 
-import 'react-toastify/dist/ReactToastify.css';
-import axios from 'axios'
+const ProductDetails = ({ addItemToCart, cartItems = [] }) => {
+  const { id } = useParams();
+  const dispatch = useDispatch();
 
-import { getUser, getToken, successMsg, errMsg } from '../../Utils/helpers'
-import ListReviews from '../Review/ListReviews';
-import { useDispatch, useSelector } from 'react-redux'
-import { getProductDetails, clearErrors, } from '../../actions/productActions'
+  const { loading, error, product: apiProduct } = useSelector(
+    (state) => state.productDetails || {}
+  );
 
-const ProductDetails = ({ addItemToCart, cartItems, }) => {
-    const { loading, error, product } = useSelector(state => state.productDetails);
-    // const [product, setProduct] = useState({})
-    const [quantity, setQuantity] = useState(1)
-    const [rating, setRating] = useState(0)
-    const [comment, setComment] = useState('')
-    const [errorReview, setErrorReview] = useState('');
-    const [success, setSuccess] = useState('')
-    const [user, setUser] = useState(getUser())
-
-    let { id } = useParams()
-    const dispatch = useDispatch()
-
-    const increaseQty = () => {
-        const count = document.querySelector('.count')
-        if (count.valueAsNumber >= product.stock) return;
-        const qty = count.valueAsNumber + 1;
-        setQuantity(qty)
+  // Fallback to local curated Dosnoventa catalog if apiProduct not found or offline
+  const product = useMemo(() => {
+    if (apiProduct && apiProduct._id === id) {
+      return apiProduct;
     }
+    const localMatch = DOSNOVENTA_CATALOG.find((p) => p._id === id);
+    return localMatch || apiProduct || DOSNOVENTA_CATALOG[0];
+  }, [apiProduct, id]);
 
-    const decreaseQty = () => {
-        const count = document.querySelector('.count')
-        if (count.valueAsNumber <= 1) return;
-        const qty = count.valueAsNumber - 1;
-        setQuantity(qty)
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [selectedSize, setSelectedSize] = useState(product?.sizes?.[0] || '54 (M)');
+  const [selectedColor, setSelectedColor] = useState(product?.colors?.[0] || 'Standard');
+  const [quantity, setQuantity] = useState(1);
+  const [activeTab, setActiveTab] = useState('specs'); // 'specs' or 'geometry'
+
+  useEffect(() => {
+    try {
+      dispatch(getProductDetails(id));
+    } catch (e) {
+      // safe fallback
     }
+    window.scrollTo(0, 0);
+  }, [dispatch, id]);
 
-    const addToCart = async () => {
-        await addItemToCart(id, quantity);
-
+  useEffect(() => {
+    if (product) {
+      if (product.sizes?.length) setSelectedSize(product.sizes[0]);
+      if (product.colors?.length) setSelectedColor(product.colors[0]);
+      setSelectedImageIndex(0);
     }
+  }, [product]);
 
-    // const productDetails = async (id) => {
-    //     let link = `http://localhost:4001/api/v1/product/${id}`
-    //     try {
-    //         let res = await axios.get(link)
-    //         setProduct(res.data.product)
-    //     } catch (err) {
-    //         console.log(err)
-    //         // setError('Product not found')
-    //     }
-    // }
+  const images = product?.images?.length
+    ? product.images
+    : [{ url: '/images/Dosnoventa_company_x.webp', alt: product?.name }];
 
-    function setUserRatings() {
-        const stars = document.querySelectorAll('.star');
-        stars.forEach((star, index) => {
-            star.starValue = index + 1;
-            ['click', 'mouseover', 'mouseout'].forEach(function (e) {
-                star.addEventListener(e, showRatings);
-            })
-        })
-        function showRatings(e) {
-            stars.forEach((star, index) => {
-                if (e.type === 'click') {
-                    if (index < this.starValue) {
-                        star.classList.add('orange');
-                        setRating(this.starValue)
-                    } else {
-                        star.classList.remove('orange')
-                    }
-                }
-                if (e.type === 'mouseover') {
-                    if (index < this.starValue) {
-                        star.classList.add('yellow');
-                    } else {
-                        star.classList.remove('yellow')
-                    }
-                }
-                if (e.type === 'mouseout') {
-                    star.classList.remove('yellow')
-                }
-            })
-        }
+  const currentImage = images[selectedImageIndex]?.url || images[0]?.url;
+
+  const handleIncrease = () => {
+    if (quantity < (product?.stock || 10)) {
+      setQuantity((prev) => prev + 1);
     }
+  };
 
-    const newReview = async (reviewData) => {
-        try {
-            const config = {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${getToken()}`
-                }
-            }
-
-            const { data } = await axios.put(`${import.meta.env.VITE_API}/review`, reviewData, config)
-            setSuccess(data.success)
-
-        } catch (error) {
-            setErrorReview(error.response.data.message)
-        }
+  const handleDecrease = () => {
+    if (quantity > 1) {
+      setQuantity((prev) => prev - 1);
     }
+  };
 
-    const reviewHandler = () => {
-        const formData = new FormData();
-        formData.set('rating', rating);
-        formData.set('comment', comment);
-        formData.set('productId', id);
-        newReview(formData)
-
+  const handleAddToCart = () => {
+    if (addItemToCart && product) {
+      addItemToCart(product._id, quantity);
     }
+  };
 
-    // useEffect(() => {
-    //     productDetails(id)
-    // }, [id,]);
+  const formattedPrice = product?.price
+    ? new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(product.price)
+    : '€1,450.00';
 
-    useEffect(() => {
-        dispatch(getProductDetails(id))
-
-    }, [id,]);
-
-    useEffect(() => {
-        localStorage.setItem('cartItems', JSON.stringify(cartItems));
-    }, [cartItems]);
-
+  if (!product) {
     return (
-        <>
-            <MetaData title={product.name} />
-            <div className="row d-flex justify-content-around">
-                <div className="col-12 col-lg-5 img-fluid" id="product_image">
-                    <Carousel pause='hover'>
-                        {product.images && product.images.map(image => (
-                            <Carousel.Item key={image.public_id}>
-                                <img className="d-block w-100" src={image.url} alt={product.title} />
-                            </Carousel.Item>
-                        ))}
-                    </Carousel>
-                </div>
+      <div className="ds-product-loading ds-container">
+        <span className="editorial-label">LOADING MACHINE SPECIFICATIONS...</span>
+      </div>
+    );
+  }
 
-                <div className="col-12 col-lg-5 mt-5">
-                    <h3>{product.name}</h3>
-                    <p id="product_id">Product # {product._id}</p>
+  return (
+    <div className="ds-product-details-page">
+      <MetaData title={`${product.name} — Dosnoventa Fixed Gear Bikes`} />
 
-                    <hr />
+      <div className="ds-container-wide">
+        {/* Breadcrumb Header */}
+        <nav className="ds-product-breadcrumb" aria-label="Breadcrumb">
+          <Link to="/shop" className="ds-bc-link">SHOP</Link>
+          <span className="ds-bc-separator">/</span>
+          <span className="ds-bc-category">{product.category || 'BIKES'}</span>
+          <span className="ds-bc-separator">/</span>
+          <span className="ds-bc-current">{product.name}</span>
+        </nav>
 
-                    <div className="rating-outer">
-                        <div className="rating-inner" style={{ width: `${(product.ratings / 5) * 100}%` }}></div>
-                    </div>
-                    <span id="no_of_reviews">({product.numOfReviews} Reviews)</span>
-
-                    <hr />
-
-                    <p id="product_price">${product.price}</p>
-                    <div className="stockCounter d-inline">
-                        {/* <span className="btn btn-danger minus" >-</span>
-
-                        {/* <input type="number" className="form-control count d-inline" readOnly /> */}
-                        {/* <input type="number" className="form-control count d-inline" value={quantity} readOnly /> */}
-
-                        {/* <span className="btn btn-primary plus" >+</span> */}
-                        <span className="btn btn-danger minus" onClick={decreaseQty}>-</span>
-
-                        <input type="number" className="form-control count d-inline" value={quantity} readOnly />
-
-                        <span className="btn btn-primary plus" onClick={increaseQty}>+</span>
-                    </div>
-
-
-                    <button type="button" id="cart_btn" className="btn btn-primary d-inline ml-4" disabled={product.stock === 0} onClick={addToCart}>Add to Cart</button>
-                    <hr />
-
-                    <p>Status: <span id="stock_status" className={product.stock > 0 ? 'greenColor' : 'redColor'} >{product.stock > 0 ? 'In Stock' : 'Out of Stock'}</span></p>
-
-                    <hr />
-
-                    <h4 className="mt-2">Description:</h4>
-                    <p>{product.description}</p>
-                    <hr />
-                    <p id="product_seller mb-3">Sold by: <strong>{product.seller}</strong></p>
-                    {/* <div className="alert alert-danger mt-5" type='alert'>Login to post your review.</div> */}
-                    {/* <button id="review_btn" type="button" className="btn btn-primary mt-4" data-toggle="modal" data-target="#ratingModal"  >
-                        Submit Your Review
-                    </button> */}
-                    {user ? <button id="review_btn" type="button" className="btn btn-primary mt-4" data-toggle="modal" data-target="#ratingModal" onClick={setUserRatings} >
-                        Submit Your Review
-                    </button> :
-                        <div className="alert alert-danger mt-5" type='alert'>Login to post your review.</div>}
-
-                    {/* <div className="row mt-2 mb-5">
-                        <div className="rating w-50">
-
-                            <div className="modal fade" id="ratingModal" tabIndex="-1" role="dialog" aria-labelledby="ratingModalLabel" aria-hidden="true">
-                                <div className="modal-dialog" role="document">
-                                    <div className="modal-content">
-                                        <div className="modal-header">
-                                            <h5 className="modal-title" id="ratingModalLabel">Submit Review</h5>
-                                            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div className="modal-body">
-
-                                            <ul className="stars" >
-                                                <li className="star"><i className="fa fa-star"></i></li>
-                                                <li className="star"><i className="fa fa-star"></i></li>
-                                                <li className="star"><i className="fa fa-star"></i></li>
-                                                <li className="star"><i className="fa fa-star"></i></li>
-                                                <li className="star"><i className="fa fa-star"></i></li>
-                                            </ul>
-
-                                            <textarea
-                                                name="review"
-                                                id="review" className="form-control mt-3"
-
-
-                                            >
-                                            </textarea>
-
-
-                                            <button className="btn my-3 float-right review-btn px-4 text-white" data-dismiss="modal" aria-label="Close" >Submit</button>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div> */}
-                    <div className="row mt-2 mb-5">
-                        <div className="rating w-50">
-
-                            <div className="modal fade" id="ratingModal" tabIndex="-1" role="dialog" aria-labelledby="ratingModalLabel" aria-hidden="true">
-                                <div className="modal-dialog" role="document">
-                                    <div className="modal-content">
-                                        <div className="modal-header">
-                                            <h5 className="modal-title" id="ratingModalLabel">Submit Review</h5>
-                                            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div className="modal-body">
-
-                                            <ul className="stars" >
-                                                <li className="star"><i className="fa fa-star"></i></li>
-                                                <li className="star"><i className="fa fa-star"></i></li>
-                                                <li className="star"><i className="fa fa-star"></i></li>
-                                                <li className="star"><i className="fa fa-star"></i></li>
-                                                <li className="star"><i className="fa fa-star"></i></li>
-                                            </ul>
-
-                                            <textarea
-                                                name="review"
-                                                id="review" className="form-control mt-3"
-                                                value={comment}
-                                                onChange={(e) => setComment(e.target.value)}
-
-                                            >
-                                            </textarea>
-
-
-                                            <button className="btn my-3 float-right review-btn px-4 text-white" data-dismiss="modal" aria-label="Close" onClick={reviewHandler} >Submit</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-                {product.reviews && product.reviews.length > 0 && (
-
-                    <ListReviews reviews={product.reviews} />
-
-                )}
-
+        {/* Main Product Layout Grid */}
+        <div className="ds-product-grid-layout">
+          {/* LEFT: Imagery Column */}
+          <div className="ds-product-gallery-col">
+            <div className="ds-product-main-view">
+              <img
+                src={currentImage}
+                alt={product.name}
+                className="ds-product-featured-img"
+              />
+              <div className="ds-gallery-overlay-badge">
+                <span>{product.material || 'ATELIER QUALITY'}</span>
+              </div>
             </div>
 
+            {/* Thumbnail Row */}
+            {images.length > 1 && (
+              <div className="ds-gallery-thumbs-row">
+                {images.map((img, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    className={`ds-thumb-btn ${selectedImageIndex === idx ? 'is-active' : ''}`}
+                    onClick={() => setSelectedImageIndex(idx)}
+                  >
+                    <img src={img.url} alt={`${product.name} thumbnail ${idx + 1}`} />
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
-        </>
-    )
-}
+          {/* RIGHT: Product Buy Box & Specs */}
+          <div className="ds-product-info-col">
+            <div className="ds-product-info-inner">
+              <div className="ds-product-eyebrow">
+                <span className="editorial-badge">{product.category || 'COMPLETE BUILD'}</span>
+                <span className="ds-product-sku">ATELIER // {product._id?.substring(0, 8)}</span>
+              </div>
 
-export default ProductDetails
+              <h1 className="ds-product-title">{product.name}</h1>
+
+              {product.tagline && (
+                <p className="ds-product-tagline">{product.tagline}</p>
+              )}
+
+              {/* Price Block */}
+              <div className="ds-product-price-section">
+                <span className="ds-price-label">PRICE (INCL. TAXES)</span>
+                <div className="ds-price-value">{formattedPrice}</div>
+              </div>
+
+              {/* Description */}
+              <p className="ds-product-description">{product.description}</p>
+
+              {/* Size Selector */}
+              {product.sizes && product.sizes.length > 0 && (
+                <div className="ds-option-group">
+                  <div className="ds-option-header">
+                    <span className="ds-option-label">FRAME SIZE</span>
+                    <span className="ds-size-selected">{selectedSize}</span>
+                  </div>
+                  <div className="ds-size-pills">
+                    {product.sizes.map((sz) => (
+                      <button
+                        key={sz}
+                        type="button"
+                        className={`ds-size-pill ${selectedSize === sz ? 'is-active' : ''}`}
+                        onClick={() => setSelectedSize(sz)}
+                      >
+                        {sz}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Colorway Selector */}
+              {product.colors && product.colors.length > 0 && (
+                <div className="ds-option-group">
+                  <div className="ds-option-header">
+                    <span className="ds-option-label">COLORWAY</span>
+                    <span className="ds-color-selected">{selectedColor}</span>
+                  </div>
+                  <div className="ds-color-pills">
+                    {product.colors.map((col) => (
+                      <button
+                        key={col}
+                        type="button"
+                        className={`ds-color-pill ${selectedColor === col ? 'is-active' : ''}`}
+                        onClick={() => setSelectedColor(col)}
+                      >
+                        {col}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Quantity & Add to Cart Action */}
+              <div className="ds-purchase-controls">
+                <div className="ds-qty-selector">
+                  <button
+                    type="button"
+                    className="ds-qty-btn"
+                    onClick={handleDecrease}
+                    aria-label="Decrease quantity"
+                  >
+                    −
+                  </button>
+                  <span className="ds-qty-val">{quantity}</span>
+                  <button
+                    type="button"
+                    className="ds-qty-btn"
+                    onClick={handleIncrease}
+                    aria-label="Increase quantity"
+                  >
+                    +
+                  </button>
+                </div>
+
+                <button
+                  type="button"
+                  className="ds-btn ds-add-cart-btn"
+                  onClick={handleAddToCart}
+                >
+                  ADD TO CART <span className="ds-arrow">→</span>
+                </button>
+              </div>
+
+              {/* Stock status indicator */}
+              <div className="ds-stock-status">
+                <span className="ds-stock-dot"></span>
+                <span>
+                  {product.stock > 0
+                    ? `READY FOR DISPATCH // ${product.stock} IN STOCK`
+                    : 'MADE TO ORDER // 2-3 WEEKS DISPATCH'}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Tabbed Technical Dossier & Geometry Section */}
+        <section className="ds-technical-dossier">
+          <div className="ds-dossier-nav">
+            <button
+              type="button"
+              className={`ds-dossier-tab ${activeTab === 'specs' ? 'is-active' : ''}`}
+              onClick={() => setActiveTab('specs')}
+            >
+              TECHNICAL SPECIFICATIONS
+            </button>
+            {product.geometry && product.geometry.length > 0 && (
+              <button
+                type="button"
+                className={`ds-dossier-tab ${activeTab === 'geometry' ? 'is-active' : ''}`}
+                onClick={() => setActiveTab('geometry')}
+              >
+                FRAME GEOMETRY CHART
+              </button>
+            )}
+          </div>
+
+          <div className="ds-dossier-content">
+            {activeTab === 'specs' && (
+              <div className="ds-specs-grid">
+                {product.specs ? (
+                  Object.entries(product.specs).map(([key, val]) => (
+                    <div key={key} className="ds-spec-row">
+                      <span className="ds-spec-label">
+                        {key.replace(/([A-Z])/g, ' $1').toUpperCase()}
+                      </span>
+                      <span className="ds-spec-detail">{val}</span>
+                    </div>
+                  ))
+                ) : (
+                  <p className="ds-specs-none">Technical sheet available on request.</p>
+                )}
+              </div>
+            )}
+
+            {activeTab === 'geometry' && product.geometry && (
+              <div className="ds-geometry-table-wrapper">
+                <table className="ds-geometry-table">
+                  <thead>
+                    <tr>
+                      <th>SIZE</th>
+                      <th>SEAT TUBE</th>
+                      <th>TOP TUBE</th>
+                      <th>HEAD ANGLE</th>
+                      <th>SEAT ANGLE</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {product.geometry.map((row) => (
+                      <tr key={row.size}>
+                        <td className="ds-geo-size">{row.size}</td>
+                        <td>{row.seatTube}</td>
+                        <td>{row.topTube}</td>
+                        <td>{row.headAngle}</td>
+                        <td>{row.seatAngle}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+};
+
+export default ProductDetails;

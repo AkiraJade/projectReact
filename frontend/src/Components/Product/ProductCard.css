@@ -1,0 +1,206 @@
+.ds-product-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: #0c0c0e;
+  border: 1px solid rgba(246, 245, 241, 0.08);
+  transition: border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.ds-product-card:hover {
+  border-color: rgba(246, 245, 241, 0.22);
+  transform: translateY(-4px);
+}
+
+.ds-card-media-link {
+  display: block;
+  text-decoration: none;
+  background: #121215;
+  overflow: hidden;
+}
+
+.ds-card-media-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 11;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at center, #1b1b22 0%, #0e0e11 100%);
+}
+
+.ds-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+  filter: contrast(1.04) brightness(0.96);
+}
+
+.ds-product-card:hover .ds-card-image {
+  transform: scale(1.05);
+  filter: contrast(1.06) brightness(1.02);
+}
+
+.ds-card-badge-row {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  right: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.ds-card-category-tag {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ds-text-primary);
+  background: rgba(10, 10, 12, 0.75);
+  backdrop-filter: blur(8px);
+  padding: 0.25rem 0.55rem;
+  border: 1px solid rgba(246, 245, 241, 0.12);
+}
+
+.ds-card-stock-tag {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ff3344;
+  background: rgba(255, 51, 68, 0.1);
+  border: 1px solid rgba(255, 51, 68, 0.3);
+  padding: 0.25rem 0.5rem;
+}
+
+.ds-card-content {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.ds-card-meta-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.ds-card-material {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ds-text-muted);
+}
+
+.ds-card-rating {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #f5a623;
+  letter-spacing: 0.05em;
+}
+
+.ds-card-title {
+  font-family: var(--ds-font-display);
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  margin: 0 0 0.4rem 0;
+  text-transform: uppercase;
+}
+
+.ds-card-title a {
+  color: var(--ds-text-primary);
+  text-decoration: none;
+  transition: color var(--ds-transition-fast);
+}
+
+.ds-card-title a:hover {
+  color: var(--ds-accent-red);
+}
+
+.ds-card-tagline {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--ds-text-secondary);
+  text-transform: uppercase;
+  margin: 0 0 1.25rem 0;
+  line-height: 1.4;
+  opacity: 0.75;
+}
+
+.ds-card-footer {
+  margin-top: auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(246, 245, 241, 0.06);
+}
+
+.ds-card-price-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.ds-card-price-label {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  color: var(--ds-text-muted);
+  text-transform: uppercase;
+  margin-bottom: 0.15rem;
+}
+
+.ds-card-price {
+  font-family: var(--ds-font-grotesk);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ds-text-primary);
+  letter-spacing: 0.02em;
+}
+
+.ds-card-inspect-btn {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ds-text-primary);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid rgba(246, 245, 241, 0.2);
+  transition: all 0.25s ease;
+}
+
+.ds-card-inspect-btn:hover {
+  border-color: var(--ds-text-primary);
+  background: rgba(246, 245, 241, 0.06);
+}
+
+.ds-card-inspect-btn:hover .ds-card-arrow {
+  transform: translateX(3px);
+}
+
+.ds-card-arrow {
+  transition: transform 0.25s ease;
+  display: inline-block;
+}

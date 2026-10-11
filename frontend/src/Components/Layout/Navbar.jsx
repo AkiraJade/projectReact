@@ -47,7 +47,7 @@ const Navbar = ({ cartItems = [] }) => {
 
           {/* CENTER: SHOP, STORIES, COMPANY */}
           <nav className="ds-navbar-links" aria-label="Main Navigation">
-            <Link to="/#catalog" className="ds-nav-item">
+            <Link to="/shop" className="ds-nav-item">
               <span className="ds-nav-label">SHOP</span>
             </Link>
             <Link to="/#stories" className="ds-nav-item">
@@ -106,7 +106,7 @@ const Navbar = ({ cartItems = [] }) => {
       <div className={`ds-mobile-drawer ${mobileMenuOpen ? 'is-open' : ''}`}>
         <div className="ds-mobile-drawer-inner">
           <div className="ds-mobile-links">
-            <Link to="/#catalog" className="ds-mobile-link" onClick={() => setMobileMenuOpen(false)}>
+            <Link to="/shop" className="ds-mobile-link" onClick={() => setMobileMenuOpen(false)}>
               SHOP
             </Link>
             <Link to="/#stories" className="ds-mobile-link" onClick={() => setMobileMenuOpen(false)}>

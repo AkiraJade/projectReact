@@ -1,0 +1,353 @@
+/* =========================================================================
+   DOSNOVENTA EDITORIAL SHOP / CATALOG PAGE STYLES
+   ========================================================================= */
+
+.ds-shop-page {
+  background-color: var(--ds-bg-primary);
+  color: var(--ds-text-primary);
+  min-height: 100vh;
+  padding-top: var(--ds-nav-height, 72px);
+}
+
+/* 1. Shop Masthead */
+.ds-shop-masthead {
+  padding: clamp(3rem, 7vw, 6rem) 0 clamp(2rem, 4vw, 3.5rem);
+  border-bottom: 1px solid rgba(246, 245, 241, 0.08);
+  background: radial-gradient(circle at 15% 30%, rgba(255, 51, 68, 0.04) 0%, transparent 60%),
+              radial-gradient(circle at 85% 70%, rgba(255, 255, 255, 0.02) 0%, transparent 50%),
+              var(--ds-bg-primary);
+}
+
+.ds-shop-masthead-content {
+  max-width: 900px;
+}
+
+.ds-shop-title {
+  font-family: var(--ds-font-display);
+  font-size: clamp(2.5rem, 6.5vw, 5.5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  text-transform: uppercase;
+  margin: 0.75rem 0 1.25rem 0;
+  color: var(--ds-text-primary);
+}
+
+.ds-shop-subtitle {
+  font-family: var(--ds-font-grotesk);
+  font-size: clamp(0.9rem, 1.3vw, 1.05rem);
+  color: var(--ds-text-secondary);
+  line-height: 1.6;
+  max-width: 720px;
+  margin: 0;
+}
+
+/* 2. Controls & Filter Bar */
+.ds-shop-controls-bar {
+  position: sticky;
+  top: var(--ds-nav-height, 72px);
+  z-index: 10;
+  background: rgba(10, 10, 12, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(246, 245, 241, 0.08);
+}
+
+.ds-controls-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1rem 0;
+  flex-wrap: wrap;
+}
+
+/* Categories Horizontal Nav */
+.ds-shop-categories-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.ds-shop-cat-btn {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: transparent;
+  color: var(--ds-text-secondary);
+  border: 1px solid rgba(246, 245, 241, 0.12);
+  padding: 0.45rem 0.9rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  outline: none;
+}
+
+.ds-shop-cat-btn:hover {
+  color: var(--ds-text-primary);
+  border-color: rgba(246, 245, 241, 0.3);
+  background: rgba(246, 245, 241, 0.04);
+}
+
+.ds-shop-cat-btn.is-active {
+  color: #0c0c0e;
+  background: var(--ds-text-primary);
+  border-color: var(--ds-text-primary);
+}
+
+/* Search & Sort Filters */
+.ds-shop-filter-inputs {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.ds-shop-search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(246, 245, 241, 0.04);
+  border: 1px solid rgba(246, 245, 241, 0.14);
+  padding: 0 0.75rem;
+  min-width: 240px;
+  transition: border-color 0.25s ease;
+}
+
+.ds-shop-search-box:focus-within {
+  border-color: var(--ds-text-primary);
+}
+
+.ds-search-icon {
+  font-size: 0.9rem;
+  color: var(--ds-text-muted);
+  margin-right: 0.4rem;
+}
+
+.ds-shop-search-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--ds-text-primary);
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  padding: 0.45rem 0;
+  width: 100%;
+}
+
+.ds-shop-search-input::placeholder {
+  color: var(--ds-text-muted);
+  font-weight: 500;
+}
+
+.ds-search-clear {
+  background: transparent;
+  border: none;
+  color: var(--ds-text-muted);
+  font-size: 0.75rem;
+  cursor: pointer;
+  padding: 0.2rem;
+  transition: color 0.2s ease;
+}
+
+.ds-search-clear:hover {
+  color: var(--ds-text-primary);
+}
+
+.ds-shop-sort-box {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.ds-sort-label {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  color: var(--ds-text-muted);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.ds-shop-sort-select {
+  background: #121215;
+  color: var(--ds-text-primary);
+  border: 1px solid rgba(246, 245, 241, 0.14);
+  padding: 0.42rem 0.75rem;
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.25s ease;
+}
+
+.ds-shop-sort-select:focus {
+  border-color: var(--ds-text-primary);
+}
+
+/* 3. Product Grid Section */
+.ds-shop-grid-section {
+  padding: clamp(2.5rem, 5vw, 4.5rem) 0 clamp(4rem, 8vw, 6rem);
+}
+
+.ds-shop-results-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(246, 245, 241, 0.06);
+}
+
+.ds-results-count {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--ds-text-muted);
+  text-transform: uppercase;
+}
+
+.ds-shop-reset-btn {
+  background: transparent;
+  border: none;
+  color: var(--ds-accent-red);
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.ds-shop-reset-btn:hover {
+  opacity: 0.75;
+}
+
+.ds-shop-product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: clamp(1.5rem, 2.5vw, 2.5rem);
+}
+
+/* Empty State */
+.ds-shop-empty-state {
+  text-align: center;
+  padding: clamp(4rem, 10vw, 7rem) 1rem;
+  border: 1px dashed rgba(246, 245, 241, 0.12);
+  background: rgba(246, 245, 241, 0.015);
+}
+
+.ds-empty-icon {
+  font-size: 3rem;
+  color: var(--ds-text-muted);
+  display: block;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.ds-empty-title {
+  font-family: var(--ds-font-display);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  margin: 0 0 0.75rem 0;
+}
+
+.ds-empty-desc {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.85rem;
+  color: var(--ds-text-secondary);
+  max-width: 480px;
+  margin: 0 auto 2rem auto;
+  line-height: 1.5;
+}
+
+/* 4. Standards Banner */
+.ds-shop-standards-banner {
+  border-top: 1px solid rgba(246, 245, 241, 0.08);
+  background: #09090b;
+  padding: clamp(3rem, 6vw, 4.5rem) 0;
+}
+
+.ds-standards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: clamp(2rem, 4vw, 3.5rem);
+}
+
+.ds-standard-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.ds-standard-number {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--ds-accent-red);
+  margin-bottom: 0.6rem;
+}
+
+.ds-standard-title {
+  font-family: var(--ds-font-display);
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  margin: 0 0 0.5rem 0;
+  color: var(--ds-text-primary);
+}
+
+.ds-standard-desc {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.78rem;
+  color: var(--ds-text-secondary);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .ds-controls-inner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .ds-shop-categories-nav {
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .ds-shop-cat-btn {
+    white-space: nowrap;
+  }
+
+  .ds-shop-filter-inputs {
+    justify-content: space-between;
+  }
+
+  .ds-shop-search-box {
+    flex-grow: 1;
+  }
+}
+
+@media (max-width: 600px) {
+  .ds-shop-product-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ds-shop-filter-inputs {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

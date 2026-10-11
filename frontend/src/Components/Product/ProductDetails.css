@@ -1,0 +1,465 @@
+/* =========================================================================
+   DOSNOVENTA PRODUCT DETAILS EDITORIAL STYLES
+   ========================================================================= */
+
+.ds-product-details-page {
+  background-color: var(--ds-bg-primary);
+  color: var(--ds-text-primary);
+  min-height: 100vh;
+  padding-top: var(--ds-nav-height, 72px);
+  padding-bottom: 5rem;
+}
+
+/* Breadcrumb */
+.ds-product-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 2rem 0 1.5rem 0;
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ds-text-muted);
+}
+
+.ds-bc-link {
+  color: var(--ds-text-secondary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.ds-bc-link:hover {
+  color: var(--ds-text-primary);
+}
+
+.ds-bc-separator {
+  opacity: 0.4;
+}
+
+.ds-bc-current {
+  color: var(--ds-text-primary);
+  font-weight: 700;
+}
+
+/* Main Grid Layout */
+.ds-product-grid-layout {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: clamp(2.5rem, 5vw, 5rem);
+  margin-bottom: 4.5rem;
+}
+
+/* Gallery Column */
+.ds-product-gallery-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.ds-product-main-view {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: radial-gradient(circle at center, #18181f 0%, #0a0a0d 100%);
+  border: 1px solid rgba(246, 245, 241, 0.1);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ds-product-featured-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ds-product-main-view:hover .ds-product-featured-img {
+  transform: scale(1.04);
+}
+
+.ds-gallery-overlay-badge {
+  position: absolute;
+  bottom: 1.25rem;
+  left: 1.25rem;
+  background: rgba(10, 10, 12, 0.75);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(246, 245, 241, 0.15);
+  padding: 0.35rem 0.75rem;
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ds-text-primary);
+}
+
+.ds-gallery-thumbs-row {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+}
+
+.ds-thumb-btn {
+  width: 90px;
+  height: 70px;
+  background: #111115;
+  border: 1px solid rgba(246, 245, 241, 0.12);
+  cursor: pointer;
+  padding: 0;
+  overflow: hidden;
+  transition: all 0.25s ease;
+  flex-shrink: 0;
+}
+
+.ds-thumb-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.6;
+  transition: opacity 0.25s ease;
+}
+
+.ds-thumb-btn:hover img,
+.ds-thumb-btn.is-active img {
+  opacity: 1;
+}
+
+.ds-thumb-btn.is-active {
+  border-color: var(--ds-text-primary);
+}
+
+/* Info Column */
+.ds-product-info-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.ds-product-info-inner {
+  position: sticky;
+  top: calc(var(--ds-nav-height, 72px) + 2rem);
+}
+
+.ds-product-eyebrow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.ds-product-sku {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  color: var(--ds-text-muted);
+}
+
+.ds-product-title {
+  font-family: var(--ds-font-display);
+  font-size: clamp(2rem, 3.5vw, 3.25rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  text-transform: uppercase;
+  margin: 0 0 0.5rem 0;
+}
+
+.ds-product-tagline {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--ds-accent-red);
+  text-transform: uppercase;
+  margin: 0 0 1.5rem 0;
+}
+
+.ds-product-price-section {
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem 0;
+  border-top: 1px solid rgba(246, 245, 241, 0.08);
+  border-bottom: 1px solid rgba(246, 245, 241, 0.08);
+  margin-bottom: 1.5rem;
+}
+
+.ds-price-label {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  color: var(--ds-text-muted);
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.ds-price-value {
+  font-family: var(--ds-font-display);
+  font-size: clamp(1.8rem, 2.8vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--ds-text-primary);
+}
+
+.ds-product-description {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: var(--ds-text-secondary);
+  margin-bottom: 2rem;
+}
+
+/* Option Selectors */
+.ds-option-group {
+  margin-bottom: 1.5rem;
+}
+
+.ds-option-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+}
+
+.ds-option-label {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  color: var(--ds-text-muted);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.ds-size-selected,
+.ds-color-selected {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.72rem;
+  color: var(--ds-text-primary);
+  font-weight: 700;
+}
+
+.ds-size-pills,
+.ds-color-pills {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.ds-size-pill,
+.ds-color-pill {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  background: transparent;
+  color: var(--ds-text-secondary);
+  border: 1px solid rgba(246, 245, 241, 0.15);
+  padding: 0.5rem 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ds-size-pill:hover,
+.ds-color-pill:hover {
+  border-color: rgba(246, 245, 241, 0.35);
+  color: var(--ds-text-primary);
+}
+
+.ds-size-pill.is-active,
+.ds-color-pill.is-active {
+  background: var(--ds-text-primary);
+  color: #0c0c0e;
+  border-color: var(--ds-text-primary);
+}
+
+/* Purchase Controls */
+.ds-purchase-controls {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  margin-bottom: 1.25rem;
+}
+
+.ds-qty-selector {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(246, 245, 241, 0.2);
+  background: #111115;
+}
+
+.ds-qty-btn {
+  background: transparent;
+  border: none;
+  color: var(--ds-text-primary);
+  font-size: 1.1rem;
+  width: 44px;
+  height: 48px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.ds-qty-btn:hover {
+  background: rgba(246, 245, 241, 0.08);
+}
+
+.ds-qty-val {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.9rem;
+  font-weight: 700;
+  min-width: 36px;
+  text-align: center;
+}
+
+.ds-add-cart-btn {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.16em;
+  padding: 0 2rem;
+  height: 48px;
+}
+
+.ds-stock-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  color: var(--ds-text-muted);
+  text-transform: uppercase;
+}
+
+.ds-stock-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #00d26a;
+  box-shadow: 0 0 8px rgba(0, 210, 106, 0.6);
+}
+
+/* Technical Dossier Tabs */
+.ds-technical-dossier {
+  border-top: 1px solid rgba(246, 245, 241, 0.1);
+  padding-top: 3rem;
+}
+
+.ds-dossier-nav {
+  display: flex;
+  gap: 1rem;
+  border-bottom: 1px solid rgba(246, 245, 241, 0.08);
+  margin-bottom: 2rem;
+}
+
+.ds-dossier-tab {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.75rem 0.25rem 1rem 0.25rem;
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ds-text-muted);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.ds-dossier-tab:hover {
+  color: var(--ds-text-primary);
+}
+
+.ds-dossier-tab.is-active {
+  color: var(--ds-text-primary);
+  border-bottom-color: var(--ds-text-primary);
+}
+
+/* Specs Grid */
+.ds-specs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.ds-spec-row {
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem;
+  background: #0d0d10;
+  border: 1px solid rgba(246, 245, 241, 0.06);
+}
+
+.ds-spec-label {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  color: var(--ds-text-muted);
+  margin-bottom: 0.4rem;
+}
+
+.ds-spec-detail {
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ds-text-primary);
+  letter-spacing: 0.02em;
+}
+
+/* Geometry Table */
+.ds-geometry-table-wrapper {
+  overflow-x: auto;
+}
+
+.ds-geometry-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--ds-font-grotesk);
+  font-size: 0.8rem;
+  text-align: left;
+}
+
+.ds-geometry-table th,
+.ds-geometry-table td {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgba(246, 245, 241, 0.08);
+}
+
+.ds-geometry-table th {
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ds-text-muted);
+  font-weight: 700;
+  background: #0e0e12;
+}
+
+.ds-geometry-table td {
+  color: var(--ds-text-secondary);
+}
+
+.ds-geometry-table tr:hover td {
+  background: rgba(246, 245, 241, 0.02);
+  color: var(--ds-text-primary);
+}
+
+.ds-geometry-table .ds-geo-size {
+  font-weight: 700;
+  color: var(--ds-text-primary);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .ds-product-grid-layout {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .ds-product-info-inner {
+    position: static;
+  }
+}

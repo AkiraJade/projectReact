@@ -12,6 +12,7 @@ import axios from 'axios';
 import Navbar from './Components/Layout/Navbar'
 import Footer from './Components/Layout/Footer'
 import Home from './Components/Home'
+import Shop from './Components/Product/Shop'
 import ProductDetails from './Components/Product/ProductDetails'
 import Register from './Components/User/Register'
 import Login from './Components/User/Login'
@@ -118,6 +119,8 @@ function App() {
         <Navbar cartItems={state.cartItems} />
         <Routes>
           <Route path="/" element={<Home />} exact="true" />
+          <Route path="/shop" element={<Shop />} exact="true" />
+          <Route path="/catalog" element={<Shop />} exact="true" />
           <Route path="/product/:id" element={<ProductDetails cartItems={state.cartItems} addItemToCart={addItemToCart} />} exact="true" />
           <Route path="/search/:keyword" element={<Home />} exact="true" />
           <Route path="/login" element={<Login />} exact="true" />

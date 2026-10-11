@@ -168,9 +168,9 @@ const Home = () => {
                   FIXED. FAST. UNCOMPROMISING.
                 </p>
                 <div className="ds-hero-cta-wrap hero-stagger-4">
-                  <a href="#featured-bike" className="ds-btn ds-hero-cta">
+                  <Link to="/shop" className="ds-btn ds-hero-cta">
                     EXPLORE THE LINEUP <span className="ds-arrow">→</span>
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -336,7 +336,7 @@ const Home = () => {
                 </div>
 
                 <div className="ds-bike-actions">
-                  <Link to="/register" className="ds-btn">
+                  <Link to="/product/dsnv-barcelona-01" className="ds-btn">
                     DISCOVER BARCELONA <span className="ds-arrow">→</span>
                   </Link>
                   <span className="editorial-label">STARTING AT €1,450 EUR</span>
@@ -449,7 +449,7 @@ const Home = () => {
             zero compromises.
           </p>
           <div className="ds-final-btn-group">
-            <Link to="/register" className="ds-btn">
+            <Link to="/shop" className="ds-btn">
               EXPLORE DOSNOVENTA <span className="ds-arrow">→</span>
             </Link>
             <Link to="/login" className="ds-btn ds-btn-outline">
