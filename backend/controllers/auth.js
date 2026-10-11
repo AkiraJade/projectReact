@@ -21,25 +21,11 @@ exports.registerUser = async (req, res, next) => {
             url: 'https://res.cloudinary.com/dgneiaky7/image/upload/v1788417006/avatars/sycta145jvdzqjukfgxw.png'
         };
 
-        if (req.body.avatar) {
-            try {
-                const result = await cloudinary.v2.uploader.upload(req.body.avatar, {
-                    folder: 'avatars',
-                    width: 150,
-                    crop: "scale"
-                });
-                avatarData = {
-                    public_id: result.public_id,
-                    url: result.secure_url
-                };
-            } catch (err) {
-                console.log('Avatar upload error:', err.message);
-            }
-        } else if (req.file) {
+        if (req.file) {
             try {
                 const result = await cloudinary.v2.uploader.upload(req.file.path, {
                     folder: 'avatars',
-                    width: 150,
+                    width: 300,
                     crop: "scale"
                 });
                 avatarData = {
@@ -49,6 +35,76 @@ exports.registerUser = async (req, res, next) => {
             } catch (err) {
                 console.log('Avatar file upload error:', err.message);
             }
+        } else if (req.body.avatar && typeof req.body.avatar === 'string' && req.body.avatar.trim() !== '') {
+            try {
+                const result = await cloudinary.v2.uploader.upload(req.body.avatar, {
+                    folder: 'avatars',
+                    width: 300,
+                    crop: "scale"
+                });
+                avatarData = {
+                    public_id: result.public_id,
+                    url: result.secure_url
+                };
+            } catch (err) {
+                console.log('Avatar upload error:', err.message);
+            }
+        }
+
+        // Parse and validate optional delivery address
+        let addressObj = null;
+        if (req.body.address) {
+            try {
+                addressObj = typeof req.body.address === 'string' ? JSON.parse(req.body.address) : req.body.address;
+            } catch (e) {
+                addressObj = null;
+            }
+        } else if (
+            req.body.addressLine1 || req.body.city || req.body.postalCode ||
+            req.body.country || req.body.recipientName || req.body.phone
+        ) {
+            addressObj = {
+                label: req.body.label || 'Home',
+                recipientName: req.body.recipientName,
+                phone: req.body.phone,
+                addressLine1: req.body.addressLine1,
+                addressLine2: req.body.addressLine2 || '',
+                city: req.body.city,
+                province: req.body.province || '',
+                postalCode: req.body.postalCode,
+                country: req.body.country,
+                isDefault: req.body.isDefault !== undefined ? (req.body.isDefault === true || req.body.isDefault === 'true') : true
+            };
+        }
+
+        let userAddresses = [];
+        if (addressObj) {
+            const hasAnyField = Object.entries(addressObj).some(
+                ([k, v]) => k !== 'isDefault' && k !== 'label' && typeof v === 'string' && v.trim() !== ''
+            );
+
+            if (hasAnyField) {
+                const { recipientName, phone, addressLine1, city, postalCode, country } = addressObj;
+                if (!recipientName?.trim() || !phone?.trim() || !addressLine1?.trim() || !city?.trim() || !postalCode?.trim() || !country?.trim()) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'Incomplete delivery address: Recipient name, phone, address line 1, city, postal code, and country are required.'
+                    });
+                }
+
+                userAddresses.push({
+                    label: addressObj.label?.trim() || 'Home',
+                    recipientName: recipientName.trim(),
+                    phone: phone.trim(),
+                    addressLine1: addressLine1.trim(),
+                    addressLine2: (addressObj.addressLine2 || '').trim(),
+                    city: city.trim(),
+                    province: (addressObj.province || '').trim(),
+                    postalCode: postalCode.trim(),
+                    country: country.trim(),
+                    isDefault: true
+                });
+            }
         }
 
         const user = await User.create({
@@ -56,6 +112,7 @@ exports.registerUser = async (req, res, next) => {
             email,
             password,
             avatar: avatarData,
+            addresses: userAddresses,
             role: 'user'
         });
 
@@ -180,52 +237,253 @@ exports.getUserProfile = async (req, res, next) => {
 
 exports.updateProfile = async (req, res, next) => {
     try {
-        const newUserData = {
-            name: req.body.name,
-            email: req.body.email
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
         }
 
-        // Update avatar
-        if (req.body.avatar && req.body.avatar !== '') {
-            let user = await User.findById(req.user.id)
-            if (user?.avatar?.public_id && !user.avatar.public_id.includes('default')) {
-                try {
-                    await cloudinary.v2.uploader.destroy(user.avatar.public_id);
-                } catch (e) {
-                    console.log('Error removing old avatar:', e.message);
-                }
+        if (req.body.name) user.name = req.body.name;
+        if (req.body.email) user.email = req.body.email;
+
+        let newAvatarData = null;
+        let oldPublicId = user.avatar?.public_id;
+
+        if (req.file) {
+            try {
+                const uploadRes = await cloudinary.v2.uploader.upload(req.file.path, {
+                    folder: 'avatars',
+                    width: 300,
+                    crop: "scale"
+                });
+                newAvatarData = {
+                    public_id: uploadRes.public_id,
+                    url: uploadRes.secure_url
+                };
+            } catch (err) {
+                console.log('Avatar file upload failed:', err.message);
+                return res.status(400).json({ success: false, message: 'Avatar upload failed: ' + err.message });
             }
+        } else if (req.body.avatar && typeof req.body.avatar === 'string' && req.body.avatar.trim() !== '') {
             try {
                 const uploadRes = await cloudinary.v2.uploader.upload(req.body.avatar, {
                     folder: 'avatars',
-                    width: 150,
+                    width: 300,
                     crop: "scale"
                 });
-                newUserData.avatar = {
+                newAvatarData = {
                     public_id: uploadRes.public_id,
                     url: uploadRes.secure_url
-                }
+                };
             } catch (err) {
                 console.log('Avatar upload failed:', err.message);
+                return res.status(400).json({ success: false, message: 'Avatar upload failed: ' + err.message });
             }
         }
 
-        const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
-            new: true,
-            runValidators: true,
-        })
-        if (!user) {
-            return res.status(404).json({ success: false, message: 'User not found' })
+        if (newAvatarData) {
+            user.avatar = newAvatarData;
+        }
+
+        await user.save();
+
+        // Destroy old Cloudinary avatar only after database update succeeds
+        if (newAvatarData && oldPublicId && !oldPublicId.includes('default')) {
+            try {
+                await cloudinary.v2.uploader.destroy(oldPublicId);
+            } catch (e) {
+                console.log('Error destroying old avatar asset:', e.message);
+            }
         }
 
         return res.status(200).json({
             success: true,
             user
-        })
+        });
     } catch (err) {
         return res.status(500).json({ success: false, message: err.message });
     }
 }
+
+// =========================================================================
+// SAVED ADDRESS MANAGEMENT CONTROLLERS
+// =========================================================================
+
+exports.getUserAddresses = async (req, res, next) => {
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+        return res.status(200).json({
+            success: true,
+            addresses: user.addresses || []
+        });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: err.message });
+    }
+};
+
+exports.addAddress = async (req, res, next) => {
+    try {
+        const { label, recipientName, phone, addressLine1, addressLine2, city, province, postalCode, country, isDefault } = req.body;
+
+        if (!recipientName?.trim() || !phone?.trim() || !addressLine1?.trim() || !city?.trim() || !postalCode?.trim() || !country?.trim()) {
+            return res.status(400).json({
+                success: false,
+                message: 'Recipient name, phone, address line 1, city, postal code, and country are required.'
+            });
+        }
+
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        const shouldBeDefault = isDefault === true || isDefault === 'true' || (user.addresses && user.addresses.length === 0);
+
+        if (shouldBeDefault && user.addresses) {
+            user.addresses.forEach(a => { a.isDefault = false; });
+        }
+
+        const newAddress = {
+            label: label?.trim() || 'Home',
+            recipientName: recipientName.trim(),
+            phone: phone.trim(),
+            addressLine1: addressLine1.trim(),
+            addressLine2: (addressLine2 || '').trim(),
+            city: city.trim(),
+            province: (province || '').trim(),
+            postalCode: postalCode.trim(),
+            country: country.trim(),
+            isDefault: shouldBeDefault,
+            createdAt: new Date(),
+            updatedAt: new Date()
+        };
+
+        user.addresses.push(newAddress);
+        await user.save();
+
+        return res.status(201).json({
+            success: true,
+            message: 'Address added successfully',
+            addresses: user.addresses
+        });
+    } catch (err) {
+        return res.status(400).json({ success: false, message: err.message });
+    }
+};
+
+exports.updateAddress = async (req, res, next) => {
+    try {
+        const { addressId } = req.params;
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        const address = user.addresses.id(addressId);
+        if (!address) {
+            return res.status(404).json({ success: false, message: 'Address not found' });
+        }
+
+        const { label, recipientName, phone, addressLine1, addressLine2, city, province, postalCode, country, isDefault } = req.body;
+
+        if (recipientName !== undefined) address.recipientName = recipientName.trim();
+        if (phone !== undefined) address.phone = phone.trim();
+        if (addressLine1 !== undefined) address.addressLine1 = addressLine1.trim();
+        if (addressLine2 !== undefined) address.addressLine2 = addressLine2.trim();
+        if (city !== undefined) address.city = city.trim();
+        if (province !== undefined) address.province = province.trim();
+        if (postalCode !== undefined) address.postalCode = postalCode.trim();
+        if (country !== undefined) address.country = country.trim();
+        if (label !== undefined) address.label = label.trim();
+
+        if (!address.recipientName || !address.phone || !address.addressLine1 || !address.city || !address.postalCode || !address.country) {
+            return res.status(400).json({
+                success: false,
+                message: 'Recipient name, phone, address line 1, city, postal code, and country are required.'
+            });
+        }
+
+        if (isDefault === true || isDefault === 'true') {
+            user.addresses.forEach(a => { a.isDefault = false; });
+            address.isDefault = true;
+        }
+
+        address.updatedAt = new Date();
+        await user.save();
+
+        return res.status(200).json({
+            success: true,
+            message: 'Address updated successfully',
+            addresses: user.addresses
+        });
+    } catch (err) {
+        return res.status(400).json({ success: false, message: err.message });
+    }
+};
+
+exports.deleteAddress = async (req, res, next) => {
+    try {
+        const { addressId } = req.params;
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        const address = user.addresses.id(addressId);
+        if (!address) {
+            return res.status(404).json({ success: false, message: 'Address not found' });
+        }
+
+        const wasDefault = address.isDefault;
+        user.addresses.pull({ _id: addressId });
+
+        // Policy: if default address was deleted, set the first remaining address as default
+        if (wasDefault && user.addresses.length > 0) {
+            user.addresses[0].isDefault = true;
+        }
+
+        await user.save();
+
+        return res.status(200).json({
+            success: true,
+            message: 'Address deleted successfully',
+            addresses: user.addresses
+        });
+    } catch (err) {
+        return res.status(400).json({ success: false, message: err.message });
+    }
+};
+
+exports.setDefaultAddress = async (req, res, next) => {
+    try {
+        const { addressId } = req.params;
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        const target = user.addresses.id(addressId);
+        if (!target) {
+            return res.status(404).json({ success: false, message: 'Address not found' });
+        }
+
+        user.addresses.forEach(a => {
+            a.isDefault = a._id.toString() === addressId;
+        });
+
+        await user.save();
+
+        return res.status(200).json({
+            success: true,
+            message: 'Default address updated successfully',
+            addresses: user.addresses
+        });
+    } catch (err) {
+        return res.status(400).json({ success: false, message: err.message });
+    }
+};
 
 exports.updatePassword = async (req, res, next) => {
     try {

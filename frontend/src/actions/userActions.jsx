@@ -48,6 +48,13 @@ export const register = (userData) => async (dispatch) => {
         }
         const { data } = await axios.post(`${import.meta.env.VITE_API}/register`, userData, config)
 
+        if (data.token && typeof window !== 'undefined') {
+            sessionStorage.setItem('token', JSON.stringify(data.token));
+        }
+        if (data.user && typeof window !== 'undefined') {
+            sessionStorage.setItem('user', JSON.stringify(data.user));
+        }
+
         dispatch({
             type: REGISTER_USER_SUCCESS,
             payload: data.user
@@ -146,7 +153,12 @@ export const loadUser = () => async (dispatch) => {
 
 export const updateProfile = (userData) => async (dispatch) => {
     try {
-        
+        let token = null;
+        try {
+            const rawToken = typeof window !== 'undefined' ? sessionStorage.getItem('token') : null;
+            token = rawToken ? JSON.parse(rawToken) : null;
+        } catch (e) {}
+
         dispatch({ type: UPDATE_PROFILE_REQUEST })
         const config = {
             headers: {
@@ -154,7 +166,19 @@ export const updateProfile = (userData) => async (dispatch) => {
             },
             withCredentials: true,
         }
+        if (token) {
+            config.headers['Authorization'] = `Bearer ${token}`;
+        }
         const { data } = await axios.put(`${import.meta.env.VITE_API}/me/update`, userData, config)
+
+        if (data.user && typeof window !== 'undefined') {
+            sessionStorage.setItem('user', JSON.stringify(data.user));
+            dispatch({
+                type: LOAD_USER_SUCCESS,
+                payload: data.user
+            });
+        }
+
         dispatch({
             type: UPDATE_PROFILE_SUCCESS,
             payload: data.success
@@ -163,10 +187,9 @@ export const updateProfile = (userData) => async (dispatch) => {
         console.log(error)
         dispatch({
             type: UPDATE_PROFILE_FAIL,
-            payload: error.response.data.message
+            payload: error?.response?.data?.message || error.message
         })
     }
-
 }
 
 export const updatePassword = (passwords) => async (dispatch) => {

@@ -178,6 +178,38 @@
   cursor: pointer;
 }
 
+.ds-nav-user-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.2rem 0;
+  transition: opacity var(--ds-transition-fast);
+}
+
+.ds-nav-user-pill:hover {
+  opacity: 0.85;
+}
+
+.ds-nav-avatar-box {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ds-bg-surface);
+  flex-shrink: 0;
+}
+
+.ds-nav-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
 .ds-user-name {
   font-family: var(--ds-font-grotesk);
   font-size: 0.8rem;

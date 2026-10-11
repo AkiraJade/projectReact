@@ -1,0 +1,222 @@
+/* =========================================================================
+   DOSNOVENTA CUSTOMER PROFILE — STYLES
+   ========================================================================= */
+
+.ds-profile-page {
+  background-color: var(--ds-bg-dark, #0a0a0a);
+  color: var(--ds-text-light, #f5f5f5);
+  min-height: 100vh;
+  padding-bottom: 7rem;
+}
+
+.ds-profile-header {
+  padding: 5rem 0 2.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ds-profile-title {
+  font-family: var(--ds-font-primary, 'Druk Wide', 'Cabinet Grotesk', -apple-system, BlinkMacSystemFont, sans-serif);
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  margin: 0.75rem 0 0;
+  color: #ffffff;
+}
+
+.ds-profile-main {
+  padding: 3.5rem 0;
+}
+
+.ds-profile-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 3.5rem;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .ds-profile-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}
+
+/* Avatar Column */
+.ds-profile-avatar-column {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.ds-profile-avatar-box {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: #111113;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ds-profile-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ds-profile-role-tag {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(10, 10, 10, 0.88);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  font-weight: 800;
+  text-transform: uppercase;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
+}
+
+.ds-profile-sidebar-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ds-sidebar-btn {
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  padding: 0.85rem;
+}
+
+/* Info Column */
+.ds-profile-info-column {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.ds-profile-dossier-card,
+.ds-profile-dispatch-card {
+  background: #111113;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 2.5rem;
+}
+
+.ds-dossier-heading {
+  font-size: 1.25rem;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  margin: 0 0 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 1rem;
+}
+
+.ds-dossier-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.ds-dossier-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  padding-bottom: 1rem;
+}
+
+.ds-dossier-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.ds-dossier-value {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.ds-dossier-status-active {
+  color: #38ef7d;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  font-weight: 800;
+}
+
+/* Dispatch Card */
+.ds-dispatch-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.ds-manage-link {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  padding-bottom: 2px;
+}
+
+.ds-manage-link:hover {
+  opacity: 0.75;
+}
+
+.ds-preview-addr-content {
+  padding-top: 0.5rem;
+}
+
+.ds-preview-addr-label {
+  display: inline-block;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.2rem 0.5rem;
+  color: #ffffff;
+  margin-bottom: 0.6rem;
+  text-transform: uppercase;
+}
+
+.ds-preview-recipient {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+.ds-preview-lines {
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.ds-no-address-preview {
+  padding: 1.5rem 0;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+}
+
+.ds-no-address-preview p {
+  margin-bottom: 1.25rem;
+}

@@ -4,6 +4,24 @@ module.exports = (err, req, res, next) => {
     let error = { ...err };
     error.message = err.message || 'Internal Server Error';
 
+    // Handling Multer Errors (e.g. LIMIT_FILE_SIZE or unsupported file)
+    if (err.name === 'MulterError') {
+        const message = err.code === 'LIMIT_FILE_SIZE'
+            ? 'File is too large. Maximum allowed size is 5MB.'
+            : err.message;
+        return res.status(400).json({
+            success: false,
+            message
+        });
+    }
+
+    if (err.message && err.message.includes('Unsupported file type')) {
+        return res.status(400).json({
+            success: false,
+            message: err.message
+        });
+    }
+
     // Wrong Mongoose Object ID Error (CastError)
     if (err.name === 'CastError') {
         const message = `Resource not found. Invalid: ${err.path}`;

@@ -24,6 +24,7 @@ import Login from './Components/User/Login'
 import NewPassword from './Components/User/NewPassword';
 import ForgotPassword from './Components/User/ForgotPassword';
 import Profile from './Components/User/Profile';
+import Addresses from './Components/User/Addresses';
 import UpdateProfile from './Components/User/UpdateProfile';
 import UpdatePassword from './Components/User/UpdatePassword';
 import Cart from './Components/Cart/Cart';
@@ -153,6 +154,7 @@ function App() {
             <Route path="/password/forgot" element={<ForgotPassword />} />
             <Route path="/password/reset/:token" element={<NewPassword />} />
             <Route path="/me" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route path="/me/addresses" element={<ProtectedRoute><Addresses /></ProtectedRoute>} />
             <Route path="/me/update" element={<ProtectedRoute><UpdateProfile /></ProtectedRoute>} />
             <Route path="/password/update" element={<ProtectedRoute><UpdatePassword /></ProtectedRoute>} />
             <Route path="/cart" element={<Cart cartItems={state.cartItems} addItemToCart={addItemToCart} removeItemFromCart={removeItemFromCart} />} />

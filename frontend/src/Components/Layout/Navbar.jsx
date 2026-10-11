@@ -62,13 +62,23 @@ const Navbar = ({ cartItems = [] }) => {
           <div className="ds-navbar-actions">
             {user ? (
               <div className="ds-user-dropdown" tabIndex={0} role="button" aria-haspopup="true">
-                <span className="ds-user-name">{user.name?.split(' ')[0]}</span>
+                <div className="ds-nav-user-pill">
+                  <div className="ds-nav-avatar-box">
+                    <img
+                      src={user.avatar?.url || 'https://res.cloudinary.com/dgneiaky7/image/upload/v1788417006/avatars/sycta145jvdzqjukfgxw.png'}
+                      alt={user.name}
+                      className="ds-nav-avatar-img"
+                    />
+                  </div>
+                  <span className="ds-user-name">{user.name?.split(' ')[0]}</span>
+                </div>
                 <div className="ds-user-menu" role="menu">
                   {user.role === 'admin' && (
                     <Link to="/dashboard" className="ds-menu-item" role="menuitem">Dashboard</Link>
                   )}
                   <Link to="/orders/me" className="ds-menu-item" role="menuitem">Orders</Link>
                   <Link to="/me" className="ds-menu-item" role="menuitem">Profile</Link>
+                  <Link to="/me/addresses" className="ds-menu-item" role="menuitem">Addresses</Link>
                   <button onClick={handleLogout} className="ds-menu-item ds-logout-btn" role="menuitem">
                     Logout
                   </button>
@@ -120,8 +130,26 @@ const Navbar = ({ cartItems = [] }) => {
           <div className="ds-mobile-footer">
             {user ? (
               <div className="ds-mobile-user">
-                <span>RIDER: {user.name}</span>
-                <button onClick={handleLogout} className="ds-btn ds-btn-outline ds-btn-sm mt-3">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
+                  <img
+                    src={user.avatar?.url || 'https://res.cloudinary.com/dgneiaky7/image/upload/v1788417006/avatars/sycta145jvdzqjukfgxw.png'}
+                    alt={user.name}
+                    style={{ width: '38px', height: '38px', borderRadius: '50%', objectFit: 'cover', border: '1px solid rgba(255,255,255,0.2)' }}
+                  />
+                  <span>RIDER: {user.name}</span>
+                </div>
+                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '0.75rem' }}>
+                  <Link to="/me" className="ds-btn ds-btn-outline ds-btn-sm" onClick={() => setMobileMenuOpen(false)}>
+                    PROFILE
+                  </Link>
+                  <Link to="/me/addresses" className="ds-btn ds-btn-outline ds-btn-sm" onClick={() => setMobileMenuOpen(false)}>
+                    ADDRESSES
+                  </Link>
+                  <Link to="/orders/me" className="ds-btn ds-btn-outline ds-btn-sm" onClick={() => setMobileMenuOpen(false)}>
+                    ORDERS
+                  </Link>
+                </div>
+                <button onClick={handleLogout} className="ds-btn ds-btn-outline ds-btn-sm" style={{ width: '100%', textAlign: 'center' }}>
                   LOGOUT
                 </button>
               </div>

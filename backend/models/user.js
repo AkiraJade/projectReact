@@ -25,13 +25,74 @@ const userSchema = new mongoose.Schema({
     avatar: {
         public_id: {
             type: String,
-            required: true
+            default: 'default_avatar'
         },
         url: {
             type: String,
-            required: true
+            default: 'https://res.cloudinary.com/dgneiaky7/image/upload/v1788417006/avatars/sycta145jvdzqjukfgxw.png'
         }
     },
+    addresses: [
+        {
+            label: {
+                type: String,
+                trim: true,
+                default: 'Home'
+            },
+            recipientName: {
+                type: String,
+                trim: true,
+                required: [true, 'Please enter recipient name']
+            },
+            phone: {
+                type: String,
+                trim: true,
+                required: [true, 'Please enter contact phone number']
+            },
+            addressLine1: {
+                type: String,
+                trim: true,
+                required: [true, 'Please enter address line 1']
+            },
+            addressLine2: {
+                type: String,
+                trim: true,
+                default: ''
+            },
+            city: {
+                type: String,
+                trim: true,
+                required: [true, 'Please enter city']
+            },
+            province: {
+                type: String,
+                trim: true,
+                default: ''
+            },
+            postalCode: {
+                type: String,
+                trim: true,
+                required: [true, 'Please enter postal code']
+            },
+            country: {
+                type: String,
+                trim: true,
+                required: [true, 'Please select country']
+            },
+            isDefault: {
+                type: Boolean,
+                default: false
+            },
+            createdAt: {
+                type: Date,
+                default: Date.now
+            },
+            updatedAt: {
+                type: Date,
+                default: Date.now
+            }
+        }
+    ],
     role: {
         type: String,
         default: 'user'

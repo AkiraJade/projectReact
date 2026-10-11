@@ -1,0 +1,368 @@
+/* Dosnoventa Editorial Shipping & Dispatch UI */
+
+.ds-shipping-page {
+  min-height: calc(100vh - 80px);
+  background: #0c0d0e;
+  color: #f6f5f1;
+  padding: 3rem 1.5rem 6rem;
+  font-family: var(--ds-font-grotesk, 'Inter', sans-serif);
+}
+
+.ds-shipping-container {
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+/* Header */
+.ds-shipping-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.ds-shipping-eyebrow {
+  font-family: var(--ds-font-mono, 'JetBrains Mono', monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.25em;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.ds-shipping-title {
+  font-size: 2.25rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+/* Sections */
+.ds-shipping-section {
+  margin-bottom: 2.5rem;
+}
+
+.ds-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.ds-section-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+}
+
+.ds-toggle-new-btn {
+  background: transparent;
+  border: 1px dashed rgba(255, 255, 255, 0.25);
+  color: #f6f5f1;
+  font-family: var(--ds-font-mono, monospace);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  padding: 0.4rem 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+}
+
+.ds-toggle-new-btn:hover {
+  border-color: #f6f5f1;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.ds-toggle-new-btn.is-active {
+  background: #f6f5f1;
+  color: #0c0d0e;
+  border-style: solid;
+}
+
+/* Address Cards Grid */
+.ds-saved-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 1.25rem;
+}
+
+.ds-saved-card {
+  background: #141618;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.ds-saved-card:hover {
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: translateY(-2px);
+}
+
+.ds-saved-card.is-selected {
+  border-color: #f6f5f1;
+  background: #1a1d21;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.ds-saved-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.ds-saved-card-radio {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.ds-radio-indicator {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.ds-saved-card.is-selected .ds-radio-indicator {
+  border-color: #f6f5f1;
+}
+
+.ds-radio-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #f6f5f1;
+  display: block;
+}
+
+.ds-card-label {
+  font-family: var(--ds-font-mono, monospace);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.ds-default-badge {
+  font-family: var(--ds-font-mono, monospace);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  padding: 0.2rem 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: #e5b94f;
+  border: 1px solid rgba(229, 185, 79, 0.4);
+  text-transform: uppercase;
+}
+
+.ds-card-body {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 1rem;
+}
+
+.ds-card-name {
+  color: #fff;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.ds-card-phone {
+  font-family: var(--ds-font-mono, monospace);
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 0.5rem;
+}
+
+.ds-card-select-btn {
+  width: 100%;
+  padding: 0.6rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #f6f5f1;
+  font-family: var(--ds-font-mono, monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ds-saved-card.is-selected .ds-card-select-btn {
+  background: #f6f5f1;
+  color: #0c0d0e;
+  border-color: #f6f5f1;
+  font-weight: 700;
+}
+
+/* Form Layout */
+.ds-shipping-form-card {
+  background: #121417;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2.25rem;
+}
+
+.ds-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.ds-form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.25rem;
+}
+
+.ds-form-row .ds-form-group {
+  margin-bottom: 0;
+}
+
+.ds-form-group label {
+  font-family: var(--ds-font-mono, monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.65);
+  margin-bottom: 0.5rem;
+}
+
+.ds-form-group input,
+.ds-form-group select {
+  background: #0c0d0e;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #f6f5f1;
+  padding: 0.85rem 1rem;
+  font-size: 0.9rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.ds-form-group input:focus,
+.ds-form-group select:focus {
+  border-color: #f6f5f1;
+  background: #141618;
+}
+
+.ds-form-group select {
+  cursor: pointer;
+}
+
+.ds-form-group select option {
+  background: #141618;
+  color: #f6f5f1;
+}
+
+.ds-form-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  margin: 1rem 0 1.5rem;
+  user-select: none;
+}
+
+.ds-form-checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #f6f5f1;
+  cursor: pointer;
+}
+
+.ds-checkbox-text {
+  font-family: var(--ds-font-mono, monospace);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.85);
+  text-transform: uppercase;
+}
+
+/* Actions */
+.ds-shipping-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ds-back-cart-link {
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+  font-family: var(--ds-font-mono, monospace);
+  font-size: 0.78rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  transition: color 0.2s ease;
+}
+
+.ds-back-cart-link:hover {
+  color: #f6f5f1;
+}
+
+.ds-shipping-submit-btn {
+  background: #f6f5f1;
+  color: #0c0d0e;
+  border: none;
+  padding: 1rem 2.5rem;
+  font-family: var(--ds-font-mono, monospace);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ds-shipping-submit-btn:hover:not(:disabled) {
+  background: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15);
+}
+
+.ds-shipping-submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .ds-shipping-page {
+    padding: 2rem 1rem 4rem;
+  }
+  .ds-form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .ds-shipping-actions {
+    flex-direction: column-reverse;
+    gap: 1.25rem;
+    align-items: stretch;
+  }
+  .ds-shipping-submit-btn {
+    width: 100%;
+    text-align: center;
+  }
+  .ds-back-cart-link {
+    text-align: center;
+  }
+}
