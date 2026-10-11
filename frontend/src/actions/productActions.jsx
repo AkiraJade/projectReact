@@ -35,7 +35,7 @@ export const getProducts = (currentPage = 1, keyword = '', price, category = '')
     } catch (error) {
         dispatch({
             type: ALL_PRODUCTS_FAIL,
-            payload: error.response.data.message
+            payload: error?.response?.data?.message || error.message
         })
     }
 }
@@ -51,7 +51,7 @@ export const getProductDetails = (id) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: PRODUCT_DETAILS_FAIL,
-            payload: error.response.data.message
+            payload: error?.response?.data?.message || error.message
         })
     }
 }
@@ -74,7 +74,7 @@ export const newProduct = (productData) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: NEW_PRODUCT_FAIL,
-            payload: error.response.data.message
+            payload: error?.response?.data?.message || error.message
         })
     }
 }
@@ -93,7 +93,7 @@ export const getAdminProducts = () => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: ADMIN_PRODUCTS_FAIL,
-            payload: error.response.data.message
+            payload: error?.response?.data?.message || error.message
         })
     }
 }
@@ -115,7 +115,7 @@ export const newReview = (reviewData) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: NEW_REVIEW_FAIL,
-            payload: error.response.data.message
+            payload: error?.response?.data?.message || error.message
         })
     }
 }

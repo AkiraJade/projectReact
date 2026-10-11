@@ -24,20 +24,13 @@ const UpdateProduct = () => {
     const [loading, setLoading] = useState(true)
     const [updateError, setUpdateError] = useState('')
     const [isUpdated, setIsUpdated] = useState(false)
+    const [isPublished, setIsPublished] = useState(true)
 
     const categories = [
-        'Electronics',
-        'Cameras',
-        'Laptops',
-        'Accessories',
-        'Headphones',
-        'Food',
-        "Books",
-        'Clothes/Shoes',
-        'Beauty/Health',
-        'Sports',
-        'Outdoor',
-        'Home'
+        'Bikes',
+        'Frames',
+        'Components',
+        'Apparel & Goods'
     ]
     let { id } = useParams();
     let navigate = useNavigate();
@@ -85,10 +78,11 @@ const UpdateProduct = () => {
             setName(product.name);
             setPrice(product.price);
             setDescription(product.description);
-            setCategory(product.category);
+            setCategory(product.category || 'Bikes');
+            setIsPublished(product.isPublished !== undefined ? product.isPublished : true);
             setSeller(product.seller);
-            setStock(product.stock)
-            setOldImages(product.images)
+            setStock(product.stock);
+            setOldImages(product.images);
         }
         if (error) {
             errMsg(error)
@@ -112,6 +106,7 @@ const UpdateProduct = () => {
         formData.set('price', price);
         formData.set('description', description);
         formData.set('category', category);
+        formData.set('isPublished', isPublished);
         formData.set('stock', stock);
         formData.set('seller', seller);
         images.forEach(image => {
@@ -177,6 +172,18 @@ const UpdateProduct = () => {
                                         {categories.map(category => (
                                             <option key={category} value={category} >{category}</option>
                                         ))}
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="publish_field">Publishing Status</label>
+                                    <select
+                                        className="form-control"
+                                        id="publish_field"
+                                        value={isPublished ? "published" : "draft"}
+                                        onChange={(e) => setIsPublished(e.target.value === "published")}
+                                    >
+                                        <option value="published">Published (Visible in Shop)</option>
+                                        <option value="draft">Draft / Unpublished (Hidden)</option>
                                     </select>
                                 </div>
                                 <div className="form-group">

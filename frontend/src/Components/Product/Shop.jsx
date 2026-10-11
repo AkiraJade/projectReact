@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProducts } from '../../actions/productActions';
 import { DOSNOVENTA_CATALOG } from '../../data/dosnoventaProducts';
@@ -7,11 +8,11 @@ import MetaData from '../Layout/MetaData';
 import './Shop.css';
 
 const CATEGORIES = [
-  'ALL',
-  'COMPLETE BIKES',
-  'FRAMES & FORKS',
-  'WHEELSETS',
-  'COMPONENTS',
+  { label: 'ALL', value: 'all' },
+  { label: 'BIKES', value: 'bikes' },
+  { label: 'FRAMES', value: 'frames' },
+  { label: 'COMPONENTS', value: 'components' },
+  { label: 'APPAREL & GOODS', value: 'apparel' },
 ];
 
 const SORT_OPTIONS = [
@@ -21,31 +22,55 @@ const SORT_OPTIONS = [
   { label: 'HIGHEST RATED', value: 'rating' },
 ];
 
+const normalizeCategory = (cat) => {
+  if (!cat) return 'all';
+  const c = cat.toLowerCase();
+  if (c.includes('bike')) return 'bikes';
+  if (c.includes('frame')) return 'frames';
+  if (c.includes('wheel')) return 'components'; // or components
+  if (c.includes('component')) return 'components';
+  if (c.includes('apparel') || c.includes('good')) return 'apparel';
+  return c;
+};
+
 const Shop = () => {
   const dispatch = useDispatch();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const categoryParam = searchParams.get('category') || 'all';
+
   const { loading, products: apiProducts } = useSelector(
     (state) => state.products || {}
   );
 
-  const [activeCategory, setActiveCategory] = useState('ALL');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedMaterial, setSelectedMaterial] = useState('ALL');
   const [sortBy, setSortBy] = useState('featured');
 
+  // Sync category state with URL param
+  const activeCategory = useMemo(() => {
+    return normalizeCategory(categoryParam);
+  }, [categoryParam]);
+
+  const handleCategorySelect = (catValue) => {
+    if (catValue === 'all') {
+      searchParams.delete('category');
+      setSearchParams(searchParams);
+    } else {
+      setSearchParams({ category: catValue });
+    }
+  };
+
   useEffect(() => {
-    // Attempt backend fetch via redux
     try {
-      dispatch(getProducts(1, '', [1, 10000], ''));
+      dispatch(getProducts(1, '', [1, 100000], ''));
     } catch (e) {
       // safe fallback
     }
     window.scrollTo(0, 0);
   }, [dispatch]);
 
-  // Combine backend products if available with curated Dosnoventa inventory
+  // Combine backend products with fallback baseline catalog
   const combinedProducts = useMemo(() => {
     if (apiProducts && Array.isArray(apiProducts) && apiProducts.length > 0) {
-      // Merge unique by _id
       const apiIds = new Set(apiProducts.map((p) => p._id));
       const filteredCurated = DOSNOVENTA_CATALOG.filter((p) => !apiIds.has(p._id));
       return [...apiProducts, ...filteredCurated];
@@ -53,23 +78,19 @@ const Shop = () => {
     return DOSNOVENTA_CATALOG;
   }, [apiProducts]);
 
-  // Filter and sort items
+  // Filter published products by category, search, and sorting
   const filteredProducts = useMemo(() => {
     return combinedProducts
       .filter((item) => {
-        // Category check
-        if (activeCategory !== 'ALL') {
-          const itemCat = item.category?.toUpperCase() || '';
-          const targetCat = activeCategory.toUpperCase();
-          if (!itemCat.includes(targetCat.replace('&', '').replace('S', '')) && itemCat !== targetCat) {
-            return false;
-          }
+        // Enforce publication check (draft/unpublished products hidden from shop)
+        if (item.isPublished === false) {
+          return false;
         }
 
-        // Material check
-        if (selectedMaterial !== 'ALL') {
-          const itemMat = (item.material || '').toUpperCase();
-          if (!itemMat.includes(selectedMaterial.toUpperCase())) {
+        // Category filter
+        if (activeCategory !== 'all') {
+          const itemCat = normalizeCategory(item.category);
+          if (itemCat !== activeCategory) {
             return false;
           }
         }
@@ -93,13 +114,13 @@ const Shop = () => {
         if (sortBy === 'rating') return (b.ratings || 0) - (a.ratings || 0);
         return 0;
       });
-  }, [combinedProducts, activeCategory, selectedMaterial, searchQuery, sortBy]);
+  }, [combinedProducts, activeCategory, searchQuery, sortBy]);
 
   return (
     <div className="ds-shop-page">
       <MetaData title="The Lineup — Dosnoventa Fixed Gear Bikes & Parts" />
 
-      {/* Shop Masthead / Header */}
+      {/* Shop Masthead */}
       <section className="ds-shop-masthead">
         <div className="ds-container-wide">
           <div className="ds-shop-masthead-content">
@@ -113,19 +134,19 @@ const Shop = () => {
         </div>
       </section>
 
-      {/* Filter and Control Bar */}
+      {/* In-Page Collection Filter Bar (Inside Shop page only, no second navbar) */}
       <section className="ds-shop-controls-bar">
         <div className="ds-container-wide ds-controls-inner">
-          {/* Categories Horizontal Selector */}
+          {/* Categories Selector */}
           <div className="ds-shop-categories-nav">
             {CATEGORIES.map((cat) => (
               <button
-                key={cat}
+                key={cat.value}
                 type="button"
-                className={`ds-shop-cat-btn ${activeCategory === cat ? 'is-active' : ''}`}
-                onClick={() => setActiveCategory(cat)}
+                className={`ds-shop-cat-btn ${activeCategory === cat.value ? 'is-active' : ''}`}
+                onClick={() => handleCategorySelect(cat.value)}
               >
-                {cat}
+                {cat.label}
               </button>
             ))}
           </div>
@@ -180,16 +201,16 @@ const Shop = () => {
         <div className="ds-container-wide">
           <div className="ds-shop-results-meta">
             <span className="ds-results-count">
-              SHOWING {filteredProducts.length} {filteredProducts.length === 1 ? 'BUILD' : 'BUILDS & COMPONENTS'}
+              SHOWING {filteredProducts.length} {filteredProducts.length === 1 ? 'PRODUCT' : 'PRODUCTS'}
+              {activeCategory !== 'all' && ` IN ${CATEGORIES.find(c => c.value === activeCategory)?.label}`}
             </span>
-            {(activeCategory !== 'ALL' || searchQuery || selectedMaterial !== 'ALL') && (
+            {(activeCategory !== 'all' || searchQuery) && (
               <button
                 type="button"
                 className="ds-shop-reset-btn"
                 onClick={() => {
-                  setActiveCategory('ALL');
+                  handleCategorySelect('all');
                   setSearchQuery('');
-                  setSelectedMaterial('ALL');
                   setSortBy('featured');
                 }}
               >
@@ -207,26 +228,26 @@ const Shop = () => {
           ) : (
             <div className="ds-shop-empty-state">
               <span className="ds-empty-icon">∅</span>
-              <h3 className="ds-empty-title">NO MATCHING BUILDS FOUND</h3>
+              <h3 className="ds-empty-title">NO MATCHING PRODUCTS FOUND</h3>
               <p className="ds-empty-desc">
-                No machines found matching "{searchQuery}". Try adjusting your filters or search keywords.
+                No products found in this category. New products added via the Admin Panel will automatically appear here once published.
               </p>
               <button
                 type="button"
                 className="ds-btn"
                 onClick={() => {
-                  setActiveCategory('ALL');
+                  handleCategorySelect('all');
                   setSearchQuery('');
                 }}
               >
-                VIEW FULL COLLECTION →
+                VIEW ALL COLLECTIONS →
               </button>
             </div>
           )}
         </div>
       </main>
 
-      {/* Brand Standards Footer Banner */}
+      {/* Standards Footer Banner */}
       <section className="ds-shop-standards-banner">
         <div className="ds-container-wide ds-standards-grid">
           <div className="ds-standard-item">
@@ -241,7 +262,7 @@ const Shop = () => {
             <span className="ds-standard-number">02</span>
             <h4 className="ds-standard-title">GLOBAL INSURED FREIGHT</h4>
             <p className="ds-standard-desc">
-              Direct dispatch in custom reinforced reinforced packaging to over 80 countries worldwide.
+              Direct dispatch in custom reinforced packaging to over 80 countries worldwide.
             </p>
           </div>
 
