@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import MetaData from '../Layout/MetaData'
 import Loader from '../Layout/Loader'
 import Sidebar from './SideBar'
-import { getToken } from '../../Utils/helpers';
+import { getToken, getAdminConfig } from '../../Utils/helpers';
 import axios from 'axios'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -22,22 +22,14 @@ const ProductsList = () => {
     let navigate = useNavigate()
     const getAdminProducts = async () => {
         try {
-
-            const config = {
-                headers: {
-
-                    'Authorization': `Bearer ${getToken()}`
-                }
-            }
-
+            const config = getAdminConfig();
             const { data } = await axios.get(`${import.meta.env.VITE_API}/admin/products`, config)
             console.log(data)
-            setProducts(data.products)
+            setProducts(data.products || [])
             setLoading(false)
         } catch (error) {
-
-            setError(error.response.data.message)
-
+            setError(error?.response?.data?.message || error.message)
+            setLoading(false)
         }
     }
     useEffect(() => {
@@ -59,27 +51,22 @@ const ProductsList = () => {
             toast.success('Product deleted successfully', {
                 position: 'bottom-right'
             })
-            navigate('/admin/products');
-
+            setIsDeleted(false);
+            getAdminProducts();
         }
 
-    }, [error, deleteError, isDeleted,])
+    }, [error, deleteError, isDeleted])
 
     const deleteProduct = async (id) => {
         try {
-            const config = {
-                headers: {
-
-                    'Authorization': `Bearer ${getToken()}`
-                }
-            }
+            const config = getAdminConfig();
             const { data } = await axios.delete(`${import.meta.env.VITE_API}/admin/product/${id}`, config)
 
             setIsDeleted(data.success)
             setLoading(false)
         } catch (error) {
-            setDeleteError(error.response.data.message)
-
+            setDeleteError(error?.response?.data?.message || error.message)
+            setLoading(false)
         }
     }
     const deleteProductHandler = (id) => {

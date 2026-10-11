@@ -2,20 +2,25 @@ const User = require('../models/user')
 const jwt = require("jsonwebtoken")
 
 exports.isAuthenticatedUser = async (req, res, next) => {
-
-    //    const token = req.header('Authorization').split(' ')[1];
-    // console.log(token)
-    const { token } = req.cookies
-
-
-    if (!token) {
-        return res.status(401).json({ message: 'Login first to access this resource' })
+    let token = req.cookies?.token;
+    if (!token && req.headers?.authorization && req.headers.authorization.startsWith('Bearer')) {
+        token = req.headers.authorization.split(' ')[1];
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET)
-    req.user = await User.findById(decoded.id);
+    if (!token || token === 'null' || token === 'undefined') {
+        return res.status(401).json({ message: 'Login first to access this resource' });
+    }
 
-    next()
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = await User.findById(decoded.id);
+        if (!req.user) {
+            return res.status(401).json({ message: 'User no longer exists' });
+        }
+        next();
+    } catch (err) {
+        return res.status(401).json({ message: 'Invalid or expired authentication token' });
+    }
 };
 
 exports.authorizeRoles = (...roles) => {

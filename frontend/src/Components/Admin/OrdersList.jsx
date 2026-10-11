@@ -7,7 +7,7 @@ import Sidebar from './SideBar'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { DataGrid, } from '@mui/x-data-grid'
-import { getToken } from '../../Utils/helpers'
+import { getToken, getAdminConfig } from '../../Utils/helpers'
 import axios from 'axios'
 
 const OrdersList = () => {
@@ -25,33 +25,24 @@ const OrdersList = () => {
 
     const listOrders = async () => {
         try {
-            const config = {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${getToken()}`
-                }
-            }
+            const config = getAdminConfig();
             const { data } = await axios.get(`${import.meta.env.VITE_API}/admin/orders`, config)
-            setAllOrders(data.orders)
+            setAllOrders(data.orders || [])
             setLoading(false)
         } catch (error) {
-            setError(error.response.data.message)
+            setError(error?.response?.data?.message || error.message)
+            setLoading(false)
         }
     }
     const deleteOrder = async (id) => {
         try {
-            const config = {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${getToken()}`
-                }
-            }
+            const config = getAdminConfig();
             const { data } = await axios.delete(`${import.meta.env.VITE_API}/admin/order/${id}`, config)
             setIsDeleted(data.success)
             setLoading(false)
         } catch (error) {
-            setError(error.response.data.message)
-
+            setError(error?.response?.data?.message || error.message)
+            setLoading(false)
         }
     }
     useEffect(() => {

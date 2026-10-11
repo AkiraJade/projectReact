@@ -6,7 +6,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import axios from 'axios';
-import { getToken } from '../../Utils/helpers';
+import { getToken, getAdminConfig } from '../../Utils/helpers';
 
 
 const UpdateProduct = () => {
@@ -49,26 +49,23 @@ const UpdateProduct = () => {
             setLoading(false)
 
         } catch (error) {
-            setError(error.response.data.message)
-
+            setError(error?.response?.data?.message || error.message)
+            setLoading(false)
         }
     }
 
     const updateProduct = async (id, productData) => {
         try {
-
-            const config = {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${getToken()}`
-                }
-            }
+            const config = getAdminConfig();
+            config.headers = {
+                ...config.headers,
+                'Content-Type': 'application/json'
+            };
             const { data } = await axios.put(`${import.meta.env.VITE_API}/admin/product/${id}`, productData, config)
             setIsUpdated(data.success)
 
         } catch (error) {
-            setUpdateError(error.response.data.message)
-
+            setUpdateError(error?.response?.data?.message || error.message)
         }
     }
     useEffect(() => {

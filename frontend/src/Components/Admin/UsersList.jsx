@@ -8,7 +8,7 @@ import Loader from '../Layout/Loader'
 import Sidebar from './SideBar'
 
 import axios from 'axios';
-import { getToken, errMsg, successMsg } from '../../Utils/helpers';
+import { getToken, getAdminConfig, errMsg, successMsg } from '../../Utils/helpers';
 import { DataGrid, } from '@mui/x-data-grid'
 
 const UsersList = () => {
@@ -17,33 +17,29 @@ const UsersList = () => {
     const [allUsers, setAllUsers] = useState([])
     const [isDeleted, setIsDeleted] = useState('')
     let navigate = useNavigate();
-    const config = {
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${getToken()}`
-        }
-    }
+
     const listUsers = async () => {
         try {
-
+            const config = getAdminConfig();
             const { data } = await axios.get(`${import.meta.env.VITE_API}/admin/users`, config)
-            setAllUsers(data.users)
+            setAllUsers(data.users || [])
             setLoading(false)
 
         } catch (error) {
-            setError(error.response.data.message)
-
+            setError(error?.response?.data?.message || error.message)
+            setLoading(false)
         }
     }
     const deleteUser = async (id) => {
         try {
+            const config = getAdminConfig();
             const { data } = await axios.delete(`${import.meta.env.VITE_API}/admin/user/${id}`, config)
             setIsDeleted(data.success)
             setLoading(false)
 
         } catch (error) {
-            setError(error.response.data.message)
-
+            setError(error?.response?.data?.message || error.message)
+            setLoading(false)
         }
     }
 

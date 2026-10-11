@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import MetaData from '../Layout/MetaData'
 import Loader from '../Layout/Loader'
 import Sidebar from './SideBar'
-import { getToken } from '../../Utils/helpers';
+import { getToken, getAdminConfig } from '../../Utils/helpers';
 import axios from 'axios'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -29,17 +29,14 @@ const Dashboard = () => {
     })
     const getAdminProducts = async () => {
         try {
-            const config = {
-                headers: {
-                    'Authorization': `Bearer ${getToken()}`
-                }
-            }
+            const config = getAdminConfig();
             const { data } = await axios.get(`${import.meta.env.VITE_API}/admin/products`, config)
             console.log(data)
-            setProducts(data.products)
+            setProducts(data.products || [])
             setLoading(false)
         } catch (error) {
-            setError(error.response.data.message)
+            setError(error?.response?.data?.message || error.message)
+            setLoading(false)
         }
     }
 

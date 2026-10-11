@@ -16,14 +16,16 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { isAuthenticated, error, loading } = useSelector((state) => state.auth || {});
+  const { isAuthenticated, user, error, loading } = useSelector((state) => state.auth || {});
 
   const redirect = location.search ? new URLSearchParams(location.search).get('redirect') : '';
 
   useEffect(() => {
     if (isAuthenticated) {
-      if (redirect === 'shipping') {
-        navigate(`/${redirect}`);
+      if (redirect) {
+        navigate(redirect.startsWith('/') ? redirect : `/${redirect}`);
+      } else if (user?.role === 'admin') {
+        navigate('/admin');
       } else {
         navigate('/');
       }
@@ -33,7 +35,7 @@ const Login = () => {
       toast.error(error);
       dispatch(clearErrors());
     }
-  }, [isAuthenticated, error, dispatch, navigate, redirect]);
+  }, [isAuthenticated, user, error, dispatch, navigate, redirect]);
 
   const validate = () => {
     const errs = {};

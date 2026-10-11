@@ -40,6 +40,18 @@ export const getToken = () => {
     }
 };
 
+export const getAdminConfig = () => {
+    const token = getToken();
+    const config = {
+        withCredentials: true,
+        headers: {}
+    };
+    if (token) {
+        config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    return config;
+};
+
 export const errMsg = (message = '') => toast.error(message, {
     position: 'bottom-center'
 });

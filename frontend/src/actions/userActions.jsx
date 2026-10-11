@@ -71,17 +71,20 @@ export const login = (email, password) => async (dispatch) => {
         }
 
         const { data } = await axios.post(`${import.meta.env.VITE_API}/login`, { email, password }, config)
-        console.log(data.user)
+        if (data.token) {
+            sessionStorage.setItem('token', JSON.stringify(data.token));
+        }
+        if (data.user) {
+            sessionStorage.setItem('user', JSON.stringify(data.user));
+        }
         dispatch({
             type: LOGIN_SUCCESS,
             payload: data.user
         })
     } catch (error) {
-        console.log(error.response.data.message)
-
         dispatch({
             type: LOGIN_FAIL,
-            payload: error.response.data.message
+            payload: error?.response?.data?.message || error.message
         })
     }
 }
