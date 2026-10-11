@@ -90,17 +90,6 @@ exports.getProducts = async (req, res) => {
         productsCount,
     })
 }
-    // if (!products)
-    //     return res.status(400).json({ message: 'error loading products' })
-
-    // return res.status(200).json({
-    //     success: true,
-    //     products,
-    //     resPerPage,
-    //     productsCount,
-
-    // })
-}
 
 exports.getSingleProduct = async (req, res, next) => {
     const product = await Product.findById(req.params.id);
