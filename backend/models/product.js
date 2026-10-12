@@ -30,6 +30,10 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please enter product description'],
     },
+    specifications: {
+        type: Map,
+        of: String
+    },
     ratings: {
         type: Number,
         default: 0
@@ -48,17 +52,9 @@ const productSchema = new mongoose.Schema({
         }
     ],
     category: {
-        type: String,
-        required: [true, 'Please select category for this product'],
-        enum: {
-            values: [
-                'Bikes',
-                'Frames',
-                'Components',
-                'Apparel & Goods'
-            ],
-            message: 'Please select correct category for product'
-        }
+        type: mongoose.Schema.ObjectId,
+        ref: 'Category',
+        required: [true, 'Please select category for this product']
     },
     isPublished: {
         type: Boolean,
@@ -78,27 +74,12 @@ const productSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    reviews: [
-        {
-            user: {
-                type: mongoose.Schema.ObjectId,
-                ref: 'User',
-                required: true
-            },
-            name: {
-                type: String,
-                required: true
-            },
-            rating: {
-                type: Number,
-                required: true
-            },
-            comment: {
-                type: String,
-                required: true
-            }
-        }
-    ],
+    avgRating: {
+        type: Number,
+        default: 0,
+        min: [0, 'Rating cannot be negative'],
+        max: [5, 'Rating cannot exceed 5']
+    },
     user: {
         type: mongoose.Schema.ObjectId,
         ref: 'User',
