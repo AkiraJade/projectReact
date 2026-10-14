@@ -89,11 +89,11 @@ const OrdersList = () => {
         {
             field: 'id',
             headerName: 'Order Reference',
-            flex: 1.1,
+            flex: 1.2,
             renderCell: (params) => (
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', lineHeight: '1.3' }}>
                     <span style={{ fontFamily: 'monospace', fontSize: '13px', fontWeight: 700, color: '#111827' }}>
-                        #ORD-{params.value.slice(-8).toUpperCase()}
+                        #ORD-{String(params.value).slice(-8).toUpperCase()}
                     </span>
                     <span style={{ fontFamily: 'monospace', fontSize: '11px', color: '#6B7280' }}>
                         {params.value}
@@ -153,47 +153,21 @@ const OrdersList = () => {
             headerAlign: 'right',
             renderCell: (params) => (
                 <div style={{ display: 'flex', gap: '8px' }}>
-                    <Link to={`/admin/order/${params.row.rawId}`} style={{ textDecoration: 'none' }}>
-                        <Button
-                            size="small"
-                            variant="outlined"
-                            sx={{
-                                minWidth: '32px',
-                                padding: '4px 8px',
-                                borderColor: '#D1D5DB',
-                                color: '#374151',
-                                '&:hover': {
-                                    borderColor: '#111827',
-                                    color: '#111827',
-                                    backgroundColor: '#F3F4F6'
-                                }
-                            }}
-                            title="Process and update fulfillment"
-                        >
-                            <VisibilityIcon fontSize="small" />
-                        </Button>
+                    <Link to={`/admin/order/${params.row.rawId}`} className="ds-table-action-btn ds-table-btn-view">
+                        <VisibilityIcon style={{ fontSize: '14px' }} />
+                        Process
                     </Link>
                     {params.row.status !== 'Delivered' && (
-                        <Button
-                            size="small"
-                            color="error"
-                            variant="outlined"
+                        <button
+                            type="button"
                             disabled={deletingId === params.row.rawId}
                             onClick={() => deleteOrderHandler(params.row.rawId, params.row.status)}
-                            sx={{
-                                minWidth: '32px',
-                                padding: '4px 8px',
-                                borderColor: '#FCA5A5',
-                                color: '#DC2626',
-                                '&:hover': {
-                                    backgroundColor: '#FEF2F2',
-                                    borderColor: '#EF4444'
-                                }
-                            }}
+                            className="ds-table-action-btn ds-table-btn-trash"
                             title="Cancel / delete unfulfilled order"
                         >
-                            <DeleteOutlineIcon fontSize="small" />
-                        </Button>
+                            <DeleteOutlineIcon style={{ fontSize: '14px' }} />
+                            Cancel
+                        </button>
                     )}
                 </div>
             )
@@ -230,43 +204,7 @@ const OrdersList = () => {
                 {loading ? (
                     <Loader />
                 ) : allOrders.length > 0 ? (
-                    <Box
-                        sx={{
-                            width: '100%',
-                            '& .MuiDataGrid-root': {
-                                border: '1px solid #EAECF0',
-                                borderRadius: '8px',
-                                color: '#111827',
-                                fontFamily: 'inherit',
-                                backgroundColor: '#FFFFFF',
-                            },
-                            '& .MuiDataGrid-cell': {
-                                borderBottom: '1px solid #F2F4F7',
-                                fontSize: '13px',
-                            },
-                            '& .MuiDataGrid-columnHeaders': {
-                                backgroundColor: '#F8F9FA',
-                                borderBottom: '1px solid #EAECF0',
-                                color: '#4B5563',
-                                fontSize: '11.5px',
-                                fontWeight: 700,
-                                letterSpacing: '0.04em',
-                                textTransform: 'uppercase',
-                            },
-                            '& .MuiDataGrid-row:hover': {
-                                backgroundColor: '#F8FAFC',
-                            },
-                            '& .MuiDataGrid-footerContainer': {
-                                borderTop: '1px solid #EAECF0',
-                                backgroundColor: '#FFFFFF',
-                                color: '#6B7280',
-                            },
-                            '& .MuiTablePagination-root': {
-                                color: '#4B5563',
-                                fontSize: '12px',
-                            },
-                        }}
-                    >
+                    <Box className="ds-datagrid-container">
                         <DataGrid
                             rows={rows}
                             columns={columns}

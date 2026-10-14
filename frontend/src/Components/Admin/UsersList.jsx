@@ -134,32 +134,14 @@ const UsersList = () => {
         <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', width: '100%' }}>
           <Link
             to={`/admin/user/${params.id}`}
-            style={{
-              padding: '5px 12px',
-              background: '#FFFFFF',
-              border: '1px solid #D1D5DB',
-              color: '#374151',
-              fontSize: '11.5px',
-              fontWeight: 600,
-              textDecoration: 'none',
-              borderRadius: '6px',
-            }}
+            className="ds-table-action-btn ds-table-btn-edit"
           >
             Edit
           </Link>
           <button
             type="button"
             onClick={() => deleteUserHandler(params.id, params.row.name)}
-            style={{
-              padding: '5px 12px',
-              background: '#FEF2F2',
-              border: '1px solid #FCA5A5',
-              color: '#DC2626',
-              fontSize: '11.5px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              borderRadius: '6px',
-            }}
+            className="ds-table-action-btn ds-table-btn-trash"
           >
             Deactivate
           </button>
@@ -214,43 +196,7 @@ const UsersList = () => {
           <Loader />
         </div>
       ) : (
-        <Box
-          sx={{
-            width: '100%',
-            '& .MuiDataGrid-root': {
-              border: '1px solid #EAECF0',
-              borderRadius: '8px',
-              color: '#111827',
-              fontFamily: 'inherit',
-              backgroundColor: '#FFFFFF',
-            },
-            '& .MuiDataGrid-cell': {
-              borderBottom: '1px solid #F2F4F7',
-              fontSize: '13px',
-            },
-            '& .MuiDataGrid-columnHeaders': {
-              backgroundColor: '#F8F9FA',
-              borderBottom: '1px solid #EAECF0',
-              color: '#4B5563',
-              fontSize: '11.5px',
-              fontWeight: 700,
-              letterSpacing: '0.04em',
-              textTransform: 'uppercase',
-            },
-            '& .MuiDataGrid-row:hover': {
-              backgroundColor: '#F8FAFC',
-            },
-            '& .MuiDataGrid-footerContainer': {
-              borderTop: '1px solid #EAECF0',
-              backgroundColor: '#FFFFFF',
-              color: '#6B7280',
-            },
-            '& .MuiTablePagination-root': {
-              color: '#4B5563',
-              fontSize: '12px',
-            },
-          }}
-        >
+        <Box className="ds-datagrid-container">
           <DataGrid
             rows={rows}
             columns={columns}

@@ -163,8 +163,8 @@ const TrashList = () => {
             />
           )}
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ fontWeight: 600, color: '#f6f5f1' }}>{params.value}</span>
-            <span style={{ fontSize: '11px', color: '#888' }}>{params.row.category}</span>
+            <span style={{ fontWeight: 600, color: '#111827', fontSize: '13.5px' }}>{params.value}</span>
+            <span style={{ fontSize: '11px', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{params.row.category}</span>
           </div>
         </div>
       ),
@@ -173,19 +173,19 @@ const TrashList = () => {
       field: 'price',
       headerName: 'Price',
       width: 100,
-      renderCell: (params) => <span style={{ fontFamily: 'monospace', color: '#e5b94f' }}>${params.value}</span>,
+      renderCell: (params) => <span style={{ fontFamily: 'monospace', fontWeight: 600, color: '#111827' }}>${params.value}</span>,
     },
     {
       field: 'deletedAt',
       headerName: 'Deleted Date',
       width: 140,
-      renderCell: (params) => <span style={{ fontSize: '12px', color: '#aaa' }}>{params.value}</span>,
+      renderCell: (params) => <span style={{ fontSize: '12.5px', color: '#4B5563' }}>{params.value}</span>,
     },
     {
       field: 'deletedBy',
       headerName: 'Deleted By',
       width: 160,
-      renderCell: (params) => <span style={{ fontSize: '12px', color: '#aaa' }}>{params.value || 'Administrator'}</span>,
+      renderCell: (params) => <span style={{ fontSize: '12.5px', color: '#4B5563' }}>{params.value || 'Administrator'}</span>,
     },
     {
       field: 'actions',
@@ -194,10 +194,10 @@ const TrashList = () => {
       sortable: false,
       filterable: false,
       renderCell: (params) => (
-        <div style={{ display: 'flex', gap: '6px' }}>
+        <div style={{ display: 'flex', gap: '8px' }}>
           <button
             type="button"
-            className="btn btn-sm btn-outline-success"
+            className="ds-table-action-btn ds-table-btn-view"
             title="Restore product to active collection"
             onClick={() =>
               setConfirmDialog({
@@ -208,13 +208,12 @@ const TrashList = () => {
                 targetId: params.id,
               })
             }
-            style={{ fontSize: '11px', padding: '3px 8px', borderColor: '#10b981', color: '#10b981' }}
           >
-            RESTORE
+            Restore
           </button>
           <button
             type="button"
-            className="btn btn-sm btn-outline-danger"
+            className="ds-table-action-btn ds-table-btn-trash"
             title="Permanently erase product"
             onClick={() =>
               setConfirmDialog({
@@ -225,9 +224,8 @@ const TrashList = () => {
                 targetId: params.id,
               })
             }
-            style={{ fontSize: '11px', padding: '3px 8px', borderColor: '#ef4444', color: '#ef4444' }}
           >
-            PURGE
+            Purge
           </button>
         </div>
       ),
@@ -522,49 +520,7 @@ const TrashList = () => {
           <Loader />
         </div>
       ) : (
-        <Box
-          sx={{
-            width: '100%',
-            '& .MuiDataGrid-root': {
-              border: '1px solid #EAECF0',
-              borderRadius: '8px',
-              color: '#111827',
-              fontFamily: 'inherit',
-              backgroundColor: '#FFFFFF',
-            },
-            '& .MuiDataGrid-cell': {
-              borderBottom: '1px solid #F2F4F7',
-              fontSize: '13px',
-            },
-            '& .MuiDataGrid-columnHeaders': {
-              backgroundColor: '#F8F9FA',
-              borderBottom: '1px solid #EAECF0',
-              color: '#4B5563',
-              fontSize: '11.5px',
-              fontWeight: 700,
-              letterSpacing: '0.04em',
-              textTransform: 'uppercase',
-            },
-            '& .MuiDataGrid-row:hover': {
-              backgroundColor: '#F8FAFC',
-            },
-            '& .MuiDataGrid-footerContainer': {
-              borderTop: '1px solid #EAECF0',
-              backgroundColor: '#FFFFFF',
-              color: '#6B7280',
-            },
-            '& .MuiTablePagination-root': {
-              color: '#4B5563',
-              fontSize: '12px',
-            },
-            '& .MuiCheckbox-root': {
-              color: '#9CA3AF',
-            },
-            '& .MuiCheckbox-root.Mui-checked': {
-              color: '#059669',
-            },
-          }}
-        >
+        <Box className="ds-datagrid-container">
           {activeTab === 'products' && (
             <DataGrid
               rows={productRows}
