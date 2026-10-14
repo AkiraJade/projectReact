@@ -7,6 +7,7 @@ import './Navbar.css';
 const Navbar = ({ cartItems = [] }) => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const { user } = useSelector((state) => state.auth || {});
   const dispatch = useDispatch();
   const location = useLocation();
@@ -23,9 +24,10 @@ const Navbar = ({ cartItems = [] }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu on route change
+  // Close menus on route change
   useEffect(() => {
     setMobileMenuOpen(false);
+    setUserMenuOpen(false);
   }, [location.pathname]);
 
   const handleLogout = () => {
@@ -61,7 +63,13 @@ const Navbar = ({ cartItems = [] }) => {
           {/* RIGHT: LOGIN / USER & CART */}
           <div className="ds-navbar-actions">
             {user ? (
-              <div className="ds-user-dropdown" tabIndex={0} role="button" aria-haspopup="true">
+              <div
+                className={`ds-user-dropdown ${userMenuOpen ? 'is-active' : ''}`}
+                tabIndex={0}
+                role="button"
+                aria-haspopup="true"
+                onClick={() => setUserMenuOpen(!userMenuOpen)}
+              >
                 <div className="ds-nav-user-pill">
                   <div className="ds-nav-avatar-box">
                     <img
@@ -74,11 +82,11 @@ const Navbar = ({ cartItems = [] }) => {
                 </div>
                 <div className="ds-user-menu" role="menu">
                   {user.role === 'admin' && (
-                    <Link to="/dashboard" className="ds-menu-item" role="menuitem">Dashboard</Link>
+                    <Link to="/dashboard" className="ds-menu-item" role="menuitem" onClick={() => setUserMenuOpen(false)}>Dashboard</Link>
                   )}
-                  <Link to="/orders/me" className="ds-menu-item" role="menuitem">Orders</Link>
-                  <Link to="/me" className="ds-menu-item" role="menuitem">Profile</Link>
-                  <Link to="/me/addresses" className="ds-menu-item" role="menuitem">Addresses</Link>
+                  <Link to="/orders/me" className="ds-menu-item" role="menuitem" onClick={() => setUserMenuOpen(false)}>Orders</Link>
+                  <Link to="/me" className="ds-menu-item" role="menuitem" onClick={() => setUserMenuOpen(false)}>Profile</Link>
+                  <Link to="/me/addresses" className="ds-menu-item" role="menuitem" onClick={() => setUserMenuOpen(false)}>Addresses</Link>
                   <button onClick={handleLogout} className="ds-menu-item ds-logout-btn" role="menuitem">
                     Logout
                   </button>

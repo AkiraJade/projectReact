@@ -1,9 +1,13 @@
+const mongoose = require('mongoose');
 const Product = require('../models/product')
 const Order = require('../models/order')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 const cloudinary = require('cloudinary')
 const APIFeatures = require('../utils/apiFeatures');
+const BadWordsPkg = require('bad-words');
+const FilterClass = BadWordsPkg.Filter || BadWordsPkg;
+const badWordsFilter = new FilterClass();
 
 exports.newProduct = async (req, res, next) => {
     try {
@@ -72,9 +76,9 @@ exports.getProducts = async (req, res) => {
         queryCopy.category = new RegExp(`^${queryCopy.category}$`, 'i');
     }
 
-    const baseQuery = Product.find({ isPublished: { $ne: false } });
+    const baseQuery = Product.find({ isPublished: { $ne: false }, isDeleted: { $ne: true } });
     const apiFeatures = new APIFeatures(baseQuery, queryCopy).search().filter();
-    const productsCount = await Product.countDocuments({ isPublished: { $ne: false } });
+    const productsCount = await Product.countDocuments({ isPublished: { $ne: false }, isDeleted: { $ne: true } });
 
     apiFeatures.pagination(resPerPage);
     const products = await apiFeatures.query;
@@ -99,6 +103,30 @@ exports.getSingleProduct = async (req, res, next) => {
                 success: false,
                 message: 'Product not found'
             });
+        }
+
+        // If product is soft-deleted, only admins can view it
+        if (product.isDeleted === true) {
+            let isAdmin = false;
+            let token = req.cookies?.token;
+            if (!token && req.headers?.authorization && req.headers.authorization.startsWith('Bearer')) {
+                token = req.headers.authorization.split(' ')[1];
+            }
+            if (token && token !== 'null') {
+                try {
+                    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+                    const user = await User.findById(decoded.id);
+                    if (user && user.role === 'admin') {
+                        isAdmin = true;
+                    }
+                } catch (e) {}
+            }
+            if (!isAdmin) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Product not found or has been removed'
+                });
+            }
         }
 
         // If product is draft/unpublished, only admins can view it
@@ -138,36 +166,24 @@ exports.getSingleProduct = async (req, res, next) => {
 }
 
 exports.getAdminProducts = async (req, res, next) => {
-
-    const products = await Product.find();
-    if (!products) {
-        return res.status(404).json({
-            success: false,
-            message: 'Products not found'
-        })
+    try {
+        const products = await Product.find({ isDeleted: { $ne: true } }).sort({ createdAt: -1 });
+        return res.status(200).json({
+            success: true,
+            products
+        });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: err.message });
     }
-    return res.status(200).json({
-        success: true,
-        products
-    })
-
 }
 exports.updateProduct = async (req, res, next) => {
     let product = await Product.findById(req.params.id);
-    // console.log(req.body)
     if (!product) {
         return res.status(404).json({
             success: false,
             message: 'Product not found'
         })
     }
-    let images = []
-
-    // if (typeof req.files === 'string') {
-    //     images.push(req.files)
-    // } else {
-    //     images = req.files
-    // }
     if (req.body.images) {
         let images = []
         if (typeof req.body.images === 'string') {
@@ -201,13 +217,13 @@ exports.updateProduct = async (req, res, next) => {
         runValidators: true,
         useFindandModify: false
     })
-    // console.log(product)
     return res.status(200).json({
         success: true,
         product
     })
 }
 
+// Soft-delete product => DELETE /api/v1/admin/product/:id
 exports.deleteProduct = async (req, res, next) => {
     try {
         const product = await Product.findById(req.params.id);
@@ -215,7 +231,80 @@ exports.deleteProduct = async (req, res, next) => {
             return res.status(404).json({
                 success: false,
                 message: 'Product not found'
-            })
+            });
+        }
+
+        if (product.isDeleted === true) {
+            return res.status(400).json({
+                success: false,
+                message: 'Product is already in Trash'
+            });
+        }
+
+        product.isDeleted = true;
+        product.deletedAt = new Date();
+        product.deletedBy = req.user ? req.user.id : null;
+        await product.save({ validateBeforeSave: false });
+
+        return res.status(200).json({
+            success: true,
+            message: 'Product moved to Trash successfully'
+        });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: err.message });
+    }
+}
+
+// Restore soft-deleted product => PUT /api/v1/admin/product/:id/restore
+exports.restoreProduct = async (req, res, next) => {
+    try {
+        const product = await Product.findById(req.params.id);
+        if (!product) {
+            return res.status(404).json({
+                success: false,
+                message: 'Product not found'
+            });
+        }
+
+        if (!product.isDeleted) {
+            return res.status(400).json({
+                success: false,
+                message: 'Product is not in Trash'
+            });
+        }
+
+        product.isDeleted = false;
+        product.deletedAt = null;
+        product.deletedBy = null;
+        await product.save({ validateBeforeSave: false });
+
+        return res.status(200).json({
+            success: true,
+            message: 'Product restored successfully'
+        });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: err.message });
+    }
+}
+
+// Permanent delete product => DELETE /api/v1/admin/product/:id/permanent
+exports.permanentDeleteProduct = async (req, res, next) => {
+    try {
+        const product = await Product.findById(req.params.id);
+        if (!product) {
+            return res.status(404).json({
+                success: false,
+                message: 'Product not found'
+            });
+        }
+
+        // Check if product is referenced in customer orders
+        const hasOrders = await Order.findOne({ 'orderItems.product': req.params.id });
+        if (hasOrders) {
+            return res.status(400).json({
+                success: false,
+                message: 'Cannot permanently delete this product because it is referenced in customer order history. It will remain safely preserved in Trash.'
+            });
         }
 
         // Clean up Cloudinary images safely
@@ -235,8 +324,23 @@ exports.deleteProduct = async (req, res, next) => {
 
         return res.status(200).json({
             success: true,
-            message: 'Product deleted'
-        })
+            message: 'Product permanently deleted'
+        });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: err.message });
+    }
+}
+
+// Get all trashed products => GET /api/v1/admin/trash/products
+exports.getTrashProducts = async (req, res, next) => {
+    try {
+        const products = await Product.find({ isDeleted: true })
+            .populate('deletedBy', 'name email')
+            .sort({ deletedAt: -1 });
+        return res.status(200).json({
+            success: true,
+            products
+        });
     } catch (err) {
         return res.status(500).json({ success: false, message: err.message });
     }
@@ -251,6 +355,20 @@ exports.createProductReview = async (req, res, next) => {
         }
         if (!comment || !comment.trim()) {
             return res.status(400).json({ success: false, message: 'Please provide a review comment' });
+        }
+
+        // Mask profanity in review comments
+        let sanitizedComment = comment;
+        try {
+            if (badWordsFilter.isProfane(comment)) {
+                sanitizedComment = badWordsFilter.clean(comment);
+            }
+        } catch (filterErr) {
+            // If filter fails for any reason, proceed with original comment
+        }
+
+        if (!productId || !mongoose.Types.ObjectId.isValid(productId)) {
+            return res.status(404).json({ success: false, message: 'Product not found or invalid product ID' });
         }
 
         const product = await Product.findById(productId);
@@ -276,7 +394,7 @@ exports.createProductReview = async (req, res, next) => {
             user: req.user._id,
             name: req.user.name,
             rating: numRating,
-            comment: comment.trim()
+            comment: sanitizedComment.trim()
         };
 
         const isReviewed = product.reviews.find(
@@ -286,7 +404,7 @@ exports.createProductReview = async (req, res, next) => {
         if (isReviewed) {
             product.reviews.forEach(r => {
                 if (r.user.toString() === req.user._id.toString()) {
-                    r.comment = comment.trim();
+                    r.comment = sanitizedComment.trim();
                     r.rating = numRating;
                 }
             });
@@ -310,42 +428,151 @@ exports.createProductReview = async (req, res, next) => {
 
 exports.getProductReviews = async (req, res, next) => {
     try {
+        if (!req.query.id || !mongoose.Types.ObjectId.isValid(req.query.id)) {
+            return res.status(200).json({ success: true, reviews: [] });
+        }
+
         const product = await Product.findById(req.query.id);
         if (!product) {
             return res.status(404).json({ success: false, message: 'Product not found' });
         }
+        const activeReviews = (product.reviews || []).filter(r => !r.isDeleted);
         res.status(200).json({
             success: true,
-            reviews: product.reviews
-        })
+            reviews: activeReviews
+        });
     } catch (err) {
         res.status(500).json({ success: false, message: err.message });
     }
 }
 
+// Soft-delete review => DELETE /api/v1/reviews?id=...&productId=...
 exports.deleteReview = async (req, res, next) => {
     try {
         const product = await Product.findById(req.query.productId);
         if (!product) {
             return res.status(404).json({ success: false, message: 'Product not found' });
         }
-        const reviews = product.reviews.filter(review => review._id.toString() !== req.query.id.toString());
-        const numOfReviews = reviews.length;
 
-        const ratings = numOfReviews > 0 ? Number((reviews.reduce((acc, item) => item.rating + acc, 0) / numOfReviews).toFixed(1)) : 0;
+        const review = (product.reviews || []).find(r => r._id.toString() === req.query.id.toString());
+        if (!review) {
+            return res.status(404).json({ success: false, message: 'Review not found' });
+        }
 
-        await Product.findByIdAndUpdate(req.query.productId, {
-            reviews,
-            ratings,
-            numOfReviews
-        }, {
-            new: true,
-            runValidators: true,
-        });
+        // Only admin or review author can soft-delete
+        if (req.user.role !== 'admin' && review.user.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ success: false, message: 'You are not authorized to delete this review' });
+        }
+
+        review.isDeleted = true;
+        review.deletedAt = new Date();
+        review.deletedBy = req.user._id;
+
+        const activeReviews = product.reviews.filter(r => !r.isDeleted);
+        product.numOfReviews = activeReviews.length;
+        product.ratings = activeReviews.length > 0
+            ? Number((activeReviews.reduce((acc, item) => item.rating + acc, 0) / activeReviews.length).toFixed(1))
+            : 0;
+
+        await product.save({ validateBeforeSave: false });
 
         return res.status(200).json({
             success: true,
-            message: 'Review removed'
+            message: 'Review moved to Trash'
+        });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: err.message });
+    }
+}
+
+// Restore soft-deleted review => PUT /api/v1/admin/review/restore?id=...&productId=...
+exports.restoreReview = async (req, res, next) => {
+    try {
+        const product = await Product.findById(req.query.productId);
+        if (!product) {
+            return res.status(404).json({ success: false, message: 'Product not found' });
+        }
+
+        const review = (product.reviews || []).find(r => r._id.toString() === req.query.id.toString());
+        if (!review) {
+            return res.status(404).json({ success: false, message: 'Review not found' });
+        }
+
+        review.isDeleted = false;
+        review.deletedAt = null;
+        review.deletedBy = null;
+
+        const activeReviews = product.reviews.filter(r => !r.isDeleted);
+        product.numOfReviews = activeReviews.length;
+        product.ratings = activeReviews.length > 0
+            ? Number((activeReviews.reduce((acc, item) => item.rating + acc, 0) / activeReviews.length).toFixed(1))
+            : 0;
+
+        await product.save({ validateBeforeSave: false });
+
+        return res.status(200).json({
+            success: true,
+            message: 'Review restored successfully'
+        });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: err.message });
+    }
+}
+
+// Permanent delete review => DELETE /api/v1/admin/review/permanent?id=...&productId=...
+exports.permanentDeleteReview = async (req, res, next) => {
+    try {
+        const product = await Product.findById(req.query.productId);
+        if (!product) {
+            return res.status(404).json({ success: false, message: 'Product not found' });
+        }
+
+        product.reviews = (product.reviews || []).filter(r => r._id.toString() !== req.query.id.toString());
+        const activeReviews = product.reviews.filter(r => !r.isDeleted);
+        product.numOfReviews = activeReviews.length;
+        product.ratings = activeReviews.length > 0
+            ? Number((activeReviews.reduce((acc, item) => item.rating + acc, 0) / activeReviews.length).toFixed(1))
+            : 0;
+
+        await product.save({ validateBeforeSave: false });
+
+        return res.status(200).json({
+            success: true,
+            message: 'Review permanently deleted'
+        });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: err.message });
+    }
+}
+
+// Get all trashed reviews => GET /api/v1/admin/trash/reviews
+exports.getTrashReviews = async (req, res, next) => {
+    try {
+        const products = await Product.find({ 'reviews.isDeleted': true })
+            .select('name reviews')
+            .populate('reviews.deletedBy', 'name email');
+
+        let deletedReviews = [];
+        for (const p of products) {
+            for (const r of (p.reviews || [])) {
+                if (r.isDeleted) {
+                    deletedReviews.push({
+                        _id: r._id,
+                        productId: p._id,
+                        productName: p.name,
+                        userName: r.name,
+                        rating: r.rating,
+                        comment: r.comment,
+                        deletedAt: r.deletedAt,
+                        deletedBy: r.deletedBy
+                    });
+                }
+            }
+        }
+
+        return res.status(200).json({
+            success: true,
+            reviews: deletedReviews
         });
     } catch (err) {
         return res.status(500).json({ success: false, message: err.message });
@@ -388,3 +615,87 @@ exports.productSales = async (req, res, next) => {
         res.status(500).json({ success: false, message: err.message });
     }
 }
+
+// Admin: Bulk soft-delete products => DELETE /api/v1/admin/products/bulk
+exports.bulkDeleteProducts = async (req, res, next) => {
+    try {
+        const { ids } = req.body;
+        if (!ids || !Array.isArray(ids) || ids.length === 0) {
+            return res.status(400).json({ success: false, message: 'No product IDs provided' });
+        }
+
+        const result = await Product.updateMany(
+            { _id: { $in: ids } },
+            {
+                $set: {
+                    isDeleted: true,
+                    deletedAt: new Date(),
+                    deletedBy: req.user ? req.user.id : null
+                }
+            }
+        );
+
+        return res.status(200).json({
+            success: true,
+            message: `${result.modifiedCount} product(s) moved to Trash`,
+            deletedCount: result.modifiedCount
+        });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: err.message });
+    }
+};
+
+// Admin: Bulk restore products => PUT /api/v1/admin/products/bulk/restore
+exports.bulkRestoreProducts = async (req, res, next) => {
+    try {
+        const { ids } = req.body;
+        if (!ids || !Array.isArray(ids) || ids.length === 0) {
+            return res.status(400).json({ success: false, message: 'No product IDs provided' });
+        }
+
+        const result = await Product.updateMany(
+            { _id: { $in: ids } },
+            {
+                $set: {
+                    isDeleted: false,
+                    deletedAt: null,
+                    deletedBy: null
+                }
+            }
+        );
+
+        return res.status(200).json({
+            success: true,
+            message: `${result.modifiedCount} product(s) restored successfully`,
+            restoredCount: result.modifiedCount
+        });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: err.message });
+    }
+};
+
+// Admin: Get overall counts of trashed items => GET /api/v1/admin/trash/counts
+exports.getTrashCounts = async (req, res, next) => {
+    try {
+        const productsCount = await Product.countDocuments({ isDeleted: true });
+        const usersCount = await User.countDocuments({ isDeleted: true });
+
+        const productsWithDeletedReviews = await Product.find({ 'reviews.isDeleted': true }).select('reviews');
+        let reviewsCount = 0;
+        for (const p of productsWithDeletedReviews) {
+            reviewsCount += (p.reviews || []).filter(r => r.isDeleted).length;
+        }
+
+        return res.status(200).json({
+            success: true,
+            counts: {
+                products: productsCount,
+                users: usersCount,
+                reviews: reviewsCount,
+                total: productsCount + usersCount + reviewsCount
+            }
+        });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: err.message });
+    }
+};

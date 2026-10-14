@@ -222,18 +222,32 @@
 
 .ds-user-menu {
   position: absolute;
-  top: calc(100% + 1rem);
+  top: 100%;
   right: 0;
   width: 180px;
-  background: var(--ds-bg-surface);
-  border: 1px solid var(--ds-border-light);
+  background: var(--ds-bg-surface, #16181b);
+  border: 1px solid var(--ds-border-light, rgba(255, 255, 255, 0.15));
   display: none;
   flex-direction: column;
   padding: 0.5rem 0;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+  z-index: 1000;
 }
 
-.ds-user-dropdown:hover .ds-user-menu {
+/* Hover bridge: keeps hover active even across any small pixel gaps */
+.ds-user-menu::before {
+  content: '';
+  position: absolute;
+  top: -16px;
+  left: 0;
+  right: 0;
+  height: 16px;
+  background: transparent;
+}
+
+.ds-user-dropdown:hover .ds-user-menu,
+.ds-user-dropdown.is-active .ds-user-menu,
+.ds-user-dropdown:focus-within .ds-user-menu {
   display: flex;
 }
 

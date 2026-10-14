@@ -1,12 +1,33 @@
-import React from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
 import { logout } from '../../../actions/userActions';
+import { getAdminConfig } from '../../../Utils/helpers';
 
 const AdminSidebar = ({ mobileOpen, setMobileOpen }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useSelector((state) => state.auth || {});
+  const [trashCount, setTrashCount] = useState(0);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchTrashCount = async () => {
+      try {
+        const config = getAdminConfig();
+        const { data } = await axios.get(`${import.meta.env.VITE_API}/admin/trash/counts`, config);
+        if (isMounted && data.success && data.counts) {
+          setTrashCount(data.counts.total || 0);
+        }
+      } catch (err) {
+        // silent fail on network or auth check
+      }
+    };
+    fetchTrashCount();
+    return () => { isMounted = false; };
+  }, [location.pathname]);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -34,7 +55,7 @@ const AdminSidebar = ({ mobileOpen, setMobileOpen }) => {
       >
         {/* Brand Header */}
         <div className="ds-admin-sidebar-brand">
-          <NavLink to="/admin" className="ds-sidebar-brand-link" onClick={closeMobile}>
+          <NavLink to="/admin/dashboard" className="ds-sidebar-brand-link" onClick={closeMobile}>
             <div className="ds-sidebar-brand-icon">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-label="Dosnoventa Logo">
                 <circle cx="5.5" cy="17.5" r="3.5" />
@@ -57,10 +78,9 @@ const AdminSidebar = ({ mobileOpen, setMobileOpen }) => {
           <div className="ds-sidebar-section">
             <div className="ds-sidebar-section-title">Navigation</div>
             <nav className="ds-sidebar-nav">
-              {/* 1. Overview */}
+              {/* 1. Dashboard */}
               <NavLink
-                to="/admin"
-                end
+                to="/admin/dashboard"
                 className={({ isActive }) => `ds-nav-link ${isActive ? 'ds-nav-link-active' : ''}`}
                 onClick={closeMobile}
               >
@@ -72,12 +92,12 @@ const AdminSidebar = ({ mobileOpen, setMobileOpen }) => {
                     <rect width="7" height="7" x="3" y="14" rx="1.5" />
                   </svg>
                 </span>
-                <span className="ds-nav-text">Overview</span>
+                <span className="ds-nav-text">Dashboard</span>
               </NavLink>
 
               {/* 2. Analytics */}
               <NavLink
-                to="/dashboard"
+                to="/admin/analytics"
                 className={({ isActive }) => `ds-nav-link ${isActive ? 'ds-nav-link-active' : ''}`}
                 onClick={closeMobile}
               >
@@ -156,6 +176,39 @@ const AdminSidebar = ({ mobileOpen, setMobileOpen }) => {
                   </svg>
                 </span>
                 <span className="ds-nav-text">Reviews</span>
+              </NavLink>
+
+              {/* 7. Trash / Recovery */}
+              <NavLink
+                to="/admin/trash"
+                className={({ isActive }) => `ds-nav-link ${isActive ? 'ds-nav-link-active' : ''}`}
+                onClick={closeMobile}
+              >
+                <span className="ds-nav-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 6h18" />
+                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                    <line x1="10" y1="11" x2="10" y2="17" />
+                    <line x1="14" y1="11" x2="14" y2="17" />
+                  </svg>
+                </span>
+                <span className="ds-nav-text">Trash</span>
+                {trashCount > 0 && (
+                  <span style={{
+                    marginLeft: 'auto',
+                    background: '#C83226',
+                    color: '#fff',
+                    fontSize: '10px',
+                    fontFamily: 'monospace',
+                    fontWeight: 700,
+                    padding: '2px 6px',
+                    borderRadius: '10px',
+                    lineHeight: 1
+                  }}>
+                    {trashCount}
+                  </span>
+                )}
               </NavLink>
             </nav>
           </div>

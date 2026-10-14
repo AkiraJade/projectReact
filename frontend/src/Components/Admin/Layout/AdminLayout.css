@@ -292,7 +292,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 1400px;
+  max-width: 1600px;
   margin: 0 auto;
 }
 
@@ -388,8 +388,8 @@
 
 /* 5. Page Content Container */
 .ds-admin-content-pane {
-  padding: 28px 32px 48px 32px;
-  max-width: 1400px;
+  padding: 24px 32px 48px 32px;
+  max-width: 1600px;
   width: 100%;
   margin: 0 auto;
   box-sizing: border-box;
@@ -759,6 +759,122 @@
   border: 1px solid #FEE2E2;
 }
 
+/* 9. Professional Atelier Admin Form Controls (No AI slop / No generic Bootstrap defaults) */
+.ds-admin-form-card {
+  background-color: var(--ds-admin-surface);
+  border: 1px solid var(--ds-admin-border);
+  border-radius: var(--ds-admin-radius-card);
+  padding: 32px;
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05);
+}
+
+.ds-form-section-title {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--ds-admin-text-main);
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--ds-admin-border-subtle);
+}
+
+.ds-form-group {
+  margin-bottom: 20px;
+}
+
+.ds-form-label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 6px;
+  letter-spacing: 0.01em;
+}
+
+.ds-form-input,
+.ds-form-select,
+.ds-form-textarea {
+  width: 100%;
+  padding: 10px 14px;
+  background-color: #FFFFFF;
+  border: 1.5px solid #D1D5DB;
+  border-radius: 8px;
+  color: #111827;
+  font-size: 13.5px;
+  font-family: inherit;
+  transition: all 0.15s ease;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.ds-form-input:focus,
+.ds-form-select:focus,
+.ds-form-textarea:focus {
+  border-color: #111827;
+  box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.08);
+}
+
+.ds-form-textarea {
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.5;
+}
+
+.ds-form-error {
+  display: block;
+  margin-top: 5px;
+  font-size: 11.5px;
+  color: #DC2626;
+  font-weight: 500;
+}
+
+.ds-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: #111827;
+  color: #FFFFFF;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ds-btn-primary:hover {
+  background-color: #000000;
+  transform: translateY(-1px);
+}
+
+.ds-btn-primary:disabled {
+  background-color: #E5E7EB;
+  color: #9CA3AF;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* File Upload Zone */
+.ds-file-dropzone {
+  border: 2px dashed #D1D5DB;
+  border-radius: 8px;
+  padding: 24px;
+  text-align: center;
+  background-color: #F9FAFB;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ds-file-dropzone:hover {
+  border-color: #111827;
+  background-color: #F3F4F6;
+}
+
 /* Responsive Rules */
 @media (max-width: 1024px) {
   .ds-dashboard-grid {
@@ -813,3 +929,4 @@
     display: none;
   }
 }
+

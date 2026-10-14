@@ -2,14 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 import MetaData from '../Layout/MetaData';
 import { updateProfile, clearErrors } from '../../actions/userActions';
 import { UPDATE_PROFILE_RESET } from '../../constants/userConstants';
 import './Profile.css';
 
+const profileSchema = yup.object({
+  name: yup.string().trim().min(2, 'Name must be at least 2 characters').required('Name is required'),
+  email: yup.string().trim().email('Valid email format required').required('Email is required'),
+});
+
 const UpdateProfile = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
   const [avatar, setAvatar] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState(
     'https://res.cloudinary.com/dgneiaky7/image/upload/v1788417006/avatars/sycta145jvdzqjukfgxw.png'
@@ -21,10 +27,23 @@ const UpdateProfile = () => {
   const { user } = useSelector((state) => state.auth || {});
   const { isUpdated, error, loading } = useSelector((state) => state.user || {});
 
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(profileSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+    },
+  });
+
   useEffect(() => {
     if (user) {
-      setName(user.name || '');
-      setEmail(user.email || '');
+      setValue('name', user.name || '');
+      setValue('email', user.email || '');
       if (user.avatar?.url) {
         setAvatarPreview(user.avatar.url);
       }
@@ -40,7 +59,7 @@ const UpdateProfile = () => {
       dispatch({ type: UPDATE_PROFILE_RESET });
       navigate('/me');
     }
-  }, [dispatch, user, error, isUpdated, navigate]);
+  }, [dispatch, user, error, isUpdated, navigate, setValue]);
 
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
@@ -68,21 +87,10 @@ const UpdateProfile = () => {
     reader.readAsDataURL(file);
   };
 
-  const submitHandler = (e) => {
-    e.preventDefault();
-
-    if (!name.trim()) {
-      toast.error('Name cannot be empty');
-      return;
-    }
-    if (!email.trim()) {
-      toast.error('Email cannot be empty');
-      return;
-    }
-
+  const onSubmit = (data) => {
     const formData = new FormData();
-    formData.set('name', name.trim());
-    formData.set('email', email.trim());
+    formData.set('name', data.name.trim());
+    formData.set('email', data.email.trim());
     if (avatar) {
       formData.set('avatar', avatar);
     }
@@ -111,7 +119,7 @@ const UpdateProfile = () => {
       <main className="ds-profile-main">
         <div className="ds-container-narrow">
           <div className="ds-profile-dossier-card" style={{ maxWidth: '600px', margin: '0 auto' }}>
-            <form onSubmit={submitHandler} noValidate>
+            <form onSubmit={handleSubmit(onSubmit)} noValidate>
               {/* Avatar Section */}
               <div className="ds-form-group" style={{ marginBottom: '2.5rem' }}>
                 <label className="ds-label">PROFILE PICTURE</label>
@@ -169,12 +177,14 @@ const UpdateProfile = () => {
                   type="text"
                   id="name_field"
                   className="ds-input"
-                  name="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
                   placeholder="Enter your name"
-                  required
+                  {...register('name')}
                 />
+                {errors.name && (
+                  <span style={{ color: '#ef4444', fontSize: '11px', marginTop: '4px', display: 'block' }}>
+                    {errors.name.message}
+                  </span>
+                )}
               </div>
 
               {/* Email Address */}
@@ -186,12 +196,14 @@ const UpdateProfile = () => {
                   type="email"
                   id="email_field"
                   className="ds-input"
-                  name="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
-                  required
+                  {...register('email')}
                 />
+                {errors.email && (
+                  <span style={{ color: '#ef4444', fontSize: '11px', marginTop: '4px', display: 'block' }}>
+                    {errors.email.message}
+                  </span>
+                )}
               </div>
 
               {/* Submit Button */}

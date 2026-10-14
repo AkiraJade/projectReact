@@ -8,6 +8,7 @@ import { ToastContainer, } from 'react-toastify';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
+import { DOSNOVENTA_CATALOG } from './data/dosnoventaProducts';
 
 
 
@@ -46,6 +47,8 @@ import UsersList from './Components/Admin/UsersList';
 import UpdateUser from './Components/Admin/UpdateUser';
 import ProtectedRoute from './Components/Route/ProtectedRoute';
 import ProductReviews from './Components/Admin/ProductReviews';
+import TrashList from './Components/Admin/TrashList';
+import Analytics from './Components/Admin/Analytics';
 
 function App() {
 
@@ -64,51 +67,64 @@ function App() {
   }, []);
 
   const addItemToCart = async (id, quantity) => {
-    // console.log(id, quantity)
     try {
-      const { data } = await axios.get(`${import.meta.env.VITE_API}/product/${id}`)
-      const item = {
-        product: data.product._id,
-        name: data.product.name,
-        price: data.product.price,
-        image: data.product.images[0].url,
-        stock: data.product.stock,
-        quantity: quantity
+      let item = null;
+
+      try {
+        const { data } = await axios.get(`${import.meta.env.VITE_API}/product/${id}`);
+        if (data?.product) {
+          item = {
+            product: data.product._id,
+            name: data.product.name,
+            price: data.product.price,
+            image: data.product.images?.[0]?.url || '/images/Dosnoventa_company_x.webp',
+            stock: data.product.stock,
+            quantity: quantity
+          };
+        }
+      } catch (apiErr) {
+        // Fallback to local curated catalog if backend call fails or product is local
+        const localProd = DOSNOVENTA_CATALOG.find(p => p._id === id);
+        if (localProd) {
+          item = {
+            product: localProd._id,
+            name: localProd.name,
+            price: localProd.price,
+            image: localProd.images?.[0]?.url || '/images/Dosnoventa_company_x.webp',
+            stock: localProd.stock,
+            quantity: quantity
+          };
+        }
       }
 
-      const isItemExist = state.cartItems.find(i => i.product === item.product)
+      if (!item) {
+        toast.error('Unable to add product to cart');
+        return;
+      }
 
-      // setState({
-      //   ...state,
-      //   cartItems: [...state.cartItems, item]
-      // })
+      const isItemExist = state.cartItems.find(i => i.product === item.product);
+      let updatedCart;
       if (isItemExist) {
-        setState({
-          ...state,
-          cartItems: state.cartItems.map(i => i.product === isItemExist.product ? item : i)
-        })
+        updatedCart = state.cartItems.map(i => i.product === isItemExist.product ? item : i);
+      } else {
+        updatedCart = [...state.cartItems, item];
       }
-      else {
-        setState({
-          ...state,
-          cartItems: [...state.cartItems, item]
-        })
-      }
+
+      setState({
+        ...state,
+        cartItems: updatedCart
+      });
+      localStorage.setItem('cartItems', JSON.stringify(updatedCart));
 
       toast.success('Item Added to Cart', {
         position: 'bottom-right'
-      })
-
-
+      });
     } catch (error) {
-      toast.error(error, {
+      toast.error(error?.response?.data?.message || error.message || 'Failed to add item to cart', {
         position: 'top-left'
       });
-
     }
-
   }
-  // localStorage.setItem('cartItems', JSON.stringify(state.cartItems))
   const removeItemFromCart = async (id) => {
     const updatedCart = state.cartItems.filter(i => i.product !== id);
     setState({
@@ -170,6 +186,8 @@ function App() {
           <Route element={<ProtectedRoute isAdmin={true}><AdminLayout /></ProtectedRoute>}>
             <Route path="/admin" element={<Dashboard />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/admin/dashboard" element={<Dashboard />} />
+            <Route path="/admin/analytics" element={<Analytics />} />
             <Route path="/admin/products" element={<ProductsList />} />
             <Route path="/admin/product" element={<NewProduct />} />
             <Route path="/admin/product/:id" element={<UpdateProduct />} />
@@ -178,6 +196,7 @@ function App() {
             <Route path="/admin/users" element={<UsersList />} />
             <Route path="/admin/user/:id" element={<UpdateUser />} />
             <Route path="/admin/reviews" element={<ProductReviews />} />
+            <Route path="/admin/trash" element={<TrashList />} />
           </Route>
         </Routes>
       </Router>

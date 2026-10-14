@@ -18,6 +18,7 @@ const Dashboard = () => {
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
   const [users, setUsers] = useState([]);
+  const [trashCounts, setTrashCounts] = useState({ total: 0, products: 0, reviews: 0, users: 0 });
   const [rangeSalesData, setRangeSalesData] = useState([]);
   const [selectedRange, setSelectedRange] = useState('30D'); // '7D' | '30D' | '90D'
   const [loading, setLoading] = useState(true);
@@ -30,19 +31,22 @@ const Dashboard = () => {
       setLoading(true);
       const config = getAdminConfig();
 
-      const [productsRes, ordersRes, usersRes] = await Promise.allSettled([
+      const [productsRes, ordersRes, usersRes, trashRes] = await Promise.allSettled([
         axios.get(`${import.meta.env.VITE_API}/admin/products`, config),
         axios.get(`${import.meta.env.VITE_API}/admin/orders`, config),
         axios.get(`${import.meta.env.VITE_API}/admin/users`, config),
+        axios.get(`${import.meta.env.VITE_API}/admin/trash/counts`, config),
       ]);
 
       const prods = productsRes.status === 'fulfilled' ? productsRes.value.data.products || [] : [];
       const ords = ordersRes.status === 'fulfilled' ? ordersRes.value.data.orders || [] : [];
       const usrs = usersRes.status === 'fulfilled' ? usersRes.value.data.users || [] : [];
+      const counts = trashRes.status === 'fulfilled' ? trashRes.value.data.counts || { total: 0, products: 0, reviews: 0, users: 0 } : { total: 0, products: 0, reviews: 0, users: 0 };
 
       setProducts(prods);
       setOrders(ords);
       setUsers(usrs);
+      setTrashCounts(counts);
 
       setLoading(false);
     } catch (err) {
@@ -220,87 +224,171 @@ const Dashboard = () => {
             </div>
             <div className="ds-stacked-card-val">{users.length}</div>
           </div>
+
+          {/* Card 4: Trashed & Recoverable Records */}
+          <Link to="/admin/trash" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <div className="ds-card ds-stacked-card" style={{ cursor: 'pointer', transition: 'border-color 0.2s' }}>
+              <div className="ds-stacked-card-header">
+                <span className="ds-card-label">Trash & Soft-Deleted</span>
+                <span className="ds-stacked-card-icon" aria-hidden="true" style={{ color: '#F87171' }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                  </svg>
+                </span>
+              </div>
+              <div className="ds-stacked-card-val" style={{ color: '#F87171' }}>
+                {trashCounts.total}
+              </div>
+              <span style={{ fontSize: '11px', color: '#9CA3AF' }}>
+                {trashCounts.products} prods • {trashCounts.reviews} revs • {trashCounts.users} users
+              </span>
+            </div>
+          </Link>
         </div>
       </div>
 
-      {/* SECTION 2: SALES OVERVIEW (REVENUE LINE CHART) */}
-      <div className="ds-card ds-chart-card">
-        <div className="ds-chart-header">
-          <div>
-            <h2 className="ds-chart-title">Sales overview</h2>
-            <p className="ds-chart-subtitle">Revenue over time</p>
+      {/* SECTION 2: OPERATIONS OVERVIEW & ATELIER SUMMARY */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px', marginBottom: '24px' }}>
+        {/* Quick Operations Summary */}
+        <div className="ds-card">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <div>
+              <h2 style={{ fontSize: '15px', fontWeight: 700, color: '#111827', margin: 0 }}>
+                Operations & Atelier Health
+              </h2>
+              <p style={{ fontSize: '12px', color: '#6B7280', margin: '2px 0 0' }}>
+                System-wide store activity snapshot
+              </p>
+            </div>
+            <Link to="/admin/analytics" style={{ fontSize: '12px', color: '#C83226', fontWeight: 600, textDecoration: 'none' }}>
+              View Analytics &rarr;
+            </Link>
           </div>
 
-          {/* 7D / 30D / 90D Range Control */}
-          <div className="ds-range-control" role="group" aria-label="Sales Range Filter">
-            {['7D', '30D', '90D'].map((rangeKey) => (
-              <button
-                key={rangeKey}
-                type="button"
-                className={`ds-range-btn ${selectedRange === rangeKey ? 'ds-range-btn-active' : ''}`}
-                onClick={() => setSelectedRange(rangeKey)}
-              >
-                {rangeKey}
-              </button>
-            ))}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '12px' }}>
+            <div style={{ padding: '12px', background: '#F8F9FA', borderRadius: '8px', border: '1px solid #EAECF0' }}>
+              <span style={{ fontSize: '11px', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Fulfillment Queue</span>
+              <div style={{ fontSize: '20px', fontWeight: 700, color: '#111827', marginTop: '4px' }}>
+                {orders.filter(o => o.orderStatus === 'Processing' || o.orderStatus === 'Assembled').length}
+              </div>
+            </div>
+
+            <div style={{ padding: '12px', background: '#F8F9FA', borderRadius: '8px', border: '1px solid #EAECF0' }}>
+              <span style={{ fontSize: '11px', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Delivered Orders</span>
+              <div style={{ fontSize: '20px', fontWeight: 700, color: '#047857', marginTop: '4px' }}>
+                {orders.filter(o => o.orderStatus === 'Delivered').length}
+              </div>
+            </div>
+
+            <div style={{ padding: '12px', background: '#F8F9FA', borderRadius: '8px', border: '1px solid #EAECF0' }}>
+              <span style={{ fontSize: '11px', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Low Stock Items</span>
+              <div style={{ fontSize: '20px', fontWeight: 700, color: outOfStockCount > 0 ? '#DC2626' : '#111827', marginTop: '4px' }}>
+                {products.filter(p => Number(p.stock) > 0 && Number(p.stock) <= 3).length}
+              </div>
+            </div>
+
+            <div style={{ padding: '12px', background: '#F8F9FA', borderRadius: '8px', border: '1px solid #EAECF0' }}>
+              <span style={{ fontSize: '11px', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.5px' }}>In Stock Ratio</span>
+              <div style={{ fontSize: '20px', fontWeight: 700, color: '#111827', marginTop: '4px' }}>
+                {products.length > 0 ? `${Math.round(((products.length - outOfStockCount) / products.length) * 100)}%` : '0%'}
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="ds-chart-container">
-          {chartLoading ? (
-            <div className="d-flex justify-content-center align-items-center h-100 text-muted small">
-              Updating analytics...
-            </div>
-          ) : rangeSalesData.length === 0 ? (
-            <div className="d-flex justify-content-center align-items-center h-100 text-muted small">
-              No sales recorded for the selected {selectedRange} window.
-            </div>
-          ) : (
-            <ResponsiveContainer width="100%" height={270}>
-              <LineChart data={rangeSalesData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F2F4F7" />
-                <XAxis
-                  dataKey="date"
-                  tickLine={false}
-                  axisLine={false}
-                  tick={{ fill: '#9CA3AF', fontSize: 11 }}
-                  dy={8}
-                />
-                <YAxis
-                  tickLine={false}
-                  axisLine={false}
-                  tick={{ fill: '#9CA3AF', fontSize: 11 }}
-                  tickFormatter={(val) => `$${val >= 1000 ? (val / 1000).toFixed(0) + 'k' : val}`}
-                />
-                <Tooltip
-                  content={({ active, payload, label }) => {
-                    if (active && payload && payload.length) {
-                      return (
-                        <div className="ds-chart-tooltip">
-                          <div className="ds-chart-tooltip-date">{label}</div>
-                          <div className="ds-chart-tooltip-val">
-                            ${Number(payload[0].value || 0).toLocaleString('en-US', {
-                              minimumFractionDigits: 2,
-                              maximumFractionDigits: 2,
-                            })}
-                          </div>
-                        </div>
-                      );
-                    }
-                    return null;
-                  }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="total"
-                  stroke="#C83226"
-                  strokeWidth={2.5}
-                  dot={false}
-                  activeDot={{ r: 5, fill: '#C83226', stroke: '#FFFFFF', strokeWidth: 2 }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          )}
+        {/* Quick Management Actions */}
+        <div className="ds-card">
+          <h2 style={{ fontSize: '15px', fontWeight: 700, color: '#111827', margin: '0 0 4px 0' }}>
+            Atelier Quick Actions
+          </h2>
+          <p style={{ fontSize: '12px', color: '#6B7280', margin: '0 0 16px 0' }}>
+            Fast-access administrative workflows
+          </p>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '10px' }}>
+            <Link to="/admin/product" style={{ textDecoration: 'none' }}>
+              <button
+                type="button"
+                style={{
+                  width: '100%',
+                  padding: '12px 14px',
+                  background: '#111827',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '6px',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  textAlign: 'left'
+                }}
+              >
+                + New Product
+              </button>
+            </Link>
+
+            <Link to="/admin/orders" style={{ textDecoration: 'none' }}>
+              <button
+                type="button"
+                style={{
+                  width: '100%',
+                  padding: '12px 14px',
+                  background: '#F1F5F9',
+                  color: '#1E293B',
+                  border: '1px solid #CBD5E1',
+                  borderRadius: '6px',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  textAlign: 'left'
+                }}
+              >
+                Inspect Orders &rarr;
+              </button>
+            </Link>
+
+            <Link to="/admin/analytics" style={{ textDecoration: 'none' }}>
+              <button
+                type="button"
+                style={{
+                  width: '100%',
+                  padding: '12px 14px',
+                  background: '#F1F5F9',
+                  color: '#1E293B',
+                  border: '1px solid #CBD5E1',
+                  borderRadius: '6px',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  textAlign: 'left'
+                }}
+              >
+                Sales Trends &rarr;
+              </button>
+            </Link>
+
+            <Link to="/admin/trash" style={{ textDecoration: 'none' }}>
+              <button
+                type="button"
+                style={{
+                  width: '100%',
+                  padding: '12px 14px',
+                  background: '#FEF2F2',
+                  color: '#991B1B',
+                  border: '1px solid #FCA5A5',
+                  borderRadius: '6px',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  textAlign: 'left'
+                }}
+              >
+                Recycle Bin ({trashCounts.total}) &rarr;
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
 

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getProductDetails, clearErrors } from '../../actions/productActions';
 import { DOSNOVENTA_CATALOG } from '../../data/dosnoventaProducts';
 import MetaData from '../Layout/MetaData';
+import ReviewSection from '../Review/ReviewSection';
 import './ProductDetails.css';
 
 const ProductDetails = ({ addItemToCart, cartItems = [] }) => {
@@ -305,6 +306,17 @@ const ProductDetails = ({ addItemToCart, cartItems = [] }) => {
               </div>
             )}
           </div>
+        </section>
+
+        {/* =========================================================================
+            RIDER VERIFIED REVIEWS & RATINGS (MP3 Requirement)
+            ========================================================================= */}
+        <section className="ds-product-reviews-section" style={{
+          marginTop: '60px',
+          paddingTop: '40px',
+          borderTop: '1px solid rgba(0, 0, 0, 0.08)'
+        }}>
+          <ReviewSection productId={product?._id} />
         </section>
       </div>
     </div>

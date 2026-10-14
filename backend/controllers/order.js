@@ -1,5 +1,7 @@
 const Order = require('../models/order');
 const Product = require('../models/product');
+const { sendOrderStatusEmail } = require('../utils/sendEmail');
+const generateReceiptPDF = require('../utils/generateReceipt');
 
 // Create a new order => /api/v1/order/new
 exports.newOrder = async (req, res, next) => {
@@ -28,11 +30,11 @@ exports.newOrder = async (req, res, next) => {
                 return res.status(404).json({ success: false, message: `Product not found: ${item.name || item.product}` });
             }
 
-            if (product.isPublished === false) {
+            if (product.isPublished === false || product.isDeleted === true) {
                 for (const reserved of reservedProducts) {
                     await Product.findByIdAndUpdate(reserved.productId, { $inc: { stock: reserved.quantity } });
                 }
-                return res.status(400).json({ success: false, message: `Product "${product.name}" is currently unavailable` });
+                return res.status(400).json({ success: false, message: `Product "${product.name}" is currently unavailable or has been removed` });
             }
 
             const requestedQty = Number(item.quantity) || 1;
@@ -196,6 +198,13 @@ exports.deleteOrder = async (req, res, next) => {
             });
         }
 
+        if (order.orderStatus === 'Delivered') {
+            return res.status(400).json({
+                success: false,
+                message: 'Delivered orders cannot be removed to preserve financial auditability and receipts.'
+            });
+        }
+
         // If order was not cancelled, restore inventory upon deletion
         if (order.orderStatus !== 'Cancelled' && order.orderStatus !== 'Delivered') {
             for (const item of order.orderItems) {
@@ -258,6 +267,23 @@ exports.updateOrder = async (req, res, next) => {
 
         order.orderStatus = newStatus;
         await order.save();
+
+        // Send email notification to customer about status update
+        try {
+            const populatedOrder = await Order.findById(order._id).populate('user', 'name email');
+            if (populatedOrder && populatedOrder.user && populatedOrder.user.email) {
+                const pdfBuffer = await generateReceiptPDF(populatedOrder, populatedOrder.user.name);
+                await sendOrderStatusEmail({
+                    email: populatedOrder.user.email,
+                    customerName: populatedOrder.user.name,
+                    order: populatedOrder,
+                    pdfBuffer
+                });
+            }
+        } catch (emailErr) {
+            // Don't fail the request if email fails
+            console.error('Order status email error:', emailErr.message);
+        }
 
         res.status(200).json({
             success: true,

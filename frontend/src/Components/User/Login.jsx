@@ -1,16 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 import { login, clearErrors } from '../../actions/userActions';
 import AuthLayout from './AuthLayout';
 import MetaData from '../Layout/MetaData';
+import SocialLogin from './SocialLogin';
 import { toast } from 'react-toastify';
 
+const loginSchema = yup.object({
+  email: yup
+    .string()
+    .email('VALID EMAIL FORMAT REQUIRED')
+    .required('EMAIL ADDRESS IS REQUIRED'),
+  password: yup
+    .string()
+    .min(6, 'PASSWORD MUST BE AT LEAST 6 CHARACTERS')
+    .required('PASSWORD IS REQUIRED'),
+});
+
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState({});
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -19,6 +31,14 @@ const Login = () => {
   const { isAuthenticated, user, error, loading } = useSelector((state) => state.auth || {});
 
   const redirect = location.search ? new URLSearchParams(location.search).get('redirect') : '';
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(loginSchema),
+  });
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -37,27 +57,8 @@ const Login = () => {
     }
   }, [isAuthenticated, user, error, dispatch, navigate, redirect]);
 
-  const validate = () => {
-    const errs = {};
-    if (!email.trim()) {
-      errs.email = 'EMAIL ADDRESS IS REQUIRED';
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      errs.email = 'VALID EMAIL FORMAT REQUIRED';
-    }
-    if (!password) {
-      errs.password = 'PASSWORD IS REQUIRED';
-    } else if (password.length < 6) {
-      errs.password = 'PASSWORD MUST BE AT LEAST 6 CHARACTERS';
-    }
-    setErrors(errs);
-    return Object.keys(errs).length === 0;
-  };
-
-  const submitHandler = (e) => {
-    e.preventDefault();
-    if (validate()) {
-      dispatch(login(email, password));
-    }
+  const onSubmit = ({ email, password }) => {
+    dispatch(login(email, password));
   };
 
   return (
@@ -69,7 +70,7 @@ const Login = () => {
         subtitle="Access your rider profile, frame builds, and order track records."
         imageSide="left"
       >
-        <form onSubmit={submitHandler} noValidate>
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
           {/* Email */}
           <div className="ds-form-group">
             <label className="ds-label" htmlFor="email">
@@ -80,11 +81,12 @@ const Login = () => {
               id="email"
               className={`ds-input ${errors.email ? 'ds-input-error' : ''}`}
               placeholder="rider@dosnoventabikes.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
               autoComplete="email"
+              {...register('email')}
             />
-            {errors.email && <span className="ds-error-text">{errors.email}</span>}
+            {errors.email && (
+              <span className="ds-error-text">{errors.email.message}</span>
+            )}
           </div>
 
           {/* Password */}
@@ -97,9 +99,8 @@ const Login = () => {
               id="password"
               className={`ds-input ${errors.password ? 'ds-input-error' : ''}`}
               placeholder="••••••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
+              {...register('password')}
             />
             <button
               type="button"
@@ -108,7 +109,9 @@ const Login = () => {
             >
               {showPassword ? 'HIDE' : 'SHOW'}
             </button>
-            {errors.password && <span className="ds-error-text">{errors.password}</span>}
+            {errors.password && (
+              <span className="ds-error-text">{errors.password.message}</span>
+            )}
           </div>
 
           {/* Actions meta row */}
@@ -127,38 +130,18 @@ const Login = () => {
           >
             {loading ? 'AUTHENTICATING...' : 'LOG IN →'}
           </button>
-
-          {/* Divider */}
-          <div className="ds-auth-divider">
-            <span>OR CONTINUE WITH</span>
-          </div>
-
-          {/* OAuth Buttons */}
-          <div className="ds-auth-socials">
-            <button
-              type="button"
-              className="ds-social-btn"
-              onClick={() => toast.info('Third-party authentication will be enabled in Phase 2.')}
-            >
-              <span>GOOGLE</span>
-            </button>
-            <button
-              type="button"
-              className="ds-social-btn"
-              onClick={() => toast.info('Apple ID authentication will be enabled in Phase 2.')}
-            >
-              <span>APPLE</span>
-            </button>
-          </div>
-
-          {/* Bottom link to Register */}
-          <div className="ds-auth-footer-prompt">
-            DON'T HAVE AN ACCOUNT?
-            <Link to="/register" className="ds-auth-footer-link">
-              CREATE ACCOUNT →
-            </Link>
-          </div>
         </form>
+
+        {/* Firebase Social Login (Google + Facebook) */}
+        <SocialLogin />
+
+        {/* Bottom link to Register */}
+        <div className="ds-auth-footer-prompt">
+          DON'T HAVE AN ACCOUNT?
+          <Link to="/register" className="ds-auth-footer-link">
+            CREATE ACCOUNT →
+          </Link>
+        </div>
       </AuthLayout>
     </>
   );

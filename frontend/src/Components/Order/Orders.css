@@ -1,0 +1,344 @@
+/* Dosnoventa Editorial Orders UI */
+
+.ds-orders-page {
+  min-height: calc(100vh - 80px);
+  background: #0c0d0e;
+  color: #f6f5f1;
+  padding: 3rem 1.5rem 6rem;
+  font-family: var(--ds-font-grotesk, 'Inter', sans-serif);
+}
+
+.ds-orders-container {
+  max-width: 1160px;
+  margin: 0 auto;
+}
+
+/* Header */
+.ds-orders-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.ds-orders-eyebrow {
+  font-family: var(--ds-font-mono, 'JetBrains Mono', monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.25em;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.ds-orders-title {
+  font-size: 2.25rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.5rem;
+  text-transform: uppercase;
+}
+
+.ds-orders-subtitle {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Empty State */
+.ds-orders-empty {
+  background: #141618;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  padding: 4rem 2rem;
+  text-align: center;
+  margin: 2rem 0;
+  border-radius: 4px;
+}
+
+.ds-empty-glyph {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 1rem;
+  opacity: 0.4;
+}
+
+.ds-empty-heading {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 0 0 0.75rem;
+  color: #fff;
+}
+
+.ds-empty-desc {
+  font-size: 0.92rem;
+  color: rgba(255, 255, 255, 0.6);
+  max-width: 480px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+}
+
+.ds-btn-gold {
+  display: inline-block;
+  background: #f6f5f1;
+  color: #0c0d0e;
+  font-family: var(--ds-font-mono, monospace);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 0.9rem 2rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.ds-btn-gold:hover {
+  background: #fff;
+  transform: translateY(-2px);
+  color: #0c0d0e;
+}
+
+/* Orders Cards List */
+.ds-orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.ds-order-card {
+  background: #141618;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1.75rem;
+  transition: border-color 0.2s ease;
+}
+
+.ds-order-card:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.ds-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ds-order-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.ds-order-ref {
+  font-family: var(--ds-font-mono, monospace);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #fff;
+}
+
+.ds-order-date {
+  font-family: var(--ds-font-mono, monospace);
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.05em;
+}
+
+/* Status Badges */
+.ds-status-badge {
+  font-family: var(--ds-font-mono, monospace);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.75rem;
+  border-radius: 2px;
+}
+
+.ds-status-badge.status-delivered {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.ds-status-badge.status-assembled {
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.ds-status-badge.status-processing {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.ds-status-badge.status-cancelled {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* Order Items Preview */
+.ds-order-items-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 1.25rem 0;
+}
+
+.ds-preview-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.ds-preview-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.ds-preview-img {
+  width: 52px;
+  height: 44px;
+  object-fit: cover;
+  background: #0c0d0e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+.ds-preview-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.ds-preview-name {
+  color: #f6f5f1;
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.ds-preview-name:hover {
+  color: #e5b94f;
+}
+
+.ds-preview-qty {
+  font-family: var(--ds-font-mono, monospace);
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 0.2rem;
+}
+
+.ds-preview-price {
+  font-family: var(--ds-font-mono, monospace);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Card Bottom */
+.ds-card-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ds-order-total {
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.ds-order-total strong {
+  font-size: 1.15rem;
+  color: #fff;
+  font-weight: 800;
+  font-family: var(--ds-font-mono, monospace);
+  margin-left: 0.4rem;
+}
+
+.ds-view-order-btn {
+  font-family: var(--ds-font-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #f6f5f1;
+  text-decoration: none;
+  padding: 0.6rem 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  transition: all 0.2s ease;
+}
+
+.ds-view-order-btn:hover {
+  background: #f6f5f1;
+  color: #0c0d0e;
+  border-color: #f6f5f1;
+}
+
+/* Details Page Dossier Styles */
+.ds-dossier-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.ds-dossier-card {
+  background: #141618;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.ds-dossier-heading {
+  font-family: var(--ds-font-mono, monospace);
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 0.75rem;
+  margin: 0 0 1.25rem;
+}
+
+.ds-dossier-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  font-size: 0.88rem;
+}
+
+.ds-dossier-row .label {
+  color: rgba(255, 255, 255, 0.5);
+  font-family: var(--ds-font-mono, monospace);
+  font-size: 0.75rem;
+}
+
+.ds-dossier-row .value {
+  color: #fff;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .ds-orders-page {
+    padding: 2rem 1rem 4rem;
+  }
+  .ds-dossier-grid {
+    grid-template-columns: 1fr;
+  }
+  .ds-card-top, .ds-card-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

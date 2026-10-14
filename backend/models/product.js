@@ -52,9 +52,9 @@ const productSchema = new mongoose.Schema({
         }
     ],
     category: {
-        type: mongoose.Schema.ObjectId,
-        ref: 'Category',
-        required: [true, 'Please select category for this product']
+        type: String,
+        required: [true, 'Please select category for this product'],
+        trim: true
     },
     isPublished: {
         type: Boolean,
@@ -80,9 +80,64 @@ const productSchema = new mongoose.Schema({
         min: [0, 'Rating cannot be negative'],
         max: [5, 'Rating cannot exceed 5']
     },
+    reviews: [
+        {
+            user: {
+                type: mongoose.Schema.ObjectId,
+                ref: 'User',
+                required: true
+            },
+            name: {
+                type: String,
+                required: true
+            },
+            rating: {
+                type: Number,
+                required: true,
+                min: 1,
+                max: 5
+            },
+            comment: {
+                type: String,
+                required: true
+            },
+            isDeleted: {
+                type: Boolean,
+                default: false,
+                index: true
+            },
+            deletedAt: {
+                type: Date,
+                default: null
+            },
+            deletedBy: {
+                type: mongoose.Schema.ObjectId,
+                ref: 'User',
+                default: null
+            },
+            createdAt: {
+                type: Date,
+                default: Date.now
+            }
+        }
+    ],
     user: {
         type: mongoose.Schema.ObjectId,
         ref: 'User',
+    },
+    isDeleted: {
+        type: Boolean,
+        default: false,
+        index: true
+    },
+    deletedAt: {
+        type: Date,
+        default: null
+    },
+    deletedBy: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
+        default: null
     },
     createdAt: {
         type: Date,

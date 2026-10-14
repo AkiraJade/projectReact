@@ -10,10 +10,16 @@ const AdminLayout = () => {
 
   // Route-aware titles
   const getHeaderInfo = (pathname) => {
-    if (pathname === '/admin' || pathname === '/dashboard') {
+    if (pathname === '/admin' || pathname === '/dashboard' || pathname === '/admin/dashboard') {
       return {
-        title: 'Overview',
-        subtitle: 'Store performance and operations',
+        title: 'Dashboard',
+        subtitle: 'Atelier operations, activity log, and store health',
+      };
+    }
+    if (pathname === '/admin/analytics') {
+      return {
+        title: 'Sales Analytics',
+        subtitle: 'Revenue trends, volume performance, and customer lifetime value',
       };
     }
     if (pathname === '/admin/products') {
@@ -56,6 +62,12 @@ const AdminLayout = () => {
       return {
         title: 'Product Reviews',
         subtitle: 'Moderate verified rider ratings and feedback',
+      };
+    }
+    if (pathname === '/admin/trash') {
+      return {
+        title: 'Trash & Recovery',
+        subtitle: 'Safely recover or permanently purge archived records',
       };
     }
     return {

@@ -31,13 +31,18 @@ export const logout = next => {
 };
 
 export const getToken = () => {
-    if (window !== 'undefined') {
-        if (sessionStorage.getItem('token')) {
-            return JSON.parse(sessionStorage.getItem('token'));
-        } else {
-            return false;
+    if (typeof window !== 'undefined') {
+        const rawToken = sessionStorage.getItem('token') || localStorage.getItem('token');
+        if (rawToken) {
+            try {
+                return JSON.parse(rawToken);
+            } catch (e) {
+                return rawToken;
+            }
         }
+        return false;
     }
+    return false;
 };
 
 export const getAdminConfig = () => {

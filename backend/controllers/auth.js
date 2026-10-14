@@ -147,6 +147,10 @@ exports.loginUser = async (req, res, next) => {
     if (!isPasswordMatched) {
         return res.status(401).json({ message: 'Invalid Email or Password' })
     }
+
+    if (user.isDeleted === true || user.status === 'deactivated') {
+        return res.status(401).json({ message: 'Your account has been deactivated or removed. Please contact support.' });
+    }
     // const token = user.getJwtToken();
 
     // res.status(201).json({
@@ -508,7 +512,7 @@ exports.updatePassword = async (req, res, next) => {
 
 exports.allUsers = async (req, res, next) => {
     try {
-        const users = await User.find().sort({ createdAt: -1 });
+        const users = await User.find({ isDeleted: { $ne: true } }).sort({ createdAt: -1 });
         res.status(200).json({
             success: true,
             users
@@ -518,15 +522,99 @@ exports.allUsers = async (req, res, next) => {
     }
 }
 
+// Soft-delete / Deactivate Customer => DELETE /api/v1/admin/user/:id
 exports.deleteUser = async (req, res, next) => {
     try {
         if (req.user.id === req.params.id) {
-            return res.status(400).json({ success: false, message: 'You cannot delete your own account' });
+            return res.status(400).json({ success: false, message: 'You cannot deactivate your own administrative account' });
         }
 
         const user = await User.findById(req.params.id);
         if (!user) {
             return res.status(404).json({ success: false, message: `User not found with id: ${req.params.id}` });
+        }
+
+        if (user.isDeleted === true) {
+            return res.status(400).json({ success: false, message: 'User is already deactivated and in Trash' });
+        }
+
+        user.isDeleted = true;
+        user.status = 'deactivated';
+        user.deletedAt = new Date();
+        user.deletedBy = req.user.id;
+        await user.save({ validateBeforeSave: false });
+
+        return res.status(200).json({
+            success: true,
+            message: 'Customer account deactivated and moved to Trash'
+        });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: err.message });
+    }
+}
+
+// Restore Customer => PUT /api/v1/admin/user/:id/restore
+exports.restoreUser = async (req, res, next) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            return res.status(404).json({ success: false, message: `User not found with id: ${req.params.id}` });
+        }
+
+        if (!user.isDeleted) {
+            return res.status(400).json({ success: false, message: 'Customer account is not in Trash' });
+        }
+
+        user.isDeleted = false;
+        user.status = 'active';
+        user.deletedAt = null;
+        user.deletedBy = null;
+        await user.save({ validateBeforeSave: false });
+
+        return res.status(200).json({
+            success: true,
+            message: 'Customer account restored successfully'
+        });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: err.message });
+    }
+}
+
+// Get all trashed customers => GET /api/v1/admin/trash/users
+exports.getTrashUsers = async (req, res, next) => {
+    try {
+        const users = await User.find({ isDeleted: true })
+            .populate('deletedBy', 'name email')
+            .sort({ deletedAt: -1 });
+        return res.status(200).json({
+            success: true,
+            users
+        });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: err.message });
+    }
+}
+
+// Permanent delete customer (with order dependency protection) => DELETE /api/v1/admin/user/:id/permanent
+exports.permanentDeleteUser = async (req, res, next) => {
+    try {
+        if (req.user.id === req.params.id) {
+            return res.status(400).json({ success: false, message: 'You cannot permanently delete your own account' });
+        }
+
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            return res.status(404).json({ success: false, message: `User not found with id: ${req.params.id}` });
+        }
+
+        // Check if customer has historical order records
+        const Order = require('../models/order');
+        const ordersCount = await Order.countDocuments({ user: req.params.id });
+        if (ordersCount > 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Cannot permanently delete this customer because they have historical orders on record. The account will remain deactivated in Trash to preserve receipt and audit integrity.'
+            });
         }
 
         if (user.avatar?.public_id && !user.avatar.public_id.includes('default')) {
@@ -540,7 +628,7 @@ exports.deleteUser = async (req, res, next) => {
         await User.findByIdAndDelete(req.params.id);
         return res.status(200).json({
             success: true,
-            message: 'User deleted successfully'
+            message: 'Customer account permanently deleted'
         });
     } catch (err) {
         return res.status(500).json({ success: false, message: err.message });
@@ -590,3 +678,55 @@ exports.logout = async (req, res, next) => {
         message: 'Logged out'
     })
 }
+
+// Social Login (Firebase) => /api/v1/auth/social-login
+exports.socialLogin = async (req, res, next) => {
+    try {
+        const { name, email, avatar, uid, provider } = req.body;
+        if (!email) {
+            return res.status(400).json({ success: false, message: 'Email is required for social login' });
+        }
+
+        let user = await User.findOne({ email });
+
+        if (user && (user.isDeleted === true || user.status === 'deactivated')) {
+            return res.status(401).json({ success: false, message: 'Your account has been deactivated or removed. Please contact support.' });
+        }
+
+        if (!user) {
+            // Auto-register: create account with a random secure password
+            const randomPassword = Math.random().toString(36).slice(-12) + uid.slice(-4);
+            user = await User.create({
+                name: name || email.split('@')[0],
+                email,
+                password: randomPassword,
+                avatar: avatar ? { public_id: `${provider}_${uid}`, url: avatar } : {
+                    public_id: 'default_avatar',
+                    url: 'https://res.cloudinary.com/dgneiaky7/image/upload/v1788417006/avatars/sycta145jvdzqjukfgxw.png'
+                },
+                role: 'user'
+            });
+        }
+
+        // Issue JWT
+        const token = user.getJwtToken ? user.getJwtToken() : require('jsonwebtoken').sign(
+            { id: user._id },
+            process.env.JWT_SECRET,
+            { expiresIn: process.env.JWT_EXPIRES_TIME || '7d' }
+        );
+
+        const options = {
+            expires: new Date(Date.now() + process.env.COOKIE_EXPIRES_TIME * 24 * 60 * 60 * 1000),
+            httpOnly: true,
+            sameSite: 'lax'
+        };
+
+        res.status(200).cookie('token', token, options).json({
+            success: true,
+            token,
+            user: { _id: user._id, name: user.name, email: user.email, role: user.role }
+        });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+};

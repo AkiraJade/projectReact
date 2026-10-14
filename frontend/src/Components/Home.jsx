@@ -1,5 +1,9 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getProducts } from '../actions/productActions';
+import { DOSNOVENTA_CATALOG } from '../data/dosnoventaProducts';
+import ProductCard from './Product/ProductCard';
 import MetaData from './Layout/MetaData';
 import './Home.css';
 
@@ -12,6 +16,57 @@ const Home = () => {
   const heroSectionRef = useRef(null);
   const galleryRef = useRef(null);
   const bikeSectionRef = useRef(null);
+  const homeSentinelRef = useRef(null);
+
+  // Redux & Infinite Scroll State for Homepage Products
+  const dispatch = useDispatch();
+  const { products: apiProducts } = useSelector((state) => state.products || {});
+  const [homeDisplayLimit, setHomeDisplayLimit] = useState(4);
+  const [isHomeLoadingMore, setIsHomeLoadingMore] = useState(false);
+
+  useEffect(() => {
+    try {
+      dispatch(getProducts());
+    } catch (e) {}
+  }, [dispatch]);
+
+  const allHomeProducts = useMemo(() => {
+    if (apiProducts && apiProducts.length > 0) {
+      const apiIds = new Set(apiProducts.map((p) => p._id));
+      const filteredCurated = DOSNOVENTA_CATALOG.filter((p) => !apiIds.has(p._id));
+      return [...apiProducts, ...filteredCurated].filter((p) => p.isPublished !== false);
+    }
+    return DOSNOVENTA_CATALOG.filter((p) => p.isPublished !== false);
+  }, [apiProducts]);
+
+  const visibleHomeProducts = useMemo(() => {
+    return allHomeProducts.slice(0, homeDisplayLimit);
+  }, [allHomeProducts, homeDisplayLimit]);
+
+  const hasMoreHomeProducts = homeDisplayLimit < allHomeProducts.length;
+
+  useEffect(() => {
+    const sentinel = homeSentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMoreHomeProducts && !isHomeLoadingMore) {
+          setIsHomeLoadingMore(true);
+          setTimeout(() => {
+            setHomeDisplayLimit((prev) => prev + 4);
+            setIsHomeLoadingMore(false);
+          }, 400);
+        }
+      },
+      { threshold: 0.1, rootMargin: '100px' }
+    );
+
+    observer.observe(sentinel);
+    return () => {
+      if (sentinel) observer.unobserve(sentinel);
+    };
+  }, [hasMoreHomeProducts, isHomeLoadingMore]);
 
   // Smooth scroll & parallax tracking via RAF
   useEffect(() => {
@@ -336,7 +391,7 @@ const Home = () => {
                 </div>
 
                 <div className="ds-bike-actions">
-                  <Link to="/product/dsnv-barcelona-01" className="ds-btn">
+                  <Link to="/product/6acf91634a50d3898bf127fa" className="ds-btn">
                     DISCOVER BARCELONA <span className="ds-arrow">→</span>
                   </Link>
                   <span className="editorial-label">STARTING AT €1,450 EUR</span>
@@ -355,6 +410,71 @@ const Home = () => {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          INFINITE SCROLL PRODUCT SHOWCASE (Quiz 3 Requirement)
+          ========================================================================= */}
+      <section className="ds-home-products-section" style={{ padding: '80px 0', background: '#0a0a0b', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+        <div className="ds-container-wide">
+          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+            <span className="editorial-label" style={{ color: '#C83226', letterSpacing: '3px' }}>THE DOSNOVENTA FLEET</span>
+            <h2 style={{ fontSize: 'clamp(1.8rem, 3.2vw, 2.8rem)', color: '#fff', letterSpacing: '2px', fontWeight: 700, margin: '8px 0' }}>
+              MACHINES OF THE RESISTANCE
+            </h2>
+            <p style={{ color: 'rgba(255,255,255,0.6)', maxWidth: '600px', margin: '0 auto', fontSize: '14px', lineHeight: 1.6 }}>
+              Hand-built track frames, urban pursuit geometry, and race-proven street components. Continuous catalog scroll.
+            </p>
+          </div>
+
+          <div className="ds-shop-product-grid" style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+            gap: '24px'
+          }}>
+            {visibleHomeProducts.map((p) => (
+              <ProductCard key={p._id} product={p} />
+            ))}
+          </div>
+
+          {/* Infinite Scroll Sentinel */}
+          <div
+            ref={homeSentinelRef}
+            style={{
+              height: '60px',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: '40px',
+            }}
+          >
+            {isHomeLoadingMore ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div
+                  style={{
+                    width: '18px',
+                    height: '18px',
+                    border: '2px solid #C83226',
+                    borderTopColor: 'transparent',
+                    borderRadius: '50%',
+                    animation: 'spin 0.8s linear infinite',
+                  }}
+                />
+                <span style={{ fontSize: '11px', letterSpacing: '2px', color: '#9ca3af' }}>
+                  LOADING MORE MACHINES...
+                </span>
+              </div>
+            ) : hasMoreHomeProducts ? (
+              <span style={{ fontSize: '11px', letterSpacing: '1.5px', color: '#6b7280' }}>
+                SCROLL TO LOAD MORE ({visibleHomeProducts.length} OF {allHomeProducts.length})
+              </span>
+            ) : (
+              <span style={{ fontSize: '11px', letterSpacing: '2px', color: '#6b7280' }}>
+                — ALL CURRENT MACHINES LOADED —
+              </span>
+            )}
           </div>
         </div>
       </section>

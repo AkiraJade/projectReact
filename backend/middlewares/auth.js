@@ -3,11 +3,14 @@ const jwt = require("jsonwebtoken")
 
 exports.isAuthenticatedUser = async (req, res, next) => {
     let token = req.cookies?.token;
-    if (!token && req.headers?.authorization && req.headers.authorization.startsWith('Bearer')) {
-        token = req.headers.authorization.split(' ')[1];
+    if ((!token || token === 'null' || token === 'undefined' || token === 'false') && req.headers?.authorization && req.headers.authorization.startsWith('Bearer')) {
+        const bearer = req.headers.authorization.split(' ')[1];
+        if (bearer && bearer !== 'null' && bearer !== 'undefined' && bearer !== 'false') {
+            token = bearer;
+        }
     }
 
-    if (!token || token === 'null' || token === 'undefined') {
+    if (!token || token === 'null' || token === 'undefined' || token === 'false') {
         return res.status(401).json({ message: 'Login first to access this resource' });
     }
 
@@ -16,6 +19,9 @@ exports.isAuthenticatedUser = async (req, res, next) => {
         req.user = await User.findById(decoded.id);
         if (!req.user) {
             return res.status(401).json({ message: 'User no longer exists' });
+        }
+        if (req.user.isDeleted === true || req.user.status === 'deactivated') {
+            return res.status(401).json({ message: 'Your account has been deactivated or removed' });
         }
         next();
     } catch (err) {

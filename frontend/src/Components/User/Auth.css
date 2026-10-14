@@ -287,3 +287,20 @@
     min-height: calc(100vh - 75px);
   }
 }
+
+/* --- React Hook Form error states --- */
+.ds-input-error,
+.auth-input-error {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.12) !important;
+}
+
+.ds-error-text,
+.auth-error-msg {
+    display: block;
+    margin-top: 4px;
+    font-size: 11px;
+    color: #ef4444;
+    letter-spacing: 0.3px;
+    font-family: var(--ds-font-grotesk, sans-serif);
+}

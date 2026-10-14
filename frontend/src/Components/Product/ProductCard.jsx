@@ -10,7 +10,7 @@ const ProductCard = ({ product }) => {
     style: 'currency',
     currency: 'EUR',
     maximumFractionDigits: 0,
-  }).format(product.price);
+  }).format(Number(product.price) || 0);
 
   const isOutOfStock = product.stock <= 0;
   const isLowStock = product.stock > 0 && product.stock <= 5;

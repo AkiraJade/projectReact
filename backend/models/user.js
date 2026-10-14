@@ -33,18 +33,43 @@ const userSchema = new mongoose.Schema({
         }
     },
     addresses: [
-        {
-            type: mongoose.Schema.ObjectId,
-            ref: 'Address'
-        }
+        new mongoose.Schema({
+            label: { type: String, trim: true, default: 'Home' },
+            recipientName: { type: String, trim: true, required: true },
+            phone: { type: String, trim: true, required: true },
+            addressLine1: { type: String, trim: true, required: true },
+            addressLine2: { type: String, trim: true, default: '' },
+            city: { type: String, trim: true, required: true },
+            province: { type: String, trim: true, default: '' },
+            postalCode: { type: String, trim: true, required: true },
+            country: { type: String, trim: true, required: true },
+            isDefault: { type: Boolean, default: false },
+            createdAt: { type: Date, default: Date.now },
+            updatedAt: { type: Date, default: Date.now }
+        })
     ],
-    defaultAddress: {
-        type: mongoose.Schema.ObjectId,
-        ref: 'Address'
-    },
     role: {
         type: String,
         default: 'user'
+    },
+    status: {
+        type: String,
+        enum: ['active', 'deactivated', 'suspended'],
+        default: 'active'
+    },
+    isDeleted: {
+        type: Boolean,
+        default: false,
+        index: true
+    },
+    deletedAt: {
+        type: Date,
+        default: null
+    },
+    deletedBy: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
+        default: null
     },
     createdAt: {
         type: Date,

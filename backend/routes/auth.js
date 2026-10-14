@@ -12,6 +12,9 @@ const {
     updatePassword,
     allUsers,
     deleteUser,
+    restoreUser,
+    permanentDeleteUser,
+    getTrashUsers,
     getUserDetails,
     updateUser,
     logout,
@@ -19,12 +22,15 @@ const {
     addAddress,
     updateAddress,
     deleteAddress,
-    setDefaultAddress
+    setDefaultAddress,
+    socialLogin
 } = require('../controllers/auth');
 const { isAuthenticatedUser, authorizeRoles } = require('../middlewares/auth');
 
 router.post('/register', upload.single("avatar"), registerUser);
 router.post('/login', loginUser);
+router.post('/auth/social-login', socialLogin);
+
 router.post('/password/forgot', forgotPassword);
 router.put('/password/reset/:token', resetPassword);
 
@@ -42,6 +48,11 @@ router.route('/me/addresses/:addressId')
     .delete(isAuthenticatedUser, deleteAddress);
 
 router.put('/me/addresses/:addressId/default', isAuthenticatedUser, setDefaultAddress);
+
+// Admin customer trash & restore (must be before /admin/user/:id)
+router.get('/admin/trash/users', isAuthenticatedUser, authorizeRoles('admin'), getTrashUsers);
+router.put('/admin/user/:id/restore', isAuthenticatedUser, authorizeRoles('admin'), restoreUser);
+router.delete('/admin/user/:id/permanent', isAuthenticatedUser, authorizeRoles('admin'), permanentDeleteUser);
 
 // Admin user management
 router.get('/admin/users', isAuthenticatedUser, authorizeRoles('admin'), allUsers);

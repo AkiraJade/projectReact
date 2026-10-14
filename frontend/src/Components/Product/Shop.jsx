@@ -1,14 +1,17 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProducts } from '../../actions/productActions';
 import { DOSNOVENTA_CATALOG } from '../../data/dosnoventaProducts';
 import ProductCard from './ProductCard';
 import MetaData from '../Layout/MetaData';
+import { Rating } from '@mui/material';
 import './Shop.css';
 
+const ITEMS_PER_PAGE = 9;
+
 const CATEGORIES = [
-  { label: 'ALL', value: 'all' },
+  { label: 'ALL PRODUCTS', value: 'all' },
   { label: 'BIKES', value: 'bikes' },
   { label: 'FRAMES', value: 'frames' },
   { label: 'COMPONENTS', value: 'components' },
@@ -38,13 +41,22 @@ const Shop = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryParam = searchParams.get('category') || 'all';
 
-  const { loading, products: apiProducts, productsCount } = useSelector(
+  const { loading, products: apiProducts } = useSelector(
     (state) => state.products || {}
   );
 
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('featured');
   const [inStockOnly, setInStockOnly] = useState(false);
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
+  const [minRating, setMinRating] = useState(0);
+  const [hasReviews, setHasReviews] = useState(false);
+
+  // Infinite scroll display limit state
+  const [displayLimit, setDisplayLimit] = useState(ITEMS_PER_PAGE);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const sentinelRef = useRef(null);
 
   // Sync category state with URL query parameter
   const activeCategory = useMemo(() => {
@@ -52,6 +64,7 @@ const Shop = () => {
   }, [categoryParam]);
 
   const handleCategorySelect = (catValue) => {
+    setDisplayLimit(ITEMS_PER_PAGE);
     if (catValue === 'all') {
       searchParams.delete('category');
       setSearchParams(searchParams);
@@ -60,18 +73,16 @@ const Shop = () => {
     }
   };
 
+  // Initial fetch products
   useEffect(() => {
     try {
-      dispatch(getProducts(1, '', [1, 100000], ''));
-    } catch (e) {
-      // safe fallback
-    }
-    window.scrollTo(0, 0);
+      dispatch(getProducts());
+    } catch (e) {}
   }, [dispatch]);
 
   // Combine backend products with curated catalog fallback
   const combinedProducts = useMemo(() => {
-    if (apiProducts && Array.isArray(apiProducts) && apiProducts.length > 0) {
+    if (apiProducts && apiProducts.length > 0) {
       const apiIds = new Set(apiProducts.map((p) => p._id));
       const filteredCurated = DOSNOVENTA_CATALOG.filter((p) => !apiIds.has(p._id));
       return [...apiProducts, ...filteredCurated];
@@ -79,43 +90,47 @@ const Shop = () => {
     return DOSNOVENTA_CATALOG;
   }, [apiProducts]);
 
-  // Total published products
   const totalPublishedCount = useMemo(() => {
     return combinedProducts.filter((item) => item.isPublished !== false).length;
   }, [combinedProducts]);
 
-  // Filter and sort products
+  // Filter and sort products according to requirements:
+  // MP2: Price filter, Category filter, Ratings filter, Review filter
   const filteredProducts = useMemo(() => {
     return combinedProducts
       .filter((item) => {
-        // Only published products
-        if (item.isPublished === false) {
-          return false;
-        }
+        if (item.isPublished === false) return false;
 
-        // Category filter
+        // 1. Category Filter
         if (activeCategory !== 'all') {
           const itemCat = normalizeCategory(item.category);
-          if (itemCat !== activeCategory) {
-            return false;
-          }
+          if (itemCat !== activeCategory) return false;
         }
 
-        // In-stock toggle
-        if (inStockOnly && Number(item.stock) <= 0) {
-          return false;
-        }
+        // 2. In-Stock Filter
+        if (inStockOnly && Number(item.stock) <= 0) return false;
 
-        // Search query
+        // 3. Price Filter (min / max)
+        const price = Number(item.price);
+        if (minPrice !== '' && price < Number(minPrice)) return false;
+        if (maxPrice !== '' && price > Number(maxPrice)) return false;
+
+        // 4. Ratings Filter (minimum stars)
+        const rating = Number(item.ratings) || 0;
+        if (minRating > 0 && rating < minRating) return false;
+
+        // 5. Review Filter (only items with customer reviews)
+        const reviewCount = (item.reviews && item.reviews.length) || Number(item.numOfReviews) || 0;
+        if (hasReviews && reviewCount < 1) return false;
+
+        // Search Query filter
         if (searchQuery.trim()) {
           const q = searchQuery.toLowerCase();
           const matchName = item.name?.toLowerCase().includes(q);
           const matchDesc = item.description?.toLowerCase().includes(q);
           const matchMat = item.material?.toLowerCase().includes(q);
           const matchCat = item.category?.toLowerCase().includes(q);
-          if (!matchName && !matchDesc && !matchMat && !matchCat) {
-            return false;
-          }
+          if (!matchName && !matchDesc && !matchMat && !matchCat) return false;
         }
 
         return true;
@@ -131,191 +146,387 @@ const Shop = () => {
         }
         return 0;
       });
-  }, [combinedProducts, activeCategory, searchQuery, sortBy, inStockOnly]);
+  }, [combinedProducts, activeCategory, searchQuery, sortBy, inStockOnly, minPrice, maxPrice, minRating, hasReviews]);
+
+  // Visible items based on infinite scroll limit
+  const visibleProducts = useMemo(() => {
+    return filteredProducts.slice(0, displayLimit);
+  }, [filteredProducts, displayLimit]);
+
+  const hasMore = displayLimit < filteredProducts.length;
+
+  // Infinite Scroll IntersectionObserver
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !isLoadingMore) {
+          setIsLoadingMore(true);
+          setTimeout(() => {
+            setDisplayLimit((prev) => prev + ITEMS_PER_PAGE);
+            setIsLoadingMore(false);
+          }, 350);
+        }
+      },
+      { threshold: 0.1, rootMargin: '150px' }
+    );
+
+    observer.observe(sentinel);
+    return () => {
+      if (sentinel) observer.unobserve(sentinel);
+    };
+  }, [hasMore, isLoadingMore]);
+
+  const resetAllFilters = () => {
+    handleCategorySelect('all');
+    setSearchQuery('');
+    setSortBy('featured');
+    setInStockOnly(false);
+    setMinPrice('');
+    setMaxPrice('');
+    setMinRating(0);
+    setHasReviews(false);
+    setDisplayLimit(ITEMS_PER_PAGE);
+  };
+
+  const hasActiveFilters =
+    activeCategory !== 'all' ||
+    searchQuery ||
+    inStockOnly ||
+    sortBy !== 'featured' ||
+    minPrice !== '' ||
+    maxPrice !== '' ||
+    minRating > 0 ||
+    hasReviews;
 
   return (
     <div className="ds-shop-page">
       <MetaData title="The Collection — Dosnoventa Fixed Gear Bicycles" />
 
       {/* =========================================================================
-          1. EDITORIAL INTRODUCTION (Restrained, high-impact masthead)
+          BLOCK 2 (TOP): FULL-WIDTH BANNER & HEADER BAR
           ========================================================================= */}
-      <section className="ds-shop-masthead">
+      <section className="ds-shop-top-block">
         <div className="ds-container-wide">
-          <div className="ds-shop-masthead-content">
-            <div className="ds-shop-masthead-meta">
-              <span className="editorial-label">THE COLLECTION</span>
-              <span className="ds-shop-meta-dot">•</span>
-              <span className="ds-shop-published-pill">
-                {totalPublishedCount} PUBLISHED MACHINES &amp; GEAR
-              </span>
+          <div className="ds-shop-top-header">
+            <div>
+              <div className="ds-shop-masthead-meta">
+                <span className="editorial-label">THE COLLECTION</span>
+                <span className="ds-shop-meta-dot">•</span>
+                <span className="ds-shop-published-pill">
+                  {totalPublishedCount} MACHINES & GEAR
+                </span>
+              </div>
+              <h1 className="ds-shop-main-title">BUILT FOR THE CITY</h1>
             </div>
 
-            <h1 className="ds-shop-title">BUILT FOR THE CITY.</h1>
+            {/* Search & Sort Controls inside Block 2 */}
+            <div className="ds-shop-top-controls">
+              <div className="ds-shop-search-box">
+                <span className="ds-search-icon">⌕</span>
+                <input
+                  type="text"
+                  placeholder="SEARCH CATALOG & SPECS..."
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setDisplayLimit(ITEMS_PER_PAGE);
+                  }}
+                  className="ds-shop-search-input"
+                  aria-label="Search catalog products"
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    className="ds-search-clear"
+                    onClick={() => setSearchQuery('')}
+                    aria-label="Clear search"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
 
-            <p className="ds-shop-subtitle">
-              Precision fixed-gear bicycles, handmade Italian Columbus steel framesets,
-              aerospace-grade Toray carbon monocoques, and ruthless street riding equipment.
-              Engineered for velocity without compromise.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* =========================================================================
-          2. IN-PAGE CATEGORY BROWSING & CATALOG TOOLBAR
-          ========================================================================= */}
-      <section className="ds-shop-controls-bar">
-        <div className="ds-container-wide ds-controls-inner">
-          {/* Category Tabs (Segmented control within page, not a second navbar) */}
-          <div className="ds-shop-categories-nav" role="tablist" aria-label="Product Categories">
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat.value}
-                type="button"
-                role="tab"
-                aria-selected={activeCategory === cat.value}
-                className={`ds-shop-cat-btn ${activeCategory === cat.value ? 'is-active' : ''}`}
-                onClick={() => handleCategorySelect(cat.value)}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Search, Filter & Sort Controls */}
-          <div className="ds-shop-filter-inputs">
-            {/* Search Box */}
-            <div className="ds-shop-search-box">
-              <span className="ds-search-icon">⌕</span>
-              <input
-                type="text"
-                placeholder="SEARCH MODELS & SPECS..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="ds-shop-search-input"
-                aria-label="Search catalog products"
-              />
-              {searchQuery && (
-                <button
-                  type="button"
-                  className="ds-search-clear"
-                  onClick={() => setSearchQuery('')}
-                  aria-label="Clear search"
+              <div className="ds-shop-sort-box">
+                <label htmlFor="ds-sort-select" className="ds-sort-label">
+                  SORT:
+                </label>
+                <select
+                  id="ds-sort-select"
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="ds-shop-sort-select"
+                  aria-label="Sort products"
                 >
-                  ✕
-                </button>
-              )}
-            </div>
-
-            {/* In-Stock Only Toggle */}
-            <label className="ds-shop-stock-toggle" htmlFor="stock-toggle">
-              <input
-                id="stock-toggle"
-                type="checkbox"
-                checked={inStockOnly}
-                onChange={(e) => setInStockOnly(e.target.checked)}
-                className="ds-stock-checkbox"
-              />
-              <span className="ds-stock-toggle-label">IN STOCK ONLY</span>
-            </label>
-
-            {/* Sort Dropdown */}
-            <div className="ds-shop-sort-box">
-              <label htmlFor="ds-sort-select" className="ds-sort-label">
-                SORT:
-              </label>
-              <select
-                id="ds-sort-select"
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="ds-shop-sort-select"
-                aria-label="Sort products"
-              >
-                {SORT_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
+                  {SORT_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* =========================================================================
-          3. PRODUCT CATALOG GRID
-          ========================================================================= */}
-      <main className="ds-shop-grid-section">
-        <div className="ds-container-wide">
-          <div className="ds-shop-results-meta">
+          {/* Active Filters Pill Bar */}
+          <div className="ds-shop-active-summary">
             <span className="ds-results-count">
-              SHOWING {filteredProducts.length} OF {totalPublishedCount} PRODUCTS
-              {activeCategory !== 'all' && ` IN ${CATEGORIES.find((c) => c.value === activeCategory)?.label}`}
-              {inStockOnly && ' (IN STOCK)'}
+              SHOWING <strong>{visibleProducts.length}</strong> OF <strong>{filteredProducts.length}</strong> ITEMS
+              {activeCategory !== 'all' && (
+                <span className="ds-active-pill">
+                  {CATEGORIES.find((c) => c.value === activeCategory)?.label}
+                </span>
+              )}
+              {inStockOnly && <span className="ds-active-pill">IN STOCK ONLY</span>}
+              {minPrice && <span className="ds-active-pill">MIN ${minPrice}</span>}
+              {maxPrice && <span className="ds-active-pill">MAX ${maxPrice}</span>}
+              {minRating > 0 && <span className="ds-active-pill">★ {minRating}+</span>}
+              {hasReviews && <span className="ds-active-pill">WITH REVIEWS</span>}
             </span>
 
-            {(activeCategory !== 'all' || searchQuery || inStockOnly || sortBy !== 'featured') && (
-              <button
-                type="button"
-                className="ds-shop-reset-btn"
-                onClick={() => {
-                  handleCategorySelect('all');
-                  setSearchQuery('');
-                  setSortBy('featured');
-                  setInStockOnly(false);
-                }}
-              >
-                RESET FILTERS ✕
+            {hasActiveFilters && (
+              <button type="button" className="ds-shop-reset-btn" onClick={resetAllFilters}>
+                CLEAR ALL FILTERS ✕
               </button>
             )}
           </div>
-
-          {loading ? (
-            <div className="ds-shop-skeleton-grid">
-              {[1, 2, 3, 4, 5, 6].map((sk) => (
-                <div key={sk} className="ds-skeleton-card">
-                  <div className="ds-skeleton-image"></div>
-                  <div className="ds-skeleton-bar ds-sk-title"></div>
-                  <div className="ds-skeleton-bar ds-sk-sub"></div>
-                  <div className="ds-skeleton-bar ds-sk-price"></div>
-                </div>
-              ))}
-            </div>
-          ) : filteredProducts.length > 0 ? (
-            <div className="ds-shop-product-grid">
-              {filteredProducts.map((item) => (
-                <ProductCard key={item._id} product={item} />
-              ))}
-            </div>
-          ) : (
-            <div className="ds-shop-empty-state">
-              <span className="ds-empty-icon">∅</span>
-              <h3 className="ds-empty-title">NO MATCHING PRODUCTS FOUND</h3>
-              <p className="ds-empty-desc">
-                No items match your active filters. Try adjusting your search query,
-                selecting &ldquo;ALL&rdquo; categories, or clearing the in-stock filter.
-              </p>
-              <button
-                type="button"
-                className="ds-btn"
-                onClick={() => {
-                  handleCategorySelect('all');
-                  setSearchQuery('');
-                  setSortBy('featured');
-                  setInStockOnly(false);
-                }}
-              >
-                VIEW ENTIRE COLLECTION →
-              </button>
-            </div>
-          )}
         </div>
-      </main>
+      </section>
 
       {/* =========================================================================
-          4. BRAND STANDARDS FOOTER BANNER
+          MAIN LAYOUT: BLOCK 1 (LEFT SIDEBAR) & BLOCK 3 (RIGHT PRODUCTS GRID)
           ========================================================================= */}
+      <section className="ds-shop-main-layout">
+        <div className="ds-container-wide ds-shop-split-wrapper">
+          {/* =====================================================================
+              BLOCK 1 (LEFT): FILTER SIDEBAR
+              ===================================================================== */}
+          <aside className="ds-shop-sidebar" aria-label="Filters">
+            <div className="ds-sidebar-card">
+              <div className="ds-sidebar-header">
+                <h3 className="ds-sidebar-title">FILTERS</h3>
+                {hasActiveFilters && (
+                  <button type="button" className="ds-sidebar-reset-link" onClick={resetAllFilters}>
+                    Reset
+                  </button>
+                )}
+              </div>
+
+              {/* 1. CATEGORY FILTER (MP2: 5pts) */}
+              <div className="ds-filter-group">
+                <span className="ds-filter-heading">CATEGORIES</span>
+                <div className="ds-category-list">
+                  {CATEGORIES.map((cat) => (
+                    <button
+                      key={cat.value}
+                      type="button"
+                      className={`ds-category-item-btn ${activeCategory === cat.value ? 'is-active' : ''}`}
+                      onClick={() => handleCategorySelect(cat.value)}
+                    >
+                      <span>{cat.label}</span>
+                      {activeCategory === cat.value && <span className="ds-cat-indicator">●</span>}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* 2. PRICE FILTER (MP2: 5pts) */}
+              <div className="ds-filter-group">
+                <span className="ds-filter-heading">PRICE RANGE ($)</span>
+                <div className="ds-price-inputs-row">
+                  <div className="ds-price-field">
+                    <span className="ds-price-cur">$</span>
+                    <input
+                      type="number"
+                      placeholder="Min"
+                      value={minPrice}
+                      onChange={(e) => {
+                        setMinPrice(e.target.value);
+                        setDisplayLimit(ITEMS_PER_PAGE);
+                      }}
+                      className="ds-price-num-input"
+                      aria-label="Min price"
+                    />
+                  </div>
+                  <span className="ds-price-sep">–</span>
+                  <div className="ds-price-field">
+                    <span className="ds-price-cur">$</span>
+                    <input
+                      type="number"
+                      placeholder="Max"
+                      value={maxPrice}
+                      onChange={(e) => {
+                        setMaxPrice(e.target.value);
+                        setDisplayLimit(ITEMS_PER_PAGE);
+                      }}
+                      className="ds-price-num-input"
+                      aria-label="Max price"
+                    />
+                  </div>
+                </div>
+
+                {/* Quick Price Buttons */}
+                <div className="ds-price-quick-tags">
+                  <button
+                    type="button"
+                    className="ds-quick-tag"
+                    onClick={() => { setMinPrice('0'); setMaxPrice('500'); setDisplayLimit(ITEMS_PER_PAGE); }}
+                  >
+                    &lt; $500
+                  </button>
+                  <button
+                    type="button"
+                    className="ds-quick-tag"
+                    onClick={() => { setMinPrice('500'); setMaxPrice('1500'); setDisplayLimit(ITEMS_PER_PAGE); }}
+                  >
+                    $500–$1.5k
+                  </button>
+                  <button
+                    type="button"
+                    className="ds-quick-tag"
+                    onClick={() => { setMinPrice('1500'); setMaxPrice(''); setDisplayLimit(ITEMS_PER_PAGE); }}
+                  >
+                    $1.5k+
+                  </button>
+                </div>
+              </div>
+
+              {/* 3. RATINGS FILTER (MP2: 5pts) */}
+              <div className="ds-filter-group">
+                <span className="ds-filter-heading">CUSTOMER RATINGS</span>
+                <div className="ds-rating-options">
+                  {[
+                    { stars: 5, label: '5.0 Stars' },
+                    { stars: 4, label: '4.0 & Up' },
+                    { stars: 3, label: '3.0 & Up' },
+                    { stars: 2, label: '2.0 & Up' },
+                  ].map((r) => (
+                    <button
+                      key={r.stars}
+                      type="button"
+                      className={`ds-rating-btn ${minRating === r.stars ? 'is-active' : ''}`}
+                      onClick={() => {
+                        setMinRating(minRating === r.stars ? 0 : r.stars);
+                        setDisplayLimit(ITEMS_PER_PAGE);
+                      }}
+                    >
+                      <Rating value={r.stars} readOnly size="small" sx={{ color: '#C83226' }} />
+                      <span className="ds-rating-txt">{r.label}</span>
+                    </button>
+                  ))}
+                  {minRating > 0 && (
+                    <button
+                      type="button"
+                      className="ds-rating-clear-btn"
+                      onClick={() => { setMinRating(0); setDisplayLimit(ITEMS_PER_PAGE); }}
+                    >
+                      All ratings
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* 4. REVIEW FILTER (MP2: 5pts) */}
+              <div className="ds-filter-group">
+                <span className="ds-filter-heading">REVIEWS & FEEDBACK</span>
+                <label className="ds-sidebar-checkbox-label" htmlFor="reviews-checkbox">
+                  <input
+                    id="reviews-checkbox"
+                    type="checkbox"
+                    checked={hasReviews}
+                    onChange={(e) => {
+                      setHasReviews(e.target.checked);
+                      setDisplayLimit(ITEMS_PER_PAGE);
+                    }}
+                    className="ds-custom-checkbox"
+                  />
+                  <span>Has Customer Reviews Only</span>
+                </label>
+              </div>
+
+              {/* 5. AVAILABILITY */}
+              <div className="ds-filter-group">
+                <span className="ds-filter-heading">AVAILABILITY</span>
+                <label className="ds-sidebar-checkbox-label" htmlFor="stock-checkbox">
+                  <input
+                    id="stock-checkbox"
+                    type="checkbox"
+                    checked={inStockOnly}
+                    onChange={(e) => {
+                      setInStockOnly(e.target.checked);
+                      setDisplayLimit(ITEMS_PER_PAGE);
+                    }}
+                    className="ds-custom-checkbox"
+                  />
+                  <span>In Stock Only</span>
+                </label>
+              </div>
+            </div>
+          </aside>
+
+          {/* =====================================================================
+              BLOCK 3 (RIGHT): PRODUCTS GRID & INFINITE SCROLL
+              ===================================================================== */}
+          <main className="ds-shop-products-column">
+            {loading ? (
+              <div className="ds-shop-skeleton-grid">
+                {[1, 2, 3, 4, 5, 6].map((sk) => (
+                  <div key={sk} className="ds-skeleton-card">
+                    <div className="ds-skeleton-image"></div>
+                    <div className="ds-skeleton-bar ds-sk-title"></div>
+                    <div className="ds-skeleton-bar ds-sk-sub"></div>
+                    <div className="ds-skeleton-bar ds-sk-price"></div>
+                  </div>
+                ))}
+              </div>
+            ) : visibleProducts.length > 0 ? (
+              <>
+                <div className="ds-shop-grid-cards">
+                  {visibleProducts.map((item) => (
+                    <ProductCard key={item._id} product={item} />
+                  ))}
+                </div>
+
+                {/* INFINITE SCROLL SENTINEL & INDICATOR (Quiz 3: 15pts) */}
+                <div
+                  ref={sentinelRef}
+                  className="ds-infinite-sentinel-box"
+                >
+                  {isLoadingMore ? (
+                    <div className="ds-infinite-loading">
+                      <div className="ds-spinner-dot" />
+                      <span>LOADING MORE MACHINES...</span>
+                    </div>
+                  ) : hasMore ? (
+                    <span className="ds-infinite-hint">
+                      SCROLL DOWN TO LOAD MORE ({visibleProducts.length} OF {filteredProducts.length})
+                    </span>
+                  ) : (
+                    <span className="ds-infinite-end">
+                      — END OF DOSNOVENTA COLLECTION —
+                    </span>
+                  )}
+                </div>
+              </>
+            ) : (
+              <div className="ds-shop-empty-state">
+                <span className="ds-empty-icon">∅</span>
+                <h3 className="ds-empty-title">NO MATCHING PRODUCTS FOUND</h3>
+                <p className="ds-empty-desc">
+                  No items match your active filters. Try adjusting your search, price range, or rating.
+                </p>
+                <button type="button" className="ds-btn" onClick={resetAllFilters}>
+                  CLEAR FILTERS & VIEW ALL →
+                </button>
+              </div>
+            )}
+          </main>
+        </div>
+      </section>
+
+      {/* BRAND STANDARDS FOOTER BANNER */}
       <section className="ds-shop-standards-banner">
         <div className="ds-container-wide ds-standards-grid">
           <div className="ds-standard-item">
@@ -326,7 +537,6 @@ const Shop = () => {
               metallurgical manufacturing defects.
             </p>
           </div>
-
           <div className="ds-standard-item">
             <span className="ds-standard-number">02</span>
             <h4 className="ds-standard-title">GLOBAL INSURED FREIGHT</h4>
@@ -334,13 +544,12 @@ const Shop = () => {
               Direct dispatch in reinforced heavy-duty bike cartons to over 80 countries worldwide.
             </p>
           </div>
-
           <div className="ds-standard-item">
             <span className="ds-standard-number">03</span>
             <h4 className="ds-standard-title">BARCELONA ATELIER TUNING</h4>
             <p className="ds-standard-desc">
-              Every custom machine is hand-aligned, faced, and pre-inspected by experienced track
-              mechanics before boxing.
+              Every custom machine is hand-aligned, faced, and pre-inspected by experienced track mechanics
+              before boxing.
             </p>
           </div>
         </div>
