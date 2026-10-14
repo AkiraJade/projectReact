@@ -668,9 +668,12 @@ exports.updateUser = async (req, res, next) => {
 }
 
 exports.logout = async (req, res, next) => {
+    const isProduction = process.env.NODE_ENV === 'PRODUCTION';
     res.cookie('token', null, {
         expires: new Date(Date.now()),
-        httpOnly: true
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: isProduction ? 'none' : 'lax',
     })
 
     return res.status(200).json({

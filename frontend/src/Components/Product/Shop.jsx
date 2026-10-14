@@ -5,7 +5,7 @@ import { getProducts } from '../../actions/productActions';
 import { DOSNOVENTA_CATALOG } from '../../data/dosnoventaProducts';
 import ProductCard from './ProductCard';
 import MetaData from '../Layout/MetaData';
-import { Rating } from '@mui/material';
+import { Rating, Slider } from '@mui/material';
 import './Shop.css';
 
 const ITEMS_PER_PAGE = 9;
@@ -365,6 +365,42 @@ const Shop = () => {
                       aria-label="Max price"
                     />
                   </div>
+                </div>
+
+                {/* Interactive Dual-Thumb Price Slider */}
+                <div style={{ padding: '0 8px', margin: '8px 0 4px' }}>
+                  <Slider
+                    value={[
+                      minPrice !== '' ? Number(minPrice) : 0,
+                      maxPrice !== '' ? Number(maxPrice) : 5000
+                    ]}
+                    onChange={(e, newValue) => {
+                      setMinPrice(String(newValue[0]));
+                      setMaxPrice(String(newValue[1]));
+                      setDisplayLimit(ITEMS_PER_PAGE);
+                    }}
+                    valueLabelDisplay="auto"
+                    min={0}
+                    max={5000}
+                    step={50}
+                    sx={{
+                      color: '#C83226',
+                      height: 4,
+                      '& .MuiSlider-thumb': {
+                        width: 14,
+                        height: 14,
+                        backgroundColor: '#fff',
+                        border: '2px solid #C83226',
+                        '&:hover, &.Mui-focusVisible': {
+                          boxShadow: '0 0 0 6px rgba(200, 50, 38, 0.16)'
+                        }
+                      },
+                      '& .MuiSlider-rail': {
+                        opacity: 0.25,
+                        backgroundColor: '#9ca3af'
+                      }
+                    }}
+                  />
                 </div>
 
                 {/* Quick Price Buttons */}

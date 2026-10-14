@@ -104,14 +104,26 @@ export const logout = () => async (dispatch) => {
             },
             withCredentials: true,
         }
-        await axios.get(`${import.meta.env.VITE_API}/logout`,config)
+        await axios.get(`${import.meta.env.VITE_API}/logout`, config)
+        if (typeof window !== 'undefined') {
+            sessionStorage.removeItem('token');
+            sessionStorage.removeItem('user');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+        }
         dispatch({
             type: LOGOUT_SUCCESS,
         })
     } catch (error) {
+        if (typeof window !== 'undefined') {
+            sessionStorage.removeItem('token');
+            sessionStorage.removeItem('user');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+        }
         dispatch({
             type: LOGOUT_FAIL,
-            payload: error.response.data.message
+            payload: error?.response?.data?.message || error.message
         })
     }
 }

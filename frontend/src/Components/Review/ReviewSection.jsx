@@ -13,10 +13,44 @@ const ReviewSection = ({ productId }) => {
     const [comment, setComment] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [isVerifiedBuyer, setIsVerifiedBuyer] = useState(false);
+    const [checkingPurchase, setCheckingPurchase] = useState(false);
 
     const userReview = reviews.find(
         r => r.user?.toString() === user?._id?.toString() || r.user === user?._id
     );
+
+    // Verify if logged-in user purchased this product or is admin
+    useEffect(() => {
+        const verifyPurchase = async () => {
+            if (!isAuthenticated || !productId || productId.startsWith('local-') || productId.startsWith('dsnv-')) {
+                setIsVerifiedBuyer(false);
+                return;
+            }
+            if (user?.role === 'admin') {
+                setIsVerifiedBuyer(true);
+                return;
+            }
+            setCheckingPurchase(true);
+            try {
+                const config = {
+                    headers: { Authorization: `Bearer ${getToken()}` },
+                    withCredentials: true
+                };
+                const { data } = await axios.get(`${import.meta.env.VITE_API}/orders/me`, config);
+                const orders = data.orders || [];
+                const bought = orders.some(o => 
+                    o.orderItems && o.orderItems.some(item => (item.product?.toString() || item.product) === productId.toString())
+                );
+                setIsVerifiedBuyer(bought);
+            } catch (err) {
+                setIsVerifiedBuyer(false);
+            } finally {
+                setCheckingPurchase(false);
+            }
+        };
+        verifyPurchase();
+    }, [isAuthenticated, user, productId]);
 
     const fetchReviews = async () => {
         if (!productId || productId.startsWith('local-') || productId.startsWith('dsnv-')) return;
@@ -103,110 +137,171 @@ const ReviewSection = ({ productId }) => {
 
             {/* Form for authenticated users */}
             {isAuthenticated ? (
-                <div style={{
-                    background: '#f8f8fa',
-                    border: '1px solid #e5e7eb',
-                    borderRadius: '8px',
-                    padding: '28px',
-                    marginBottom: '40px'
-                }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                        <h3 style={{ fontSize: '15px', fontWeight: 700, margin: 0, letterSpacing: '1px' }}>
-                            {userReview ? 'UPDATE YOUR REVIEW' : 'RATE & REVIEW THIS MACHINE'}
-                        </h3>
-                        <span style={{ fontSize: '11px', letterSpacing: '1px', color: '#6b7280' }}>
-                            VERIFIED BUYERS ONLY
-                        </span>
-                    </div>
-
-                    {error && (
-                        <div style={{
-                            background: '#fee2e2',
-                            color: '#991b1b',
-                            padding: '12px 16px',
-                            borderRadius: '6px',
-                            fontSize: '13px',
-                            marginBottom: '16px'
-                        }}>
-                            {error}
-                        </div>
-                    )}
-                    {success && (
-                        <div style={{
-                            background: '#d1fae5',
-                            color: '#065f46',
-                            padding: '12px 16px',
-                            borderRadius: '6px',
-                            fontSize: '13px',
-                            marginBottom: '16px'
-                        }}>
-                            {success}
-                        </div>
-                    )}
-
-                    <form onSubmit={handleSubmit}>
-                        <div style={{ marginBottom: '20px' }}>
-                            <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, letterSpacing: '1px', marginBottom: '8px' }}>
-                                YOUR RATING (1–5 STARS) *
-                            </label>
-                            <Rating
-                                id="review-stars-input"
-                                name="review-rating"
-                                value={rating}
-                                onChange={(e, newVal) => setRating(newVal)}
-                                size="large"
-                                sx={{ color: '#C83226' }}
-                            />
-                        </div>
-
-                        <div style={{ marginBottom: '20px' }}>
-                            <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, letterSpacing: '1px', marginBottom: '8px' }}>
-                                REVIEW DETAILS *
-                            </label>
-                            <textarea
-                                id="review-comment-input"
-                                value={comment}
-                                onChange={(e) => setComment(e.target.value)}
-                                rows={4}
-                                placeholder="Describe performance, weld quality, street handling, or component finish..."
-                                style={{
-                                    width: '100%',
-                                    padding: '12px',
-                                    border: '1px solid #d1d5db',
-                                    borderRadius: '6px',
-                                    fontSize: '14px',
-                                    lineHeight: 1.6,
-                                    fontFamily: 'inherit',
-                                    background: '#fff',
-                                    boxSizing: 'border-box'
-                                }}
-                            />
-                            <span style={{ fontSize: '11px', color: '#6b7280', marginTop: '4px', display: 'block' }}>
-                                Notice: Inappropriate language and profanity will be automatically filtered.
+                isVerifiedBuyer ? (
+                    <div style={{
+                        background: '#f8f8fa',
+                        border: '1px solid #e5e7eb',
+                        borderRadius: '8px',
+                        padding: '28px',
+                        marginBottom: '40px'
+                    }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                <h3 style={{ fontSize: '15px', fontWeight: 700, margin: 0, letterSpacing: '1px' }}>
+                                    {userReview ? 'UPDATE YOUR REVIEW' : 'RATE & REVIEW THIS MACHINE'}
+                                </h3>
+                                <span style={{
+                                    fontSize: '10px',
+                                    fontWeight: 700,
+                                    letterSpacing: '1px',
+                                    background: '#10B981',
+                                    color: '#fff',
+                                    padding: '3px 8px',
+                                    borderRadius: '12px'
+                                }}>
+                                    ✓ VERIFIED BUYER
+                                </span>
+                            </div>
+                            <span style={{ fontSize: '11px', letterSpacing: '1px', color: '#6b7280' }}>
+                                RIDER VERIFIED
                             </span>
                         </div>
 
-                        <button
-                            id="submit-review-btn"
-                            type="submit"
-                            disabled={submitting}
+                        {error && (
+                            <div style={{
+                                background: '#fee2e2',
+                                color: '#991b1b',
+                                padding: '12px 16px',
+                                borderRadius: '6px',
+                                fontSize: '13px',
+                                marginBottom: '16px'
+                            }}>
+                                {error}
+                            </div>
+                        )}
+                        {success && (
+                            <div style={{
+                                background: '#d1fae5',
+                                color: '#065f46',
+                                padding: '12px 16px',
+                                borderRadius: '6px',
+                                fontSize: '13px',
+                                marginBottom: '16px'
+                            }}>
+                                {success}
+                            </div>
+                        )}
+
+                        <form onSubmit={handleSubmit}>
+                            <div style={{ marginBottom: '20px' }}>
+                                <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, letterSpacing: '1px', marginBottom: '8px' }}>
+                                    YOUR RATING (1–5 STARS) *
+                                </label>
+                                <Rating
+                                    id="review-stars-input"
+                                    name="review-rating"
+                                    value={rating}
+                                    onChange={(e, newVal) => setRating(newVal)}
+                                    size="large"
+                                    sx={{ color: '#C83226' }}
+                                />
+                            </div>
+
+                            <div style={{ marginBottom: '20px' }}>
+                                <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, letterSpacing: '1px', marginBottom: '8px' }}>
+                                    REVIEW DETAILS *
+                                </label>
+                                <textarea
+                                    id="review-comment-input"
+                                    value={comment}
+                                    onChange={(e) => setComment(e.target.value)}
+                                    rows={4}
+                                    placeholder="Describe performance, weld quality, street handling, or component finish..."
+                                    style={{
+                                        width: '100%',
+                                        padding: '12px',
+                                        border: '1px solid #d1d5db',
+                                        borderRadius: '6px',
+                                        fontSize: '14px',
+                                        lineHeight: 1.6,
+                                        fontFamily: 'inherit',
+                                        background: '#fff',
+                                        boxSizing: 'border-box'
+                                    }}
+                                />
+                                <span style={{ fontSize: '11px', color: '#6b7280', marginTop: '4px', display: 'block' }}>
+                                    Notice: Inappropriate language and profanity will be automatically filtered.
+                                </span>
+                            </div>
+
+                            <button
+                                id="submit-review-btn"
+                                type="submit"
+                                disabled={submitting}
+                                style={{
+                                    background: '#1a1a1a',
+                                    color: '#fff',
+                                    border: 'none',
+                                    padding: '12px 28px',
+                                    borderRadius: '4px',
+                                    fontSize: '12px',
+                                    letterSpacing: '2px',
+                                    fontWeight: 600,
+                                    cursor: submitting ? 'not-allowed' : 'pointer',
+                                    transition: 'background 0.2s'
+                                }}
+                            >
+                                {submitting ? 'PROCESSING...' : (userReview ? 'UPDATE REVIEW' : 'SUBMIT REVIEW')}
+                            </button>
+                        </form>
+                    </div>
+                ) : (
+                    <div style={{
+                        background: '#f8f8fa',
+                        border: '1px solid #e5e7eb',
+                        borderRadius: '8px',
+                        padding: '24px',
+                        marginBottom: '40px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
+                    }}>
+                        <div>
+                            <span style={{
+                                display: 'inline-block',
+                                background: '#fef3c7',
+                                color: '#92400e',
+                                padding: '3px 8px',
+                                borderRadius: '4px',
+                                fontSize: '11px',
+                                fontWeight: 700,
+                                letterSpacing: '0.5px',
+                                marginBottom: '6px'
+                            }}>
+                                VERIFIED PURCHASE REQUIRED
+                            </span>
+                            <div style={{ fontSize: '14px', color: '#4b5563' }}>
+                                Only riders who have ordered this product through Dosnoventa can submit a review.
+                            </div>
+                        </div>
+                        <a
+                            href="/shop"
                             style={{
                                 background: '#1a1a1a',
                                 color: '#fff',
-                                border: 'none',
-                                padding: '12px 28px',
+                                padding: '8px 18px',
                                 borderRadius: '4px',
                                 fontSize: '12px',
-                                letterSpacing: '2px',
+                                letterSpacing: '1px',
+                                textDecoration: 'none',
                                 fontWeight: 600,
-                                cursor: submitting ? 'not-allowed' : 'pointer',
-                                transition: 'background 0.2s'
+                                whiteSpace: 'nowrap'
                             }}
                         >
-                            {submitting ? 'PROCESSING...' : (userReview ? 'UPDATE REVIEW' : 'SUBMIT REVIEW')}
-                        </button>
-                    </form>
-                </div>
+                            BROWSE SHOP →
+                        </a>
+                    </div>
+                )
             ) : (
                 <div style={{
                     background: '#f8f8fa',
