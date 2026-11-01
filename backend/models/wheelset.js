@@ -76,9 +76,9 @@ const wheelsetSchema = new mongoose.Schema({
     }
 });
 
-wheelsetSchema.pre('save', function(next) {
+wheelsetSchema.pre('save', function() {
     this.updatedAt = Date.now();
-    next();
+    
 });
 
 module.exports = mongoose.model('Wheelset', wheelsetSchema);

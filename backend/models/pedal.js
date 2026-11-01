@@ -76,9 +76,9 @@ const pedalSchema = new mongoose.Schema({
     }
 });
 
-pedalSchema.pre('save', function(next) {
+pedalSchema.pre('save', function() {
     this.updatedAt = Date.now();
-    next();
+    
 });
 
 module.exports = mongoose.model('Pedal', pedalSchema);

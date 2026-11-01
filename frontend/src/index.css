@@ -4,25 +4,32 @@
    ========================================================================== */
 
 :root {
-  /* Color Palette */
-  --ds-bg-base: #0a0b0d;           /* Deep Charcoal / Near-black */
-  --ds-bg-surface: #121417;        /* Surface layer */
-  --ds-bg-surface-elevated: #1a1c21;/* Hover / card surface */
-  --ds-bg-subtle: #24272e;         /* Subtle borders & lines */
+  /* Default: LIGHT MODE PALETTE */
+  --ds-bg-base: #f8f8fa;           /* Off-white / Warm clean studio background */
+  --ds-bg-surface: #ffffff;        /* Pure white cards / modules */
+  --ds-bg-surface-elevated: #f1f2f5;/* Hover / elevated surface */
+  --ds-bg-subtle: #e5e7eb;         /* Subtle borders & dividing lines */
 
-  --ds-text-primary: #f6f5f1;      /* Off-white / Warm white */
-  --ds-text-secondary: #9ea3ac;    /* Muted gray */
-  --ds-text-muted: #5e6470;        /* Compact labels / ghost text */
-  --ds-text-dark: #0a0b0d;
+  --ds-text-primary: #121417;      /* Crisp rich black / near-black */
+  --ds-text-secondary: #4b5563;    /* Readable slate gray */
+  --ds-text-muted: #6b7280;        /* Muted labels & timestamps */
+  --ds-text-dark: #121417;
 
-  --ds-accent-red: #d92d20;        /* Deep racing red */
-  --ds-accent-silver: #c5c9d1;     /* Industrial silver */
-  --ds-accent-blue: #3e7bfa;       /* Technical track blue */
-  --ds-accent-hvis: #d4ff00;       /* High-vis neon chartreuse accent */
+  --ds-accent-red: #c83226;        /* Dosnoventa racing scarlet */
+  --ds-accent-silver: #4b5563;     /* Architectural slate */
+  --ds-accent-blue: #2563eb;       /* Track blue */
+  --ds-accent-hvis: #65a30d;       /* Crisp acid green accent */
 
-  --ds-border-light: rgba(246, 245, 241, 0.08);
-  --ds-border-active: rgba(246, 245, 241, 0.25);
-  --ds-border-red: rgba(217, 45, 32, 0.5);
+  --ds-border-light: rgba(18, 20, 23, 0.08);
+  --ds-border-active: rgba(18, 20, 23, 0.22);
+  --ds-border-red: rgba(200, 50, 38, 0.5);
+
+  --ds-card-bg: #ffffff;
+  --ds-card-border: #e5e7eb;
+  --ds-header-bg: rgba(255, 255, 255, 0.88);
+  --ds-input-bg: #ffffff;
+  --ds-input-border: #d1d5db;
+  --ds-input-text: #111827;
 
   /* Typography */
   --ds-font-display: 'Syne', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -43,6 +50,35 @@
   --ds-transition-slow: 0.65s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Optional: DARK MODE OVERRIDES */
+html[data-theme='dark'] {
+  --ds-bg-base: #0a0b0d;           /* Deep Charcoal / Near-black */
+  --ds-bg-surface: #121417;        /* Surface layer */
+  --ds-bg-surface-elevated: #1a1c21;/* Hover / card surface */
+  --ds-bg-subtle: #24272e;         /* Subtle borders & lines */
+
+  --ds-text-primary: #f6f5f1;      /* Off-white / Warm white */
+  --ds-text-secondary: #9ea3ac;    /* Muted gray */
+  --ds-text-muted: #6b7280;        /* Compact labels / ghost text */
+  --ds-text-dark: #f6f5f1;
+
+  --ds-accent-red: #d92d20;        /* Deep racing red */
+  --ds-accent-silver: #c5c9d1;     /* Industrial silver */
+  --ds-accent-blue: #3e7bfa;       /* Technical track blue */
+  --ds-accent-hvis: #d4ff00;       /* High-vis neon chartreuse accent */
+
+  --ds-border-light: rgba(246, 245, 241, 0.08);
+  --ds-border-active: rgba(246, 245, 241, 0.25);
+  --ds-border-red: rgba(217, 45, 32, 0.5);
+
+  --ds-card-bg: #121417;
+  --ds-card-border: rgba(246, 245, 241, 0.08);
+  --ds-header-bg: rgba(10, 11, 13, 0.85);
+  --ds-input-bg: #16181d;
+  --ds-input-border: rgba(246, 245, 241, 0.15);
+  --ds-input-text: #f6f5f1;
+}
+
 /* Base resets & typography override */
 html {
   scroll-behavior: smooth;
@@ -58,6 +94,7 @@ body {
   width: 100%;
   min-height: 100%;
   overflow-x: hidden;
+  transition: background-color 0.25s ease, color 0.25s ease;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

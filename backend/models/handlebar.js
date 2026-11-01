@@ -80,9 +80,9 @@ const handlebarSchema = new mongoose.Schema({
     }
 });
 
-handlebarSchema.pre('save', function(next) {
+handlebarSchema.pre('save', function() {
     this.updatedAt = Date.now();
-    next();
+    
 });
 
 module.exports = mongoose.model('Handlebar', handlebarSchema);

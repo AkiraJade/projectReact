@@ -80,9 +80,9 @@ const frameSchema = new mongoose.Schema({
     }
 });
 
-frameSchema.pre('save', function(next) {
+frameSchema.pre('save', function() {
     this.updatedAt = Date.now();
-    next();
+    
 });
 
 module.exports = mongoose.model('Frame', frameSchema);

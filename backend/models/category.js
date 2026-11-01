@@ -48,12 +48,12 @@ const categorySchema = new mongoose.Schema({
     }
 });
 
-categorySchema.pre('save', function(next) {
+categorySchema.pre('save', function() {
     if (!this.slug && this.name) {
         this.slug = this.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
     }
     this.updatedAt = Date.now();
-    next();
+    
 });
 
 module.exports = mongoose.model('Category', categorySchema);

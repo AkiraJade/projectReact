@@ -83,12 +83,12 @@ const gearRatioSchema = new mongoose.Schema({
     }
 });
 
-gearRatioSchema.pre('save', function(next) {
+gearRatioSchema.pre('save', function() {
     if (this.chainring.teeth && this.cog.teeth) {
         this.ratio = this.chainring.teeth / this.cog.teeth;
     }
     this.updatedAt = Date.now();
-    next();
+    
 });
 
 module.exports = mongoose.model('GearRatio', gearRatioSchema);

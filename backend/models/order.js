@@ -4,7 +4,10 @@ const orderSchema = new mongoose.Schema({
     referenceNumber: {
         type: String,
         unique: true,
-        required: true
+        sparse: true,
+        default: function() {
+            return 'ORD-' + Date.now().toString(36).toUpperCase() + '-' + Math.floor(1000 + Math.random() * 9000);
+        }
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,
@@ -12,39 +15,36 @@ const orderSchema = new mongoose.Schema({
         ref: 'User',
         index: true
     },
+    shippingInfo: {
+        address: { type: String },
+        city: { type: String },
+        phoneNo: { type: String },
+        postalCode: { type: String },
+        country: { type: String }
+    },
     deliveryMethod: {
         type: String,
-        required: true,
         enum: ['delivery', 'pickup'],
         default: 'delivery'
     },
     deliveryAddress: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Address',
-        required: function() {
-            return this.deliveryMethod === 'delivery';
-        }
+        ref: 'Address'
     },
     pickupDetails: {
         date: {
-            type: Date,
-            required: function() {
-                return this.deliveryMethod === 'pickup';
-            }
+            type: Date
         },
         timeSlot: {
-            type: String,
-            required: function() {
-                return this.deliveryMethod === 'pickup';
-            }
+            type: String
         }
     },
     orderItems: [
         {
             type: {
                 type: String,
-                required: true,
-                enum: ['product', 'customBuild']
+                enum: ['product', 'customBuild'],
+                default: 'product'
             },
             name: {
                 type: String,
@@ -126,8 +126,8 @@ const orderSchema = new mongoose.Schema({
     orderStatus: {
         type: String,
         required: true,
-        enum: ['Pending', 'Assembling', 'Ready for Pickup', 'Out for Delivery', 'Delivered', 'Cancelled'],
-        default: 'Pending'
+        enum: ['Pending', 'Processing', 'Assembling', 'Ready for Pickup', 'Out for Delivery', 'Delivered', 'Cancelled'],
+        default: 'Processing'
     },
     statusHistory: [
         {
@@ -161,9 +161,9 @@ const orderSchema = new mongoose.Schema({
     }
 });
 
-orderSchema.pre('save', function(next) {
+orderSchema.pre('save', function() {
     this.updatedAt = Date.now();
-    next();
+    
 });
 
 module.exports = mongoose.model('Order', orderSchema)

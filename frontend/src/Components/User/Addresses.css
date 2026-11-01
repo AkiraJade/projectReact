@@ -3,8 +3,8 @@
    ========================================================================= */
 
 .ds-addresses-page {
-  background-color: var(--ds-bg-dark, #0a0a0a);
-  color: var(--ds-text-light, #f5f5f5);
+  background-color: var(--ds-bg-base, #f8f8fa);
+  color: var(--ds-text-primary, #121417);
   min-height: 100vh;
   padding-bottom: 6rem;
 }
@@ -12,7 +12,7 @@
 /* Header */
 .ds-addresses-header {
   padding: 5rem 0 2.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--ds-border-light, rgba(0, 0, 0, 0.08));
 }
 
 .ds-addresses-header-inner {
@@ -31,12 +31,12 @@
   letter-spacing: -0.02em;
   text-transform: uppercase;
   margin: 0.75rem 0 0.85rem;
-  color: #ffffff;
+  color: var(--ds-text-primary, #121417);
 }
 
 .ds-addresses-subtitle {
   font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.65);
+  color: var(--ds-text-secondary, #4b5563);
   max-width: 620px;
   margin: 0;
 }
@@ -93,22 +93,24 @@
 }
 
 .ds-address-card {
-  background: #111111;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--ds-bg-surface, #ffffff);
+  border: 1px solid var(--ds-border-light, #e5e7eb);
   padding: 2rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
   transition: all 0.25s ease;
 }
 
 .ds-address-card:hover {
-  border-color: rgba(255, 255, 255, 0.25);
+  border-color: var(--ds-border-active, rgba(0, 0, 0, 0.25));
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
 }
 
 .ds-address-card.is-default-card {
-  border-color: rgba(255, 255, 255, 0.35);
-  background: #131417;
+  border-color: var(--ds-text-primary, #121417);
+  background: var(--ds-bg-surface, #ffffff);
 }
 
 .ds-address-card-top {
@@ -130,9 +132,9 @@
   font-weight: 700;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--ds-bg-subtle, #f1f2f5);
   padding: 0.25rem 0.6rem;
-  color: #ffffff;
+  color: var(--ds-text-primary, #121417);
 }
 
 .ds-address-default-badge {
@@ -140,8 +142,8 @@
   font-weight: 800;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  background: #ffffff;
-  color: #0a0a0a;
+  background: var(--ds-text-primary, #121417);
+  color: var(--ds-bg-surface, #ffffff);
   padding: 0.25rem 0.6rem;
 }
 
@@ -177,13 +179,13 @@
   letter-spacing: -0.01em;
   text-transform: uppercase;
   margin: 0 0 0.3rem;
-  color: #ffffff;
+  color: var(--ds-text-primary, #121417);
 }
 
 .ds-recipient-phone {
   font-size: 0.8rem;
   letter-spacing: 0.05em;
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--ds-text-muted, #6b7280);
   display: block;
   margin-bottom: 1.25rem;
 }
@@ -192,14 +194,14 @@
   font-style: normal;
   font-size: 0.9rem;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--ds-text-secondary, #4b5563);
 }
 
 .ds-address-country {
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #ffffff;
+  color: var(--ds-text-primary, #121417);
   margin-top: 0.3rem;
 }
 

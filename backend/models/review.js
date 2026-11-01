@@ -45,9 +45,9 @@ const reviewSchema = new mongoose.Schema({
 
 reviewSchema.index({ user: 1, product: 1 }, { unique: true });
 
-reviewSchema.pre('save', function(next) {
+reviewSchema.pre('save', function() {
     this.updatedAt = Date.now();
-    next();
+    
 });
 
 module.exports = mongoose.model('Review', reviewSchema);

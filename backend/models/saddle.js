@@ -76,9 +76,9 @@ const saddleSchema = new mongoose.Schema({
     }
 });
 
-saddleSchema.pre('save', function(next) {
+saddleSchema.pre('save', function() {
     this.updatedAt = Date.now();
-    next();
+    
 });
 
 module.exports = mongoose.model('Saddle', saddleSchema);

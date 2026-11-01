@@ -14,10 +14,11 @@
 
 .ds-navbar-scrolled {
   padding: 1rem 0;
-  background: rgba(10, 11, 13, 0.75);
+  background: var(--ds-header-bg, rgba(255, 255, 255, 0.9));
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(246, 245, 241, 0.08);
+  border-bottom: 1px solid var(--ds-border-light, rgba(0, 0, 0, 0.08));
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
 }
 
 .ds-navbar-container {
@@ -170,6 +171,34 @@
   color: var(--ds-accent-red);
   font-weight: 700;
   letter-spacing: 0.08em;
+}
+
+/* Theme Toggle Button */
+.ds-theme-toggle-btn {
+  background: var(--ds-bg-surface-elevated, rgba(18, 20, 23, 0.4));
+  color: var(--ds-text-primary);
+  border: 1px solid var(--ds-border-light, rgba(246, 245, 241, 0.15));
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: all var(--ds-transition-fast);
+  outline: none;
+}
+
+.ds-theme-toggle-btn:hover {
+  border-color: var(--ds-text-primary);
+  transform: rotate(15deg) scale(1.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.ds-theme-toggle-btn svg {
+  display: block;
+  stroke: currentColor;
 }
 
 /* User Menu */

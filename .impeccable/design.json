@@ -1,0 +1,210 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-15T06:31:30.000Z",
+  "title": "Design System: Dosnoventa Fixed Gear Bicycles",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Racing Scarlet",
+        "canonical": "oklch(55% 0.22 25)",
+        "tonalRamp": [
+          "#3a0a07",
+          "#65130f",
+          "#911b15",
+          "#bd241c",
+          "#c83226",
+          "#d95247",
+          "#ea8279",
+          "#f7bbb6"
+        ]
+      },
+      "neutral-bg": {
+        "role": "neutral",
+        "displayName": "Studio Off-White",
+        "canonical": "oklch(97% 0.003 260)",
+        "tonalRamp": [
+          "#121417",
+          "#282c33",
+          "#4d5360",
+          "#7c8497",
+          "#b2b8c6",
+          "#d7dbe3",
+          "#edeef2",
+          "#f8f8fa"
+        ]
+      },
+      "neutral-surface": {
+        "role": "neutral",
+        "displayName": "Pure Module White",
+        "canonical": "oklch(100% 0 0)",
+        "tonalRamp": [
+          "#1e1e24",
+          "#3a3b43",
+          "#666772",
+          "#999ba6",
+          "#c8cad3",
+          "#e8e9ee",
+          "#f5f6f8",
+          "#ffffff"
+        ]
+      },
+      "dark-bg": {
+        "role": "neutral",
+        "displayName": "Velodrome Obsidian",
+        "canonical": "oklch(12% 0.005 260)",
+        "tonalRamp": [
+          "#000000",
+          "#0a0b0d",
+          "#16181d",
+          "#24272e",
+          "#383c46",
+          "#555a66",
+          "#8a8f9d",
+          "#c5c9d3"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display Hero",
+        "purpose": "High-impact editorial mastheads and model titles."
+      },
+      "headline": {
+        "displayName": "Technical Headline",
+        "purpose": "Major collection dividers and section intros."
+      },
+      "title": {
+        "displayName": "Component Title",
+        "purpose": "Product card names and modal headlines."
+      },
+      "body": {
+        "displayName": "Reading Body",
+        "purpose": "Detailed technical descriptions and verified reviews."
+      },
+      "label": {
+        "displayName": "Micro Tracked Label",
+        "purpose": "Technical attributes, specifications, badges, and button labels."
+      }
+    },
+    "shadows": [
+      {
+        "name": "flat-rest",
+        "value": "none",
+        "purpose": "Standard architectural baseline at rest."
+      },
+      {
+        "name": "lift-hover",
+        "value": "0 10px 25px -5px rgba(0, 0, 0, 0.08)",
+        "purpose": "Subtle tactile response upon hovering interactive bike cards."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ds-fast",
+        "value": "0.18s cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Snappy micro-interactions, button hover shifts, and toggle flips."
+      },
+      {
+        "name": "ds-medium",
+        "value": "0.35s cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Card expansion, filter transitions, and drawer panels."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1440px" },
+      { "name": "wide", "value": "1720px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Atelier Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "High-contrast action trigger with inverted color fill and sharp zero radius.",
+      "html": "<button class=\"ds-btn\">ACQUIRE MACHINE <span class=\"ds-arrow\">→</span></button>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem; font-family: 'Space Grotesk', -apple-system, sans-serif; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; padding: 1.1rem 2.2rem; border: 1px solid #121417; background-color: #121417; color: #ffffff; cursor: pointer; text-decoration: none; border-radius: 0; transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn:hover { background-color: #c83226; border-color: #c83226; color: #ffffff; transform: translateY(-2px); } .ds-arrow { display: inline-block; transition: transform 0.18s ease; } .ds-btn:hover .ds-arrow { transform: translateX(6px); }"
+    },
+    {
+      "name": "Outline Spec Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Secondary technical spec action trigger with 1px hairline border.",
+      "html": "<button class=\"ds-btn-outline\">VIEW GEOMETRY</button>",
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', -apple-system, sans-serif; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; padding: 1.1rem 2.2rem; border: 1px solid #121417; background-color: transparent; color: #121417; cursor: pointer; border-radius: 0; transition: all 0.18s ease; } .ds-btn-outline:hover { background-color: #121417; color: #ffffff; }"
+    },
+    {
+      "name": "Editorial Status Badge",
+      "kind": "chip",
+      "refersTo": "chip-badge",
+      "description": "Translucent status pill with 6px scarlet velocity dot.",
+      "html": "<div class=\"editorial-badge\">HANDCRAFTED IN BARCELONA</div>",
+      "css": ".editorial-badge { display: inline-flex; align-items: center; gap: 0.5rem; font-family: 'Space Grotesk', sans-serif; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.35rem 0.85rem; border: 1px solid rgba(18, 20, 23, 0.12); background: rgba(255, 255, 255, 0.85); color: #121417; border-radius: 4px; backdrop-filter: blur(8px); } .editorial-badge::before { content: ''; display: inline-block; width: 6px; height: 6px; background-color: #c83226; border-radius: 50%; }"
+    },
+    {
+      "name": "Technical Field Input",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Stark square text field with 1px hairline stroke and focus highlight.",
+      "html": "<input type=\"text\" class=\"ds-input\" placeholder=\"ENTER RIDER EMAIL...\" />",
+      "css": ".ds-input { width: 100%; max-width: 380px; background-color: #ffffff; border: 1px solid #d1d5db; color: #121417; font-family: 'Inter', sans-serif; font-size: 0.95rem; padding: 0.9rem 1.15rem; border-radius: 0; outline: none; box-sizing: border-box; transition: border-color 0.18s, box-shadow 0.18s; } .ds-input:focus { border-color: #121417; box-shadow: 0 0 0 1px #121417; } .ds-input::placeholder { color: #9ca3af; font-size: 0.82rem; letter-spacing: 0.08em; text-transform: uppercase; }"
+    },
+    {
+      "name": "Product Spec Card",
+      "kind": "card",
+      "refersTo": "card-product",
+      "description": "Architectural flat card with crisp hairline divider and subtle hover lift.",
+      "html": "<div class=\"ds-card-demo\"><div class=\"ds-card-meta\"><span class=\"ds-meta-pill\">COLUMBUS SPIRIT</span><span class=\"ds-meta-price\">$1,750</span></div><h3 class=\"ds-card-title\">DOSNOVENTA BARCELONA</h3><p class=\"ds-card-sub\">HANDMADE ITALIAN TRIPLE-BUTTED STEEL</p></div>",
+      "css": ".ds-card-demo { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 0; padding: 1.5rem; max-width: 320px; transition: transform 0.18s ease, border-color 0.18s ease; font-family: 'Space Grotesk', sans-serif; } .ds-card-demo:hover { transform: translateY(-3px); border-color: #121417; } .ds-card-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; font-size: 0.72rem; letter-spacing: 0.14em; font-weight: 600; color: #6b7280; } .ds-meta-price { color: #c83226; font-weight: 700; font-size: 0.9rem; } .ds-card-title { font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 800; margin: 0 0 0.4rem 0; letter-spacing: -0.02em; color: #121417; } .ds-card-sub { font-size: 0.75rem; color: #4b5563; margin: 0; letter-spacing: 0.05em; text-transform: uppercase; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Barcelona Velodrome Atelier",
+    "overview": "The Dosnoventa design language unites the uncompromising mechanical precision of a track bike with the stark typographical restraint of modern European art direction. Interfaces are constructed like high-grade bicycle frames: zero ornamental excess, razor-sharp geometric cuts, generous negative space, and relentless structural clarity.",
+    "keyCharacteristics": [
+      "Zero-Radius Architecture: Strict 0px to 4px corners; eschews friendly rounded pills in favor of industrial precision.",
+      "Micro-Tracked Hierarchy: Uppercase sans-serif headers paired with generous letter spacing (0.12em to 0.18em) for metadata and labels.",
+      "Tactile High-Contrast Planes: Pure white and rich charcoal cards separated by 1px hairline dividers rather than heavy drop shadows.",
+      "Mechanical Restraint: Color is deployed with mathematical precision; scarlet accent coverage remains under 10% of any given view."
+    ],
+    "rules": [
+      {
+        "name": "The Ten-Percent Flare Rule",
+        "body": "The Racing Scarlet accent (#c83226) must never dominate a layout. It is a high-speed brake-light signal used on <=10% of any surface to guide the eye directly to action.",
+        "section": "colors"
+      },
+      {
+        "name": "The Dual-Atmosphere Rule",
+        "body": "Backgrounds and surfaces must cleanly swap between Light (#f8f8fa) and Dark (#0a0b0d) via CSS custom properties without modifying structural hierarchy or layout integrity.",
+        "section": "colors"
+      },
+      {
+        "name": "The Strict Uppercase Metadata Rule",
+        "body": "All labels, categories, badges, and button labels must be rendered in uppercase with 0.12em to 0.18em tracking. Body copy and reviews remain in standard sentence casing.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Plane Rule",
+        "body": "Never apply diffuse multi-layered drop shadows to product cards or containers. Depth belongs to the photography and crisp 1px borders, not artificial blur.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do maintain sharp 0px corners on primary CTAs, inputs, and collection cards.",
+      "Do keep typography hierarchy disciplined: Syne for display, Space Grotesk for titles & labels, Inter for body copy.",
+      "Do use Racing Scarlet (#c83226) exclusively as an intentional velocity accent, never as a full-page background flood.",
+      "Do write concise, technical, and authentic cycling copy (Columbus Spirit tubing, 144 BCD, 7005 Airplane aluminum).",
+      "Do preserve 100% feature parity between Light Mode and Dark Mode."
+    ],
+    "donts": [
+      "Don't use playful rounded bubble buttons or soft pill corners (rounded-full or rounded-2xl).",
+      "Don't use fuzzy, floating drop shadows to simulate elevation; use 1px borders and surface color shifts.",
+      "Don't use generic decorative illustrations, emojis, or stock icons that contradict track cycling reality.",
+      "Don't mix more than two accent colors on any single viewport.",
+      "Don't allow long lines of text to exceed 75 characters without column wrapping."
+    ]
+  }
+}

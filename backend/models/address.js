@@ -66,9 +66,9 @@ const addressSchema = new mongoose.Schema({
     }
 });
 
-addressSchema.pre('save', function(next) {
+addressSchema.pre('save', function() {
     this.updatedAt = Date.now();
-    next();
+    
 });
 
 module.exports = mongoose.model('Address', addressSchema);

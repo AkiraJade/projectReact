@@ -113,9 +113,9 @@ const customBuildSchema = new mongoose.Schema({
     }
 });
 
-customBuildSchema.pre('save', function(next) {
+customBuildSchema.pre('save', function() {
     this.updatedAt = Date.now();
-    next();
+    
 });
 
 module.exports = mongoose.model('CustomBuild', customBuildSchema);
