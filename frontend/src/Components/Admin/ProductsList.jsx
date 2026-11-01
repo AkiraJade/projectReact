@@ -94,23 +94,92 @@ const ProductsList = () => {
       field: 'product',
       headerName: 'Product',
       flex: 2,
+      minWidth: 260,
       renderCell: (params) => (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-          {params.row.image ? (
-            <img
-              src={params.row.image}
-              alt={params.row.name}
-              style={{ width: '44px', height: '38px', objectFit: 'cover', borderRadius: '4px', background: '#F3F4F6', border: '1px solid #E5E7EB' }}
-              onError={(e) => { e.target.style.display = 'none'; }}
-            />
-          ) : (
-            <div style={{ width: '44px', height: '38px', borderRadius: '4px', background: '#F3F4F6', border: '1px solid #E5E7EB', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9CA3AF', fontSize: '10px' }}>
-              NO IMG
-            </div>
-          )}
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ fontWeight: 600, color: '#111827', fontSize: '13.5px' }}>{params.row.name}</span>
-            <span style={{ fontSize: '11px', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{params.row.category}</span>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '14px',
+          width: '100%',
+          minWidth: 0,
+          height: '100%'
+        }}>
+          <div style={{
+            width: '46px',
+            height: '46px',
+            minWidth: '46px',
+            borderRadius: '4px',
+            overflow: 'hidden',
+            backgroundColor: '#f8f9fa',
+            border: '1px solid #e5e7eb',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0
+          }}>
+            {params.row.image ? (
+              <img
+                src={params.row.image}
+                alt={params.row.name}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  display: 'block'
+                }}
+                onError={(e) => { e.target.style.display = 'none'; }}
+              />
+            ) : (
+              <span style={{
+                fontSize: '9px',
+                fontWeight: 700,
+                color: '#98a2b3',
+                letterSpacing: '0.05em',
+                fontFamily: 'var(--ds-font-grotesk, sans-serif)'
+              }}>
+                NO IMG
+              </span>
+            )}
+          </div>
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            minWidth: 0,
+            overflow: 'hidden',
+            lineHeight: 1.3
+          }}>
+            <span
+              style={{
+                fontWeight: 600,
+                color: '#101828',
+                fontSize: '13.5px',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                display: 'block'
+              }}
+              title={params.row.name}
+            >
+              {params.row.name}
+            </span>
+            <span
+              style={{
+                fontSize: '11px',
+                fontWeight: 600,
+                color: '#667085',
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
+                fontFamily: 'var(--ds-font-grotesk, sans-serif)',
+                marginTop: '3px',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                display: 'block'
+              }}
+            >
+              {params.row.category || 'General'}
+            </span>
           </div>
         </div>
       ),
@@ -122,9 +191,15 @@ const ProductsList = () => {
       align: 'right',
       headerAlign: 'right',
       renderCell: (params) => (
-        <strong style={{ fontFamily: 'monospace', color: '#111827', fontSize: '13.5px' }}>
+        <span style={{
+          fontFamily: 'var(--ds-font-grotesk, sans-serif)',
+          fontVariantNumeric: 'tabular-nums',
+          fontWeight: 700,
+          color: '#101828',
+          fontSize: '14px'
+        }}>
           {params.value}
-        </strong>
+        </span>
       ),
     },
     {
@@ -136,30 +211,14 @@ const ProductsList = () => {
       renderCell: (params) => {
         const qty = Number(params.value);
         return qty > 0 ? (
-          <span style={{
-            background: '#ECFDF5',
-            color: '#065F46',
-            border: '1px solid #A7F3D0',
-            padding: '3px 10px',
-            borderRadius: '12px',
-            fontSize: '11px',
-            fontWeight: 600,
-            letterSpacing: '0.5px'
-          }}>
-            ● IN STOCK ({qty})
+          <span className="ds-table-badge ds-badge-success">
+            <span className="ds-table-badge-dot"></span>
+            IN STOCK ({qty})
           </span>
         ) : (
-          <span style={{
-            background: '#FEF2F2',
-            color: '#991B1B',
-            border: '1px solid #FECACA',
-            padding: '3px 10px',
-            borderRadius: '12px',
-            fontSize: '11px',
-            fontWeight: 600,
-            letterSpacing: '0.5px'
-          }}>
-            ○ OUT OF STOCK
+          <span className="ds-table-badge ds-badge-danger">
+            <span className="ds-table-badge-dot"></span>
+            OUT OF STOCK
           </span>
         );
       },
@@ -173,7 +232,7 @@ const ProductsList = () => {
       align: 'right',
       headerAlign: 'right',
       renderCell: (params) => (
-        <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', width: '100%' }}>
+        <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', alignItems: 'center', width: '100%', height: '100%' }}>
           <Link
             to={`/admin/product/${params.id}`}
             className="ds-table-action-btn ds-table-btn-edit"
@@ -203,16 +262,23 @@ const ProductsList = () => {
   }));
 
   return (
-    <div className="ds-card" style={{ padding: '24px 28px' }}>
+    <div className="ds-card ds-admin-table-card" style={{ padding: '24px 28px' }}>
       <MetaData title="Products Catalog — DOSNOVENTA" />
 
       {/* Top Controls Bar */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
         <div>
-          <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#111827', margin: 0 }}>
+          <h2 style={{
+            fontSize: '18px',
+            fontWeight: 700,
+            color: '#101828',
+            margin: 0,
+            fontFamily: 'var(--ds-font-grotesk, sans-serif)',
+            letterSpacing: '0.02em'
+          }}>
             Products Inventory ({products.length})
           </h2>
-          <p style={{ fontSize: '12.5px', color: '#6B7280', margin: '3px 0 0' }}>
+          <p style={{ fontSize: '12.5px', color: '#667085', margin: '3px 0 0' }}>
             Manage catalog specifications, pricing, inventory stock, and atelier items.
           </p>
         </div>
@@ -220,19 +286,8 @@ const ProductsList = () => {
         <div style={{ display: 'flex', gap: '12px' }}>
           <Link
             to="/admin/trash"
-            style={{
-              background: '#FFFFFF',
-              border: '1px solid #D1D5DB',
-              color: '#4B5563',
-              padding: '8px 16px',
-              fontSize: '12px',
-              fontWeight: 600,
-              textDecoration: 'none',
-              borderRadius: '6px',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px'
-            }}
+            className="ds-table-action-btn ds-table-btn-edit"
+            style={{ padding: '8px 16px', fontSize: '11.5px', height: '36px' }}
           >
             View Trash
           </Link>
@@ -240,17 +295,21 @@ const ProductsList = () => {
             to="/admin/product"
             style={{
               background: '#C83226',
-              border: 'none',
+              border: '1px solid #C83226',
               color: '#FFFFFF',
-              padding: '8px 18px',
-              fontSize: '12px',
+              padding: '0 18px',
+              height: '36px',
+              fontSize: '11.5px',
               fontWeight: 600,
+              fontFamily: 'var(--ds-font-grotesk, sans-serif)',
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
               textDecoration: 'none',
-              borderRadius: '6px',
+              borderRadius: '4px',
               display: 'inline-flex',
               alignItems: 'center',
               gap: '6px',
-              boxShadow: '0 1px 2px rgba(200, 50, 38, 0.2)'
+              transition: 'all 0.18s ease'
             }}
           >
             + Add Product
@@ -287,6 +346,8 @@ const ProductsList = () => {
             <DataGrid
               rows={rows}
               columns={columns}
+              rowHeight={72}
+              columnHeaderHeight={48}
               pageSizeOptions={[10, 25, 50]}
               initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
               checkboxSelection

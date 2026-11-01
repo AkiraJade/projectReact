@@ -61,26 +61,18 @@ const OrdersList = () => {
     }, []);
 
     const getStatusChip = (status) => {
-        const config = {
-            Processing: { bg: '#FEF3C7', text: '#92400E', border: '#FDE68A' },
-            Assembled: { bg: '#DBEAFE', text: '#1E40AF', border: '#BFDBFE' },
-            Delivered: { bg: '#D1FAE5', text: '#065F46', border: '#A7F3D0' },
-            Cancelled: { bg: '#FEE2E2', text: '#991B1B', border: '#FECACA' }
-        }[status] || { bg: '#F3F4F6', text: '#374151', border: '#E5E7EB' };
+        const statusMap = {
+            Processing: { className: 'ds-badge-warning', label: 'Processing' },
+            Assembled: { className: 'ds-badge-info', label: 'Assembled' },
+            Delivered: { className: 'ds-badge-success', label: 'Delivered' },
+            Cancelled: { className: 'ds-badge-danger', label: 'Cancelled' }
+        };
+        const s = statusMap[status] || { className: 'ds-badge-neutral', label: status || 'Pending' };
 
         return (
-            <span style={{
-                backgroundColor: config.bg,
-                color: config.text,
-                border: `1px solid ${config.border}`,
-                padding: '4px 10px',
-                borderRadius: '12px',
-                fontSize: '11px',
-                fontWeight: 700,
-                letterSpacing: '0.5px',
-                textTransform: 'uppercase'
-            }}>
-                {status}
+            <span className={`ds-table-badge ${s.className}`}>
+                <span className="ds-table-badge-dot"></span>
+                {s.label}
             </span>
         );
     };
@@ -90,12 +82,25 @@ const OrdersList = () => {
             field: 'id',
             headerName: 'Order Reference',
             flex: 1.2,
+            minWidth: 180,
             renderCell: (params) => (
-                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', lineHeight: '1.3' }}>
-                    <span style={{ fontFamily: 'monospace', fontSize: '13px', fontWeight: 700, color: '#111827' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', lineHeight: '1.3', height: '100%' }}>
+                    <span style={{
+                        fontFamily: 'var(--ds-font-grotesk, sans-serif)',
+                        fontSize: '13.5px',
+                        fontWeight: 700,
+                        color: '#101828',
+                        letterSpacing: '0.04em'
+                    }}>
                         #ORD-{String(params.value).slice(-8).toUpperCase()}
                     </span>
-                    <span style={{ fontFamily: 'monospace', fontSize: '11px', color: '#6B7280' }}>
+                    <span style={{
+                        fontFamily: 'monospace',
+                        fontSize: '11px',
+                        color: '#667085',
+                        letterSpacing: '0.02em',
+                        marginTop: '2px'
+                    }}>
                         {params.value}
                     </span>
                 </div>
@@ -105,8 +110,13 @@ const OrdersList = () => {
             field: 'customer',
             headerName: 'Customer',
             flex: 1,
+            minWidth: 140,
             renderCell: (params) => (
-                <span style={{ fontSize: '13px', fontWeight: 600, color: '#1F2937' }}>
+                <span style={{
+                    fontSize: '13.5px',
+                    fontWeight: 600,
+                    color: '#101828'
+                }}>
                     {params.value}
                 </span>
             )
@@ -114,11 +124,17 @@ const OrdersList = () => {
         {
             field: 'numofItems',
             headerName: 'Items',
-            width: 80,
+            width: 90,
             align: 'center',
             headerAlign: 'center',
             renderCell: (params) => (
-                <span style={{ fontWeight: 600, color: '#374151' }}>
+                <span style={{
+                    fontWeight: 600,
+                    color: '#344054',
+                    fontFamily: 'var(--ds-font-grotesk, sans-serif)',
+                    fontVariantNumeric: 'tabular-nums',
+                    fontSize: '13px'
+                }}>
                     {params.value}
                 </span>
             )
@@ -126,11 +142,17 @@ const OrdersList = () => {
         {
             field: 'amount',
             headerName: 'Grand Total',
-            width: 130,
+            width: 140,
             align: 'right',
             headerAlign: 'right',
             renderCell: (params) => (
-                <span style={{ fontWeight: 700, color: '#111827', fontSize: '13.5px', fontFamily: 'monospace' }}>
+                <span style={{
+                    fontWeight: 700,
+                    color: '#101828',
+                    fontSize: '14px',
+                    fontFamily: 'var(--ds-font-grotesk, sans-serif)',
+                    fontVariantNumeric: 'tabular-nums'
+                }}>
                     ${Number(params.value).toFixed(2)}
                 </span>
             )
@@ -138,7 +160,7 @@ const OrdersList = () => {
         {
             field: 'status',
             headerName: 'Fulfillment Status',
-            width: 160,
+            width: 180,
             align: 'center',
             headerAlign: 'center',
             renderCell: (params) => getStatusChip(params.value)
@@ -146,15 +168,15 @@ const OrdersList = () => {
         {
             field: 'actions',
             headerName: 'Actions',
-            width: 140,
+            width: 210,
             sortable: false,
             filterable: false,
             align: 'right',
             headerAlign: 'right',
             renderCell: (params) => (
-                <div style={{ display: 'flex', gap: '8px' }}>
+                <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', alignItems: 'center', width: '100%', height: '100%' }}>
                     <Link to={`/admin/order/${params.row.rawId}`} className="ds-table-action-btn ds-table-btn-view">
-                        <VisibilityIcon style={{ fontSize: '14px' }} />
+                        <VisibilityIcon style={{ fontSize: '13px' }} />
                         Process
                     </Link>
                     {params.row.status !== 'Delivered' && (
@@ -165,7 +187,7 @@ const OrdersList = () => {
                             className="ds-table-action-btn ds-table-btn-trash"
                             title="Cancel / delete unfulfilled order"
                         >
-                            <DeleteOutlineIcon style={{ fontSize: '14px' }} />
+                            <DeleteOutlineIcon style={{ fontSize: '13px' }} />
                             Cancel
                         </button>
                     )}
@@ -190,17 +212,17 @@ const OrdersList = () => {
             {/* Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
                 <div>
-                    <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#111827', margin: 0 }}>
+                    <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#101828', margin: 0 }}>
                         Orders & Fulfillment
                     </h2>
-                    <p style={{ fontSize: '12.5px', color: '#6B7280', margin: '4px 0 0' }}>
+                    <p style={{ fontSize: '12.5px', color: '#667085', margin: '4px 0 0' }}>
                         Customer orders, build queue progress, and automated PDF delivery logs.
                     </p>
                 </div>
             </div>
 
             {/* Content Card */}
-            <div className="ds-card" style={{ padding: '24px 28px' }}>
+            <div className="ds-card ds-admin-table-card" style={{ padding: '24px 28px' }}>
                 {loading ? (
                     <Loader />
                 ) : allOrders.length > 0 ? (
@@ -208,6 +230,8 @@ const OrdersList = () => {
                         <DataGrid
                             rows={rows}
                             columns={columns}
+                            rowHeight={72}
+                            columnHeaderHeight={48}
                             pageSizeOptions={[10, 25, 50]}
                             initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
                             disableSelectionOnClick

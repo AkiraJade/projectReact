@@ -82,7 +82,7 @@ const ProductReviews = () => {
             headerName: 'Review ID',
             flex: 0.8,
             renderCell: (params) => (
-                <span style={{ fontFamily: 'monospace', fontSize: '11px', color: '#9CA3AF' }}>
+                <span style={{ fontFamily: 'monospace', fontSize: '11px', color: '#667085' }}>
                     {params.value}
                 </span>
             )
@@ -92,11 +92,11 @@ const ProductReviews = () => {
             headerName: 'Reviewer',
             flex: 1,
             renderCell: (params) => (
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <span style={{ fontWeight: 600, color: '#111827', fontSize: '13px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                    <span style={{ fontWeight: 600, color: '#101828', fontSize: '13.5px' }}>
                         {params.row.userName}
                     </span>
-                    <span style={{ fontSize: '11px', color: '#6B7280', fontFamily: 'monospace' }}>
+                    <span style={{ fontSize: '11px', color: '#667085', fontFamily: 'monospace', marginTop: '2px' }}>
                         {params.row.userId}
                     </span>
                 </div>
@@ -122,7 +122,7 @@ const ProductReviews = () => {
             headerName: 'Comment',
             flex: 2,
             renderCell: (params) => (
-                <span style={{ fontSize: '13px', color: '#374151', whiteSpace: 'normal', lineHeight: '1.4' }}>
+                <span style={{ fontSize: '13px', color: '#344054', whiteSpace: 'normal', lineHeight: '1.4' }}>
                     {params.value}
                 </span>
             )
@@ -130,7 +130,7 @@ const ProductReviews = () => {
         {
             field: 'actions',
             headerName: 'Actions',
-            width: 110,
+            width: 130,
             sortable: false,
             filterable: false,
             align: 'right',
@@ -140,19 +140,7 @@ const ProductReviews = () => {
                     type="button"
                     disabled={deletingId === params.id}
                     onClick={() => deleteReviewHandler(params.id)}
-                    style={{
-                        padding: '5px 12px',
-                        background: '#FEF2F2',
-                        border: '1px solid #FCA5A5',
-                        color: '#DC2626',
-                        fontSize: '11.5px',
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                        borderRadius: '6px',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '4px'
-                    }}
+                    className="ds-table-action-btn ds-table-btn-trash"
                 >
                     <DeleteOutlineIcon style={{ fontSize: '14px' }} />
                     Trash
@@ -176,34 +164,24 @@ const ProductReviews = () => {
             {/* Header & Sub-Bar */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
                 <div>
-                    <h2 style={{ fontSize: '18px', fontWeight: 700, letterSpacing: '0.5px', color: '#F9FAFB', margin: 0 }}>
-                        PRODUCT REVIEWS MODERATION
+                    <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#101828', margin: 0 }}>
+                        Product Reviews Moderation
                     </h2>
-                    <p style={{ fontSize: '12px', color: '#9CA3AF', margin: '4px 0 0' }}>
+                    <p style={{ fontSize: '12.5px', color: '#667085', margin: '4px 0 0' }}>
                         Inspect verified customer reviews, mask flagged language, or move inappropriate feedback to Trash.
                     </p>
                 </div>
 
                 <div style={{ display: 'flex', gap: '10px' }}>
-                    <Link to="/admin/trash" style={{ textDecoration: 'none' }}>
-                        <Button
-                            variant="outlined"
-                            size="small"
-                            startIcon={<DeleteSweepIcon />}
-                            sx={{
-                                color: '#9CA3AF',
-                                borderColor: '#374151',
-                                '&:hover': { borderColor: '#C83226', color: '#fff' }
-                            }}
-                        >
-                            Trash & Archived
-                        </Button>
+                    <Link to="/admin/trash" className="ds-table-action-btn ds-table-btn-edit" style={{ padding: '8px 16px', fontSize: '11.5px', height: '36px' }}>
+                        <DeleteSweepIcon style={{ fontSize: '15px' }} />
+                        Trash & Archived
                     </Link>
                 </div>
             </div>
 
             {/* Search Box */}
-            <div className="ds-card" style={{ padding: '24px 28px' }}>
+            <div className="ds-card ds-admin-table-card" style={{ padding: '24px 28px' }}>
                 <form onSubmit={submitHandler} style={{ display: 'flex', gap: '14px', alignItems: 'flex-end', flexWrap: 'wrap' }}>
                     <div style={{ flex: 1, minWidth: '280px' }}>
                         <label style={{ display: 'block', fontSize: '11.5px', fontWeight: 600, letterSpacing: '0.04em', color: '#4B5563', marginBottom: '8px', textTransform: 'uppercase' }}>
@@ -268,50 +246,16 @@ const ProductReviews = () => {
             </div>
 
             {/* DataGrid Table */}
-            <div className="ds-card" style={{ padding: '24px 28px' }}>
+            <div className="ds-card ds-admin-table-card" style={{ padding: '24px 28px' }}>
                 {loading ? (
                     <Loader />
                 ) : listReviews.length > 0 ? (
-                    <Box
-                        sx={{
-                            width: '100%',
-                            '& .MuiDataGrid-root': {
-                                border: '1px solid #EAECF0',
-                                borderRadius: '8px',
-                                color: '#111827',
-                                fontFamily: 'inherit',
-                                backgroundColor: '#FFFFFF',
-                            },
-                            '& .MuiDataGrid-cell': {
-                                borderBottom: '1px solid #F2F4F7',
-                                fontSize: '13px',
-                            },
-                            '& .MuiDataGrid-columnHeaders': {
-                                backgroundColor: '#F8F9FA',
-                                borderBottom: '1px solid #EAECF0',
-                                color: '#4B5563',
-                                fontSize: '11.5px',
-                                fontWeight: 700,
-                                letterSpacing: '0.04em',
-                                textTransform: 'uppercase',
-                            },
-                            '& .MuiDataGrid-row:hover': {
-                                backgroundColor: '#F8FAFC',
-                            },
-                            '& .MuiDataGrid-footerContainer': {
-                                borderTop: '1px solid #EAECF0',
-                                backgroundColor: '#FFFFFF',
-                                color: '#6B7280',
-                            },
-                            '& .MuiTablePagination-root': {
-                                color: '#4B5563',
-                                fontSize: '12px',
-                            },
-                        }}
-                    >
+                    <Box className="ds-datagrid-container">
                         <DataGrid
                             rows={rows}
                             columns={columns}
+                            rowHeight={72}
+                            columnHeaderHeight={48}
                             pageSizeOptions={[5, 10, 25]}
                             initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
                             disableSelectionOnClick

@@ -152,19 +152,93 @@ const TrashList = () => {
     {
       field: 'name',
       headerName: 'Product',
-      flex: 1.5,
+      flex: 2,
+      minWidth: 260,
       renderCell: (params) => (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          {params.row.image && (
-            <img
-              src={params.row.image}
-              alt={params.value}
-              style={{ width: '38px', height: '32px', objectFit: 'cover', borderRadius: '2px', border: '1px solid #333' }}
-            />
-          )}
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span style={{ fontWeight: 600, color: '#111827', fontSize: '13.5px' }}>{params.value}</span>
-            <span style={{ fontSize: '11px', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{params.row.category}</span>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '14px',
+          width: '100%',
+          minWidth: 0,
+          height: '100%'
+        }}>
+          <div style={{
+            width: '46px',
+            height: '46px',
+            minWidth: '46px',
+            borderRadius: '4px',
+            overflow: 'hidden',
+            backgroundColor: '#f8f9fa',
+            border: '1px solid #e5e7eb',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0
+          }}>
+            {params.row.image ? (
+              <img
+                src={params.row.image}
+                alt={params.value}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  display: 'block'
+                }}
+                onError={(e) => { e.target.style.display = 'none'; }}
+              />
+            ) : (
+              <span style={{
+                fontSize: '9px',
+                fontWeight: 700,
+                color: '#98a2b3',
+                letterSpacing: '0.05em',
+                fontFamily: 'var(--ds-font-grotesk, sans-serif)'
+              }}>
+                NO IMG
+              </span>
+            )}
+          </div>
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            minWidth: 0,
+            overflow: 'hidden',
+            lineHeight: 1.3
+          }}>
+            <span
+              style={{
+                fontWeight: 600,
+                color: '#101828',
+                fontSize: '13.5px',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                display: 'block'
+              }}
+              title={params.value}
+            >
+              {params.value}
+            </span>
+            <span
+              style={{
+                fontSize: '11px',
+                fontWeight: 600,
+                color: '#667085',
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
+                fontFamily: 'var(--ds-font-grotesk, sans-serif)',
+                marginTop: '3px',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                display: 'block'
+              }}
+            >
+              {params.row.category || 'General'}
+            </span>
           </div>
         </div>
       ),
@@ -172,32 +246,46 @@ const TrashList = () => {
     {
       field: 'price',
       headerName: 'Price',
-      width: 100,
-      renderCell: (params) => <span style={{ fontFamily: 'monospace', fontWeight: 600, color: '#111827' }}>${params.value}</span>,
+      width: 120,
+      align: 'right',
+      headerAlign: 'right',
+      renderCell: (params) => (
+        <span style={{
+          fontFamily: 'var(--ds-font-grotesk, sans-serif)',
+          fontVariantNumeric: 'tabular-nums',
+          fontWeight: 700,
+          color: '#101828',
+          fontSize: '14px'
+        }}>
+          ${Number(params.value).toFixed(2)}
+        </span>
+      ),
     },
     {
       field: 'deletedAt',
       headerName: 'Deleted Date',
       width: 140,
-      renderCell: (params) => <span style={{ fontSize: '12.5px', color: '#4B5563' }}>{params.value}</span>,
+      renderCell: (params) => <span style={{ fontSize: '13px', color: '#475467' }}>{params.value}</span>,
     },
     {
       field: 'deletedBy',
       headerName: 'Deleted By',
       width: 160,
-      renderCell: (params) => <span style={{ fontSize: '12.5px', color: '#4B5563' }}>{params.value || 'Administrator'}</span>,
+      renderCell: (params) => <span style={{ fontSize: '13px', color: '#475467' }}>{params.value || 'Administrator'}</span>,
     },
     {
       field: 'actions',
       headerName: 'Actions',
-      width: 180,
+      width: 190,
       sortable: false,
       filterable: false,
+      align: 'right',
+      headerAlign: 'right',
       renderCell: (params) => (
-        <div style={{ display: 'flex', gap: '8px' }}>
+        <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', alignItems: 'center', width: '100%', height: '100%' }}>
           <button
             type="button"
-            className="ds-table-action-btn ds-table-btn-view"
+            className="ds-table-action-btn ds-table-btn-restore"
             title="Restore product to active collection"
             onClick={() =>
               setConfirmDialog({
@@ -237,43 +325,49 @@ const TrashList = () => {
     {
       field: 'productName',
       headerName: 'Product',
-      width: 200,
-      renderCell: (params) => <strong style={{ color: '#111827' }}>{params.value}</strong>,
+      width: 220,
+      renderCell: (params) => <strong style={{ color: '#101828', fontSize: '13.5px', fontWeight: 600 }}>{params.value}</strong>,
     },
     {
       field: 'userName',
       headerName: 'Reviewer',
-      width: 140,
-      renderCell: (params) => <span style={{ color: '#374151' }}>{params.value}</span>,
+      width: 160,
+      renderCell: (params) => <span style={{ color: '#475467', fontSize: '13px' }}>{params.value}</span>,
     },
     {
       field: 'rating',
       headerName: 'Rating',
       width: 90,
-      renderCell: (params) => <span style={{ color: '#D97706', fontWeight: 600 }}>★ {params.value}</span>,
+      align: 'center',
+      headerAlign: 'center',
+      renderCell: (params) => <span style={{ color: '#D97706', fontWeight: 700, fontSize: '13px' }}>★ {params.value}</span>,
     },
     {
       field: 'comment',
       headerName: 'Comment',
       flex: 1.5,
-      renderCell: (params) => <span style={{ fontSize: '12px', color: '#4B5563' }}>{params.value}</span>,
+      renderCell: (params) => <span style={{ fontSize: '13px', color: '#475467' }}>{params.value}</span>,
     },
     {
       field: 'deletedAt',
       headerName: 'Deleted Date',
-      width: 130,
+      width: 140,
+      renderCell: (params) => <span style={{ fontSize: '13px', color: '#475467' }}>{params.value}</span>,
     },
     {
       field: 'actions',
       headerName: 'Actions',
-      width: 180,
+      width: 190,
       sortable: false,
       filterable: false,
+      align: 'right',
+      headerAlign: 'right',
       renderCell: (params) => (
-        <div style={{ display: 'flex', gap: '6px' }}>
+        <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', alignItems: 'center', width: '100%', height: '100%' }}>
           <button
             type="button"
-            className="btn btn-sm btn-outline-success"
+            className="ds-table-action-btn ds-table-btn-restore"
+            title="Restore review"
             onClick={() =>
               setConfirmDialog({
                 open: true,
@@ -284,13 +378,13 @@ const TrashList = () => {
                 extraData: { productId: params.row.productId },
               })
             }
-            style={{ fontSize: '11px', padding: '3px 8px', borderColor: '#10b981', color: '#10b981' }}
           >
-            RESTORE
+            Restore
           </button>
           <button
             type="button"
-            className="btn btn-sm btn-outline-danger"
+            className="ds-table-action-btn ds-table-btn-trash"
+            title="Permanently remove review"
             onClick={() =>
               setConfirmDialog({
                 open: true,
@@ -301,9 +395,8 @@ const TrashList = () => {
                 extraData: { productId: params.row.productId },
               })
             }
-            style={{ fontSize: '11px', padding: '3px 8px', borderColor: '#ef4444', color: '#ef4444' }}
           >
-            PURGE
+            Purge
           </button>
         </div>
       ),
@@ -315,21 +408,24 @@ const TrashList = () => {
     {
       field: 'name',
       headerName: 'Customer Name',
-      flex: 1,
-      renderCell: (params) => <strong style={{ color: '#111827' }}>{params.value}</strong>,
+      flex: 1.2,
+      renderCell: (params) => <strong style={{ color: '#101828', fontSize: '13.5px', fontWeight: 600 }}>{params.value}</strong>,
     },
     {
       field: 'email',
       headerName: 'Email Address',
-      flex: 1.2,
-      renderCell: (params) => <span style={{ fontFamily: 'monospace', color: '#374151' }}>{params.value}</span>,
+      flex: 1.5,
+      renderCell: (params) => <span style={{ color: '#475467', fontSize: '13px' }}>{params.value}</span>,
     },
     {
       field: 'status',
       headerName: 'Status',
-      width: 130,
+      width: 140,
+      align: 'center',
+      headerAlign: 'center',
       renderCell: () => (
-        <span style={{ background: 'rgba(239, 68, 68, 0.2)', color: '#ef4444', padding: '2px 8px', borderRadius: '2px', fontSize: '11px', letterSpacing: '1px' }}>
+        <span className="ds-table-badge ds-badge-danger">
+          <span className="ds-table-badge-dot"></span>
           DEACTIVATED
         </span>
       ),
@@ -338,18 +434,22 @@ const TrashList = () => {
       field: 'deletedAt',
       headerName: 'Deactivated On',
       width: 140,
+      renderCell: (params) => <span style={{ fontSize: '13px', color: '#475467' }}>{params.value}</span>,
     },
     {
       field: 'actions',
       headerName: 'Actions',
-      width: 180,
+      width: 190,
       sortable: false,
       filterable: false,
+      align: 'right',
+      headerAlign: 'right',
       renderCell: (params) => (
-        <div style={{ display: 'flex', gap: '6px' }}>
+        <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', alignItems: 'center', width: '100%', height: '100%' }}>
           <button
             type="button"
-            className="btn btn-sm btn-outline-success"
+            className="ds-table-action-btn ds-table-btn-restore"
+            title="Reactivate customer account"
             onClick={() =>
               setConfirmDialog({
                 open: true,
@@ -359,13 +459,13 @@ const TrashList = () => {
                 targetId: params.id,
               })
             }
-            style={{ fontSize: '11px', padding: '3px 8px', borderColor: '#10b981', color: '#10b981' }}
           >
-            REACTIVATE
+            Reactivate
           </button>
           <button
             type="button"
-            className="btn btn-sm btn-outline-danger"
+            className="ds-table-action-btn ds-table-btn-trash"
+            title="Permanently erase account"
             onClick={() =>
               setConfirmDialog({
                 open: true,
@@ -375,9 +475,8 @@ const TrashList = () => {
                 targetId: params.id,
               })
             }
-            style={{ fontSize: '11px', padding: '3px 8px', borderColor: '#ef4444', color: '#ef4444' }}
           >
-            PURGE
+            Purge
           </button>
         </div>
       ),
@@ -414,35 +513,40 @@ const TrashList = () => {
   }));
 
   return (
-    <div className="ds-card" style={{ padding: '24px 28px' }}>
+    <div className="ds-card ds-admin-table-card" style={{ padding: '24px 28px' }}>
       <MetaData title="Trash & Recovery — DOSNOVENTA" />
 
       {/* Top Banner / Heading */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
         <div>
-          <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#111827', margin: 0 }}>
+          <span className="ds-eyebrow" style={{ fontSize: '10px', letterSpacing: '0.14em', color: '#c83226', fontWeight: 700, textTransform: 'uppercase' }}>
+            ATELIER RECOVERY VAULT
+          </span>
+          <h2 style={{ fontSize: '18px', fontFamily: 'var(--ds-font-grotesk)', fontWeight: 700, color: '#101828', margin: '4px 0 0', letterSpacing: '0.02em' }}>
             Trash & Soft-Deleted Records
           </h2>
-          <p style={{ fontSize: '12.5px', color: '#6B7280', margin: '3px 0 0' }}>
+          <p style={{ fontSize: '12.5px', color: '#667085', margin: '4px 0 0' }}>
             Safely restore items back to production or permanently purge unreferenced records.
           </p>
         </div>
 
         {/* Tab Switcher */}
-        <div style={{ display: 'flex', background: '#F1F5F9', border: '1px solid #E2E8F0', borderRadius: '6px', padding: '3px' }}>
+        <div style={{ display: 'flex', background: '#f8f9fa', border: '1px solid #eaecf0', borderRadius: '4px', padding: '2px', gap: '2px' }}>
           <button
             type="button"
             onClick={() => setActiveTab('products')}
             style={{
-              background: activeTab === 'products' ? '#FFFFFF' : 'transparent',
-              color: activeTab === 'products' ? '#111827' : '#64748B',
-              border: 'none',
-              padding: '6px 14px',
-              fontSize: '12px',
-              fontWeight: 600,
+              background: activeTab === 'products' ? '#ffffff' : 'transparent',
+              color: activeTab === 'products' ? '#101828' : '#667085',
+              border: activeTab === 'products' ? '1px solid #eaecf0' : '1px solid transparent',
+              padding: '7px 16px',
+              fontSize: '11px',
+              fontFamily: 'var(--ds-font-grotesk)',
+              letterSpacing: '0.08em',
+              fontWeight: 700,
+              textTransform: 'uppercase',
               cursor: 'pointer',
-              borderRadius: '4px',
-              boxShadow: activeTab === 'products' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
+              borderRadius: '2px',
               transition: 'all 0.15s ease',
             }}
           >
@@ -452,15 +556,17 @@ const TrashList = () => {
             type="button"
             onClick={() => setActiveTab('reviews')}
             style={{
-              background: activeTab === 'reviews' ? '#FFFFFF' : 'transparent',
-              color: activeTab === 'reviews' ? '#111827' : '#64748B',
-              border: 'none',
-              padding: '6px 14px',
-              fontSize: '12px',
-              fontWeight: 600,
+              background: activeTab === 'reviews' ? '#ffffff' : 'transparent',
+              color: activeTab === 'reviews' ? '#101828' : '#667085',
+              border: activeTab === 'reviews' ? '1px solid #eaecf0' : '1px solid transparent',
+              padding: '7px 16px',
+              fontSize: '11px',
+              fontFamily: 'var(--ds-font-grotesk)',
+              letterSpacing: '0.08em',
+              fontWeight: 700,
+              textTransform: 'uppercase',
               cursor: 'pointer',
-              borderRadius: '4px',
-              boxShadow: activeTab === 'reviews' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
+              borderRadius: '2px',
               transition: 'all 0.15s ease',
             }}
           >
@@ -470,15 +576,17 @@ const TrashList = () => {
             type="button"
             onClick={() => setActiveTab('users')}
             style={{
-              background: activeTab === 'users' ? '#FFFFFF' : 'transparent',
-              color: activeTab === 'users' ? '#111827' : '#64748B',
-              border: 'none',
-              padding: '6px 14px',
-              fontSize: '12px',
-              fontWeight: 600,
+              background: activeTab === 'users' ? '#ffffff' : 'transparent',
+              color: activeTab === 'users' ? '#101828' : '#667085',
+              border: activeTab === 'users' ? '1px solid #eaecf0' : '1px solid transparent',
+              padding: '7px 16px',
+              fontSize: '11px',
+              fontFamily: 'var(--ds-font-grotesk)',
+              letterSpacing: '0.08em',
+              fontWeight: 700,
+              textTransform: 'uppercase',
               cursor: 'pointer',
-              borderRadius: '4px',
-              boxShadow: activeTab === 'users' ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
+              borderRadius: '2px',
               transition: 'all 0.15s ease',
             }}
           >
@@ -489,13 +597,13 @@ const TrashList = () => {
 
       {/* Bulk Actions Bar (for products) */}
       {activeTab === 'products' && selectedIds.length > 0 && (
-        <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 2, p: 1.5, background: '#1c1f24', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
-          <span style={{ fontSize: '13px', color: '#fff', fontFamily: 'monospace' }}>
+        <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 2, p: 1.5, background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '4px' }}>
+          <span style={{ fontSize: '13px', color: '#991b1b', fontWeight: 600 }}>
             {selectedIds.length} product(s) selected
           </span>
           <Button
             variant="contained"
-            color="success"
+            color="error"
             size="small"
             startIcon={<RestoreFromTrashIcon />}
             onClick={() =>
@@ -507,7 +615,7 @@ const TrashList = () => {
               })
             }
             disabled={actionLoading}
-            sx={{ fontWeight: 700, letterSpacing: '1px' }}
+            sx={{ fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase', fontSize: '11px' }}
           >
             {actionLoading ? 'RESTORING...' : `RESTORE SELECTED (${selectedIds.length})`}
           </Button>
@@ -525,6 +633,8 @@ const TrashList = () => {
             <DataGrid
               rows={productRows}
               columns={productColumns}
+              rowHeight={72}
+              columnHeaderHeight={48}
               pageSizeOptions={[5, 10, 25]}
               initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
               checkboxSelection
@@ -550,6 +660,8 @@ const TrashList = () => {
             <DataGrid
               rows={reviewRows}
               columns={reviewColumns}
+              rowHeight={72}
+              columnHeaderHeight={48}
               pageSizeOptions={[5, 10, 25]}
               initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
               disableRowSelectionOnClick
@@ -561,6 +673,8 @@ const TrashList = () => {
             <DataGrid
               rows={userRows}
               columns={userColumns}
+              rowHeight={72}
+              columnHeaderHeight={48}
               pageSizeOptions={[5, 10, 25]}
               initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
               disableRowSelectionOnClick

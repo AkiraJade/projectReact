@@ -883,130 +883,360 @@
   transform: none;
 }
 
-/* 10. Modern Enterprise Data Table Styling (MUI DataGrid Polish) */
-.ds-datagrid-container {
-  width: 100%;
-  background-color: #FFFFFF;
-}
-
-.ds-datagrid-container .MuiDataGrid-root {
-  border: 1px solid #EAECF0 !important;
+/* 10. Modern Architectural Data Table Styling (Clean Light Workstation in Both Light & Dark Modes) */
+.ds-admin-table-card,
+html[data-theme='dark'] .ds-admin-table-card {
+  background-color: #ffffff !important;
+  border: 1px solid #e4e7ec !important;
   border-radius: 8px !important;
-  color: #111827 !important;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
-  background-color: #FFFFFF !important;
-  font-size: 13.5px !important;
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.05), 0 1px 2px rgba(16, 24, 40, 0.03) !important;
+  color: #101828 !important;
 }
 
-.ds-datagrid-container .MuiDataGrid-columnHeaders {
-  background-color: #F8F9FA !important;
-  border-bottom: 1.5px solid #EAECF0 !important;
-  color: #374151 !important;
-  font-size: 11.5px !important;
+.ds-admin-table-card h2,
+html[data-theme='dark'] .ds-admin-table-card h2 {
+  color: #101828 !important;
+}
+
+.ds-admin-table-card p,
+html[data-theme='dark'] .ds-admin-table-card p {
+  color: #667085 !important;
+}
+
+/* Datagrid Container - Always White / Crisp Light Surface */
+.ds-datagrid-container,
+html[data-theme='dark'] .ds-datagrid-container {
+  width: 100%;
+  background-color: #ffffff !important;
+  border-radius: 6px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.ds-datagrid-container .MuiDataGrid-root,
+html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-root {
+  border: 1px solid #eaecf0 !important;
+  border-radius: 6px !important;
+  color: #101828 !important;
+  font-family: var(--ds-font-body, 'Inter', sans-serif) !important;
+  background-color: #ffffff !important;
+  font-size: 13px !important;
+}
+
+.ds-datagrid-container .MuiDataGrid-main,
+html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-main,
+.ds-datagrid-container .MuiDataGrid-virtualScroller,
+html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-virtualScroller,
+.ds-datagrid-container .MuiDataGrid-virtualScrollerContent,
+html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-virtualScrollerContent {
+  background-color: #ffffff !important;
+}
+
+.ds-datagrid-container .MuiDataGrid-cell strong,
+html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-cell strong {
+  color: #101828 !important;
+}
+
+/* Column Headers */
+.ds-datagrid-container .MuiDataGrid-columnHeaders,
+html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-columnHeaders {
+  background-color: #f8f9fa !important;
+  border-bottom: 1.5px solid #eaecf0 !important;
+  color: #475467 !important;
+  font-family: var(--ds-font-grotesk, 'Space Grotesk', sans-serif) !important;
+  font-size: 11px !important;
   font-weight: 700 !important;
-  letter-spacing: 0.05em !important;
+  letter-spacing: 0.1em !important;
   text-transform: uppercase !important;
   min-height: 48px !important;
+  max-height: 48px !important;
+  height: 48px !important;
 }
 
-.ds-datagrid-container .MuiDataGrid-columnHeaderTitle {
+.ds-datagrid-container .MuiDataGrid-columnHeaderTitle,
+html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-columnHeaderTitle {
   font-weight: 700 !important;
-  color: #374151 !important;
+  font-family: var(--ds-font-grotesk, 'Space Grotesk', sans-serif) !important;
+  letter-spacing: 0.1em !important;
+  color: #475467 !important;
 }
 
-.ds-datagrid-container .MuiDataGrid-cell {
-  border-bottom: 1px solid #F2F4F7 !important;
+.ds-datagrid-container .MuiDataGrid-columnHeaderTitleContainer {
+  padding: 0 !important;
+}
+
+/* Product Rows & Exact Height Synchronization */
+.ds-datagrid-container .MuiDataGrid-row,
+html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-row {
+  background-color: #ffffff !important;
+  border-bottom: 1px solid #f2f4f7 !important;
+  box-sizing: border-box !important;
+  transition: background-color 0.15s ease !important;
+}
+
+.ds-datagrid-container .MuiDataGrid-row:hover,
+html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-row:hover {
+  background-color: #f8fafc !important;
+}
+
+.ds-datagrid-container .MuiDataGrid-row.Mui-selected,
+html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-row.Mui-selected {
+  background-color: #fff1f0 !important;
+}
+
+.ds-datagrid-container .MuiDataGrid-row.Mui-selected:hover,
+html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-row.Mui-selected:hover {
+  background-color: #fee4e2 !important;
+}
+
+/* Cells */
+.ds-datagrid-container .MuiDataGrid-cell,
+html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-cell {
+  border-bottom: 1px solid #f2f4f7 !important;
   display: flex !important;
   align-items: center !important;
-  color: #111827 !important;
-  padding: 12px 16px !important;
+  color: #101828 !important;
+  padding: 0 16px !important;
+  font-size: 13px !important;
+  box-sizing: border-box !important;
 }
 
-.ds-datagrid-container .MuiDataGrid-row {
-  min-height: 64px !important;
-  transition: background-color 0.12s ease !important;
+.ds-datagrid-container .MuiDataGrid-cell:focus,
+.ds-datagrid-container .MuiDataGrid-cell:focus-within {
+  outline: none !important;
 }
 
-.ds-datagrid-container .MuiDataGrid-row:hover {
-  background-color: #F8FAFC !important;
-}
-
-.ds-datagrid-container .MuiDataGrid-row.Mui-selected {
-  background-color: #FEF2F2 !important;
-}
-
-.ds-datagrid-container .MuiDataGrid-row.Mui-selected:hover {
-  background-color: #FEE2E2 !important;
-}
-
-.ds-datagrid-container .MuiDataGrid-footerContainer {
-  border-top: 1px solid #EAECF0 !important;
-  background-color: #FAFAFA !important;
-  color: #4B5563 !important;
+/* Footer & Pagination */
+.ds-datagrid-container .MuiDataGrid-footerContainer,
+html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-footerContainer {
+  border-top: 1px solid #eaecf0 !important;
+  background-color: #f8f9fa !important;
+  color: #475467 !important;
   font-size: 12px !important;
   min-height: 52px !important;
+  max-height: 52px !important;
+  height: 52px !important;
 }
 
-.ds-datagrid-container .MuiTablePagination-root {
-  color: #374151 !important;
-  font-size: 12.5px !important;
+.ds-datagrid-container .MuiTablePagination-root,
+html[data-theme='dark'] .ds-datagrid-container .MuiTablePagination-root {
+  color: #475467 !important;
+  font-family: var(--ds-font-grotesk, 'Space Grotesk', sans-serif) !important;
+  font-size: 12px !important;
 }
 
-.ds-datagrid-container .MuiCheckbox-root {
-  color: #D1D5DB !important;
+.ds-datagrid-container .MuiTablePagination-select,
+html[data-theme='dark'] .ds-datagrid-container .MuiTablePagination-select {
+  color: #101828 !important;
+  font-weight: 600 !important;
 }
 
-.ds-datagrid-container .MuiCheckbox-root.Mui-checked {
-  color: #C83226 !important;
+.ds-datagrid-container .MuiTablePagination-selectIcon,
+html[data-theme='dark'] .ds-datagrid-container .MuiTablePagination-selectIcon {
+  color: #667085 !important;
 }
 
-/* Action Pill Buttons in DataTables */
-.ds-table-action-btn {
+.ds-datagrid-container .MuiTablePagination-selectLabel,
+.ds-datagrid-container .MuiTablePagination-displayedRows,
+html[data-theme='dark'] .ds-datagrid-container .MuiTablePagination-selectLabel,
+html[data-theme='dark'] .ds-datagrid-container .MuiTablePagination-displayedRows {
+  font-family: var(--ds-font-grotesk, 'Space Grotesk', sans-serif) !important;
+  letter-spacing: 0.02em !important;
+  color: #475467 !important;
+  font-size: 12px !important;
+}
+
+.ds-datagrid-container .MuiTablePagination-actions button,
+html[data-theme='dark'] .ds-datagrid-container .MuiTablePagination-actions button {
+  color: #475467 !important;
+}
+
+.ds-datagrid-container .MuiTablePagination-actions button:hover,
+html[data-theme='dark'] .ds-datagrid-container .MuiTablePagination-actions button:hover {
+  background-color: #eaecf0 !important;
+}
+
+.ds-datagrid-container .MuiTablePagination-actions button.Mui-disabled,
+html[data-theme='dark'] .ds-datagrid-container .MuiTablePagination-actions button.Mui-disabled {
+  color: #d0d5dd !important;
+}
+
+/* Checkbox */
+.ds-datagrid-container .MuiCheckbox-root,
+html[data-theme='dark'] .ds-datagrid-container .MuiCheckbox-root {
+  color: #98a2b3 !important;
+  padding: 6px !important;
+}
+
+.ds-datagrid-container .MuiCheckbox-root.Mui-checked,
+html[data-theme='dark'] .ds-datagrid-container .MuiCheckbox-root.Mui-checked {
+  color: #c83226 !important;
+}
+
+.ds-datagrid-container .MuiDataGrid-iconSeparator,
+html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-iconSeparator {
+  color: #eaecf0 !important;
+}
+
+/* Polished Action Buttons in DataTables (Consistent in Light & Dark Modes) */
+.ds-table-action-btn,
+html[data-theme='dark'] .ds-table-action-btn {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 5px 12px;
-  border-radius: 6px;
-  font-size: 12px;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 14px;
+  height: 32px;
+  border-radius: 4px;
+  font-family: var(--ds-font-grotesk, 'Space Grotesk', sans-serif);
+  font-size: 11px;
   font-weight: 600;
-  text-decoration: none;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none !important;
   cursor: pointer;
   transition: all 0.15s ease;
   line-height: 1;
+  box-sizing: border-box;
 }
 
-.ds-table-btn-edit {
-  background-color: #FFFFFF;
-  border: 1px solid #D1D5DB;
-  color: #374151;
+.ds-table-btn-edit,
+html[data-theme='dark'] .ds-table-btn-edit {
+  background-color: #ffffff !important;
+  border: 1px solid #d0d5dd !important;
+  color: #344054 !important;
 }
 
-.ds-table-btn-edit:hover {
-  background-color: #F3F4F6;
-  border-color: #9CA3AF;
-  color: #111827;
+.ds-table-btn-edit:hover,
+html[data-theme='dark'] .ds-table-btn-edit:hover {
+  background-color: #101828 !important;
+  border-color: #101828 !important;
+  color: #ffffff !important;
 }
 
-.ds-table-btn-trash {
-  background-color: #FEF2F2;
-  border: 1px solid #FCA5A5;
-  color: #DC2626;
+.ds-table-btn-trash,
+html[data-theme='dark'] .ds-table-btn-trash {
+  background-color: #ffffff !important;
+  border: 1px solid #fecdca !important;
+  color: #b42318 !important;
 }
 
-.ds-table-btn-trash:hover {
-  background-color: #FEE2E2;
-  border-color: #EF4444;
+.ds-table-btn-trash:hover,
+html[data-theme='dark'] .ds-table-btn-trash:hover {
+  background-color: #d92d20 !important;
+  border-color: #d92d20 !important;
+  color: #ffffff !important;
 }
 
-.ds-table-btn-view {
-  background-color: #F0FDF4;
-  border: 1px solid #BBF7D0;
-  color: #16A34A;
+.ds-table-btn-view,
+html[data-theme='dark'] .ds-table-btn-view {
+  background-color: #ffffff !important;
+  border: 1px solid #bfdbfe !important;
+  color: #1d4ed8 !important;
 }
 
-.ds-table-btn-view:hover {
-  background-color: #DCFCE7;
-  border-color: #86EFAC;
+.ds-table-btn-view:hover,
+html[data-theme='dark'] .ds-table-btn-view:hover {
+  background-color: #1d4ed8 !important;
+  border-color: #1d4ed8 !important;
+  color: #ffffff !important;
+}
+
+.ds-table-btn-restore,
+html[data-theme='dark'] .ds-table-btn-restore {
+  background-color: #ffffff !important;
+  border: 1px solid #a7f3d0 !important;
+  color: #047857 !important;
+}
+
+.ds-table-btn-restore:hover,
+html[data-theme='dark'] .ds-table-btn-restore:hover {
+  background-color: #047857 !important;
+  border-color: #047857 !important;
+  color: #ffffff !important;
+}
+
+/* Polished Table Status Badges */
+.ds-table-badge,
+html[data-theme='dark'] .ds-table-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-family: var(--ds-font-grotesk, 'Space Grotesk', sans-serif);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.ds-table-badge-dot,
+html[data-theme='dark'] .ds-table-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.ds-badge-success,
+html[data-theme='dark'] .ds-badge-success {
+  background-color: #ecfdf3 !important;
+  color: #027a48 !important;
+  border: 1px solid #abefc6 !important;
+}
+.ds-badge-success .ds-table-badge-dot,
+html[data-theme='dark'] .ds-badge-success .ds-table-badge-dot {
+  background-color: #12b76a !important;
+}
+
+.ds-badge-warning,
+html[data-theme='dark'] .ds-badge-warning {
+  background-color: #fffbeb !important;
+  color: #b54708 !important;
+  border: 1px solid #fedf89 !important;
+}
+.ds-badge-warning .ds-table-badge-dot,
+html[data-theme='dark'] .ds-badge-warning .ds-table-badge-dot {
+  background-color: #f79009 !important;
+}
+
+.ds-badge-info,
+html[data-theme='dark'] .ds-badge-info {
+  background-color: #eff8ff !important;
+  color: #175cd3 !important;
+  border: 1px solid #b2ddff !important;
+}
+.ds-badge-info .ds-table-badge-dot,
+html[data-theme='dark'] .ds-badge-info .ds-table-badge-dot {
+  background-color: #2e90fa !important;
+}
+
+.ds-badge-danger,
+html[data-theme='dark'] .ds-badge-danger {
+  background-color: #fef3f2 !important;
+  color: #b42318 !important;
+  border: 1px solid #fecdca !important;
+}
+.ds-badge-danger .ds-table-badge-dot,
+html[data-theme='dark'] .ds-badge-danger .ds-table-badge-dot {
+  background-color: #f04438 !important;
+}
+
+.ds-badge-neutral,
+html[data-theme='dark'] .ds-badge-neutral {
+  background-color: #f8f9fa !important;
+  color: #475467 !important;
+  border: 1px solid #eaecf0 !important;
+}
+.ds-badge-neutral .ds-table-badge-dot,
+html[data-theme='dark'] .ds-badge-neutral .ds-table-badge-dot {
+  background-color: #667085 !important;
+}
+.ds-badge-neutral .ds-table-badge-dot {
+  background-color: #6b7280;
 }
 
 
