@@ -522,23 +522,23 @@ const TrashList = () => {
           <span className="ds-eyebrow" style={{ fontSize: '10px', letterSpacing: '0.14em', color: '#c83226', fontWeight: 700, textTransform: 'uppercase' }}>
             ATELIER RECOVERY VAULT
           </span>
-          <h2 style={{ fontSize: '18px', fontFamily: 'var(--ds-font-grotesk)', fontWeight: 700, color: '#101828', margin: '4px 0 0', letterSpacing: '0.02em' }}>
+          <h2 style={{ fontSize: '18px', fontFamily: 'var(--ds-font-grotesk)', fontWeight: 700, color: 'var(--ds-admin-text-main)', margin: '4px 0 0', letterSpacing: '0.02em' }}>
             Trash & Soft-Deleted Records
           </h2>
-          <p style={{ fontSize: '12.5px', color: '#667085', margin: '4px 0 0' }}>
+          <p style={{ fontSize: '12.5px', color: 'var(--ds-admin-text-muted)', margin: '4px 0 0' }}>
             Safely restore items back to production or permanently purge unreferenced records.
           </p>
         </div>
 
         {/* Tab Switcher */}
-        <div style={{ display: 'flex', background: '#f8f9fa', border: '1px solid #eaecf0', borderRadius: '4px', padding: '2px', gap: '2px' }}>
+        <div style={{ display: 'flex', background: 'var(--ds-admin-surface-elevated)', border: '1px solid var(--ds-admin-border)', borderRadius: '4px', padding: '2px', gap: '2px' }}>
           <button
             type="button"
             onClick={() => setActiveTab('products')}
             style={{
-              background: activeTab === 'products' ? '#ffffff' : 'transparent',
-              color: activeTab === 'products' ? '#101828' : '#667085',
-              border: activeTab === 'products' ? '1px solid #eaecf0' : '1px solid transparent',
+              background: activeTab === 'products' ? 'var(--ds-admin-surface)' : 'transparent',
+              color: activeTab === 'products' ? 'var(--ds-admin-text-main)' : 'var(--ds-admin-text-muted)',
+              border: activeTab === 'products' ? '1px solid var(--ds-admin-border)' : '1px solid transparent',
               padding: '7px 16px',
               fontSize: '11px',
               fontFamily: 'var(--ds-font-grotesk)',
@@ -556,9 +556,9 @@ const TrashList = () => {
             type="button"
             onClick={() => setActiveTab('reviews')}
             style={{
-              background: activeTab === 'reviews' ? '#ffffff' : 'transparent',
-              color: activeTab === 'reviews' ? '#101828' : '#667085',
-              border: activeTab === 'reviews' ? '1px solid #eaecf0' : '1px solid transparent',
+              background: activeTab === 'reviews' ? 'var(--ds-admin-surface)' : 'transparent',
+              color: activeTab === 'reviews' ? 'var(--ds-admin-text-main)' : 'var(--ds-admin-text-muted)',
+              border: activeTab === 'reviews' ? '1px solid var(--ds-admin-border)' : '1px solid transparent',
               padding: '7px 16px',
               fontSize: '11px',
               fontFamily: 'var(--ds-font-grotesk)',
@@ -576,9 +576,9 @@ const TrashList = () => {
             type="button"
             onClick={() => setActiveTab('users')}
             style={{
-              background: activeTab === 'users' ? '#ffffff' : 'transparent',
-              color: activeTab === 'users' ? '#101828' : '#667085',
-              border: activeTab === 'users' ? '1px solid #eaecf0' : '1px solid transparent',
+              background: activeTab === 'users' ? 'var(--ds-admin-surface)' : 'transparent',
+              color: activeTab === 'users' ? 'var(--ds-admin-text-main)' : 'var(--ds-admin-text-muted)',
+              border: activeTab === 'users' ? '1px solid var(--ds-admin-border)' : '1px solid transparent',
               padding: '7px 16px',
               fontSize: '11px',
               fontFamily: 'var(--ds-font-grotesk)',

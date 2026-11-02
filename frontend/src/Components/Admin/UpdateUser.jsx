@@ -76,47 +76,58 @@ const UpdateUser = () => {
     }
 
     return (
-        <div className="ds-card" style={{ maxWidth: 600, margin: '0 auto' }}>
+        <div className="ds-admin-form-card" style={{ maxWidth: 600, margin: '0 auto' }}>
             <MetaData title={`Update Rider — DOSNOVENTA`} />
-            <div className="py-3">
+            <div>
                 <form onSubmit={submitHandler}>
-                    <h2 className="mb-4 font-weight-bold">Update Rider Account</h2>
-                    <div className="form-group">
-                        <label htmlFor="name_field">Name</label>
+                    <h2 className="ds-form-section-title">Update Rider Account</h2>
+                    <div className="ds-form-group">
+                        <label htmlFor="name_field" className="ds-form-label">Full Name</label>
                         <input
-                            type="name"
+                            type="text"
                             id="name_field"
-                            className="form-control"
+                            className="ds-form-input"
                             name='name'
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                         />
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="email_field">Email</label>
+                    <div className="ds-form-group">
+                        <label htmlFor="email_field" className="ds-form-label">Email Address</label>
                         <input
                             type="email"
                             id="email_field"
-                            className="form-control"
+                            className="ds-form-input"
                             name='email'
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="role_field">Role</label>
+                    <div className="ds-form-group">
+                        <label htmlFor="role_field" className="ds-form-label">Account Role</label>
                         <select
                             id="role_field"
-                            className="form-control"
+                            className="ds-form-select"
                             name='role'
                             value={role}
                             onChange={(e) => setRole(e.target.value)}
                         >
-                            <option value="user">user</option>
-                            <option value="admin">admin</option>
+                            <option value="user">User (Customer)</option>
+                            <option value="admin">Admin (Atelier Staff)</option>
                         </select>
                     </div>
-                    <button type="submit" className="btn btn-dark btn-block mt-4 mb-3" >Update Rider</button>
+                    <div style={{ marginTop: '28px', display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+                        <button
+                            type="button"
+                            onClick={() => navigate('/admin/users')}
+                            className="ds-admin-btn-secondary"
+                        >
+                            Cancel
+                        </button>
+                        <button type="submit" className="ds-btn-primary">
+                            Update Rider
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>

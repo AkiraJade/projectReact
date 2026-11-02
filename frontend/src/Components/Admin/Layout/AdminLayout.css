@@ -5,8 +5,10 @@
 :root {
   --ds-admin-bg: #F8F9FA;
   --ds-admin-surface: #FFFFFF;
+  --ds-admin-surface-elevated: #F1F5F9;
   --ds-admin-border: #EAECF0;
   --ds-admin-border-subtle: #F2F4F7;
+  --ds-admin-border-input: #D1D5DB;
   --ds-admin-text-main: #111827;
   --ds-admin-text-muted: #6B7280;
   --ds-admin-text-light: #9CA3AF;
@@ -16,6 +18,21 @@
   --ds-admin-radius-card: 12px;
   --ds-admin-radius-sm: 8px;
   --ds-admin-sidebar-width: 250px;
+}
+
+html[data-theme='dark'] {
+  --ds-admin-bg: #0A0B0D;
+  --ds-admin-surface: #121417;
+  --ds-admin-surface-elevated: #181B20;
+  --ds-admin-border: rgba(255, 255, 255, 0.1);
+  --ds-admin-border-subtle: rgba(255, 255, 255, 0.06);
+  --ds-admin-border-input: rgba(255, 255, 255, 0.2);
+  --ds-admin-text-main: #F6F5F1;
+  --ds-admin-text-muted: #9CA3AF;
+  --ds-admin-text-light: #6B7280;
+  --ds-admin-accent: #E03E30;
+  --ds-admin-accent-hover: #C83226;
+  --ds-admin-accent-subtle: rgba(200, 50, 38, 0.15);
 }
 
 /* 1. Independent Admin Shell */
@@ -29,28 +46,40 @@
   position: relative;
 }
 
-/* Force all form controls within the Admin Shell to be light and readable */
+/* Form controls within the Admin Shell - dynamic light and dark theme */
 .ds-admin-shell input,
 .ds-admin-shell select,
 .ds-admin-shell textarea {
-  background-color: #FFFFFF !important;
-  color: #111827 !important;
-  border-color: #D1D5DB !important;
+  background-color: var(--ds-admin-surface) !important;
+  color: var(--ds-admin-text-main) !important;
+  border: 1.5px solid var(--ds-admin-border-input) !important;
 }
 
 .ds-admin-shell input::placeholder,
 .ds-admin-shell textarea::placeholder {
-  color: #9CA3AF !important;
-  opacity: 1 !important;
+  color: var(--ds-admin-text-muted) !important;
+  opacity: 0.85 !important;
 }
 
 .ds-admin-shell input:focus,
 .ds-admin-shell select:focus,
 .ds-admin-shell textarea:focus {
-  background-color: #FFFFFF !important;
-  color: #111827 !important;
-  border-color: #111827 !important;
-  box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.08) !important;
+  background-color: var(--ds-admin-surface) !important;
+  color: var(--ds-admin-text-main) !important;
+  border-color: var(--ds-admin-accent) !important;
+  box-shadow: 0 0 0 3px rgba(200, 50, 38, 0.15) !important;
+}
+
+/* Prominent, readable form labels in Admin across all modes */
+.ds-admin-shell .ds-form-label,
+.ds-admin-shell .ds-form-group label,
+.ds-form-label {
+  display: block !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--ds-admin-text-main) !important;
+  margin-bottom: 6px !important;
+  letter-spacing: 0.01em !important;
 }
 
 /* 2. Left Pinned Admin Sidebar (Fixed, Follows Scroll, Clear Labels) */
@@ -163,7 +192,7 @@
   gap: 12px;
   padding: 10px 14px;
   border-radius: var(--ds-admin-radius-sm);
-  color: #4B5563;
+  color: var(--ds-admin-text-muted);
   text-decoration: none;
   font-size: 13.5px;
   font-weight: 500;
@@ -172,7 +201,7 @@
 }
 
 .ds-nav-link:hover {
-  background-color: #F1F5F9;
+  background-color: var(--ds-admin-surface-elevated);
   color: var(--ds-admin-text-main);
 }
 
@@ -200,7 +229,7 @@
 .ds-admin-sidebar-footer {
   padding: 16px 14px;
   border-top: 1px solid var(--ds-admin-border);
-  background-color: #FAFAFA;
+  background-color: var(--ds-admin-surface);
 }
 
 .ds-sidebar-user-info {
@@ -218,8 +247,8 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background-color: #111827;
-  color: #FFFFFF;
+  background-color: var(--ds-admin-text-main);
+  color: var(--ds-admin-surface);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -280,9 +309,9 @@
 }
 
 .ds-footer-action-btn:hover {
-  background-color: #F1F5F9;
+  background-color: var(--ds-admin-surface-elevated);
   color: var(--ds-admin-text-main);
-  border-color: #CBD5E1;
+  border-color: var(--ds-admin-text-light);
 }
 
 .ds-footer-logout-btn:hover {
@@ -388,14 +417,14 @@
   height: 36px;
   border-radius: 50%;
   border: 1px solid var(--ds-admin-border);
-  background-color: #F3F4F6;
+  background-color: var(--ds-admin-surface-elevated);
   text-decoration: none;
   overflow: hidden;
   transition: border-color 0.15s ease;
 }
 
 .ds-admin-profile-pill:hover {
-  border-color: #9CA3AF;
+  border-color: var(--ds-admin-text-light);
 }
 
 .ds-admin-avatar-img {
@@ -407,7 +436,7 @@
 .ds-admin-avatar-initials {
   font-size: 12.5px;
   font-weight: 600;
-  color: #374151;
+  color: var(--ds-admin-text-main);
 }
 
 /* 5. Page Content Container */
@@ -578,7 +607,7 @@
 
 .ds-range-control {
   display: inline-flex;
-  background-color: #F1F5F9;
+  background-color: var(--ds-admin-surface-elevated);
   border-radius: 8px;
   padding: 3px;
   gap: 2px;
@@ -587,7 +616,7 @@
 .ds-range-btn {
   border: none;
   background: transparent;
-  color: #64748B;
+  color: var(--ds-admin-text-muted);
   font-size: 12px;
   font-weight: 600;
   padding: 5px 12px;
@@ -601,7 +630,7 @@
 }
 
 .ds-range-btn-active {
-  background-color: #FFFFFF;
+  background-color: var(--ds-admin-surface);
   color: var(--ds-admin-text-main);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
 }
@@ -613,7 +642,7 @@
 
 /* Custom Tooltip */
 .ds-chart-tooltip {
-  background-color: #FFFFFF;
+  background-color: var(--ds-admin-surface);
   border: 1px solid var(--ds-admin-border);
   border-radius: 8px;
   padding: 10px 14px;
@@ -696,8 +725,8 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background-color: #F1F5F9;
-  color: #475569;
+  background-color: var(--ds-admin-surface-elevated);
+  color: var(--ds-admin-text-main);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -797,7 +826,7 @@
   font-weight: 700;
   letter-spacing: 0.03em;
   text-transform: uppercase;
-  color: var(--ds-admin-text-main);
+  color: var(--ds-admin-text-main) !important;
   margin-bottom: 20px;
   padding-bottom: 12px;
   border-bottom: 1px solid var(--ds-admin-border-subtle);
@@ -808,12 +837,12 @@
 }
 
 .ds-form-label {
-  display: block;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: #374151;
-  margin-bottom: 6px;
-  letter-spacing: 0.01em;
+  display: block !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--ds-admin-text-main) !important;
+  margin-bottom: 6px !important;
+  letter-spacing: 0.01em !important;
 }
 
 .ds-form-input,
@@ -821,10 +850,10 @@
 .ds-form-textarea {
   width: 100%;
   padding: 10px 14px;
-  background-color: #FFFFFF;
-  border: 1.5px solid #D1D5DB;
+  background-color: var(--ds-admin-surface) !important;
+  border: 1.5px solid var(--ds-admin-border-input) !important;
   border-radius: 8px;
-  color: #111827;
+  color: var(--ds-admin-text-main) !important;
   font-size: 13.5px;
   font-family: inherit;
   transition: all 0.15s ease;
@@ -835,8 +864,8 @@
 .ds-form-input:focus,
 .ds-form-select:focus,
 .ds-form-textarea:focus {
-  border-color: #111827;
-  box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.08);
+  border-color: var(--ds-admin-accent) !important;
+  box-shadow: 0 0 0 3px rgba(200, 50, 38, 0.15) !important;
 }
 
 .ds-form-textarea {
@@ -858,8 +887,8 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background-color: #111827;
-  color: #FFFFFF;
+  background-color: var(--ds-admin-text-main);
+  color: var(--ds-admin-surface) !important;
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -872,20 +901,93 @@
 }
 
 .ds-btn-primary:hover {
-  background-color: #000000;
+  background-color: var(--ds-admin-accent);
+  color: #FFFFFF !important;
   transform: translateY(-1px);
 }
 
 .ds-btn-primary:disabled {
-  background-color: #E5E7EB;
-  color: #9CA3AF;
+  background-color: var(--ds-admin-surface-elevated);
+  color: var(--ds-admin-text-muted);
   cursor: not-allowed;
   transform: none;
 }
 
-/* 10. Modern Architectural Data Table Styling (Clean Light Workstation in Both Light & Dark Modes) */
-.ds-admin-table-card,
-html[data-theme='dark'] .ds-admin-table-card {
+.ds-admin-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 20px;
+  background-color: var(--ds-admin-surface);
+  border: 1px solid var(--ds-admin-border-input);
+  border-radius: 8px;
+  color: var(--ds-admin-text-main);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+
+.ds-admin-btn-secondary:hover {
+  background-color: var(--ds-admin-surface-elevated);
+  border-color: var(--ds-admin-text-main);
+}
+
+.ds-file-dropzone {
+  border: 2px dashed var(--ds-admin-border-input);
+  border-radius: 8px;
+  padding: 28px 20px;
+  text-align: center;
+  background-color: var(--ds-admin-surface);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ds-file-dropzone:hover {
+  border-color: var(--ds-admin-accent);
+  background-color: var(--ds-admin-surface-elevated);
+}
+
+.ds-file-dropzone-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ds-admin-text-main);
+}
+
+.ds-file-dropzone-subtitle {
+  font-size: 12px;
+  color: var(--ds-admin-text-muted);
+  margin-top: 2px;
+}
+
+.ds-admin-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid var(--ds-admin-border);
+  background-color: var(--ds-admin-surface);
+  color: var(--ds-admin-text-main);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ds-admin-theme-toggle:hover {
+  background-color: var(--ds-admin-surface-elevated);
+  border-color: var(--ds-admin-text-light);
+  transform: rotate(15deg);
+}
+
+.ds-admin-theme-toggle svg {
+  display: block;
+  stroke: currentColor;
+}
+
+/* 10. Modern Architectural Data Table Styling (Adaptive to Light & Dark Modes) */
+.ds-admin-table-card {
   background-color: #ffffff !important;
   border: 1px solid #e4e7ec !important;
   border-radius: 8px !important;
@@ -893,19 +995,16 @@ html[data-theme='dark'] .ds-admin-table-card {
   color: #101828 !important;
 }
 
-.ds-admin-table-card h2,
-html[data-theme='dark'] .ds-admin-table-card h2 {
+.ds-admin-table-card h2 {
   color: #101828 !important;
 }
 
-.ds-admin-table-card p,
-html[data-theme='dark'] .ds-admin-table-card p {
+.ds-admin-table-card p {
   color: #667085 !important;
 }
 
-/* Datagrid Container - Always White / Crisp Light Surface */
-.ds-datagrid-container,
-html[data-theme='dark'] .ds-datagrid-container {
+/* Datagrid Container - Light Mode */
+.ds-datagrid-container {
   width: 100%;
   background-color: #ffffff !important;
   border-radius: 6px;
@@ -913,8 +1012,7 @@ html[data-theme='dark'] .ds-datagrid-container {
   box-sizing: border-box;
 }
 
-.ds-datagrid-container .MuiDataGrid-root,
-html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-root {
+.ds-datagrid-container .MuiDataGrid-root {
   border: 1px solid #eaecf0 !important;
   border-radius: 6px !important;
   color: #101828 !important;
@@ -924,22 +1022,17 @@ html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-root {
 }
 
 .ds-datagrid-container .MuiDataGrid-main,
-html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-main,
 .ds-datagrid-container .MuiDataGrid-virtualScroller,
-html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-virtualScroller,
-.ds-datagrid-container .MuiDataGrid-virtualScrollerContent,
-html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-virtualScrollerContent {
+.ds-datagrid-container .MuiDataGrid-virtualScrollerContent {
   background-color: #ffffff !important;
 }
 
-.ds-datagrid-container .MuiDataGrid-cell strong,
-html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-cell strong {
+.ds-datagrid-container .MuiDataGrid-cell strong {
   color: #101828 !important;
 }
 
 /* Column Headers */
-.ds-datagrid-container .MuiDataGrid-columnHeaders,
-html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-columnHeaders {
+.ds-datagrid-container .MuiDataGrid-columnHeaders {
   background-color: #f8f9fa !important;
   border-bottom: 1.5px solid #eaecf0 !important;
   color: #475467 !important;
@@ -953,8 +1046,7 @@ html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-columnHeaders {
   height: 48px !important;
 }
 
-.ds-datagrid-container .MuiDataGrid-columnHeaderTitle,
-html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-columnHeaderTitle {
+.ds-datagrid-container .MuiDataGrid-columnHeaderTitle {
   font-weight: 700 !important;
   font-family: var(--ds-font-grotesk, 'Space Grotesk', sans-serif) !important;
   letter-spacing: 0.1em !important;
@@ -966,32 +1058,27 @@ html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-columnHeaderTitle {
 }
 
 /* Product Rows & Exact Height Synchronization */
-.ds-datagrid-container .MuiDataGrid-row,
-html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-row {
+.ds-datagrid-container .MuiDataGrid-row {
   background-color: #ffffff !important;
   border-bottom: 1px solid #f2f4f7 !important;
   box-sizing: border-box !important;
   transition: background-color 0.15s ease !important;
 }
 
-.ds-datagrid-container .MuiDataGrid-row:hover,
-html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-row:hover {
+.ds-datagrid-container .MuiDataGrid-row:hover {
   background-color: #f8fafc !important;
 }
 
-.ds-datagrid-container .MuiDataGrid-row.Mui-selected,
-html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-row.Mui-selected {
+.ds-datagrid-container .MuiDataGrid-row.Mui-selected {
   background-color: #fff1f0 !important;
 }
 
-.ds-datagrid-container .MuiDataGrid-row.Mui-selected:hover,
-html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-row.Mui-selected:hover {
+.ds-datagrid-container .MuiDataGrid-row.Mui-selected:hover {
   background-color: #fee4e2 !important;
 }
 
 /* Cells */
-.ds-datagrid-container .MuiDataGrid-cell,
-html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-cell {
+.ds-datagrid-container .MuiDataGrid-cell {
   border-bottom: 1px solid #f2f4f7 !important;
   display: flex !important;
   align-items: center !important;
@@ -1007,8 +1094,7 @@ html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-cell {
 }
 
 /* Footer & Pagination */
-.ds-datagrid-container .MuiDataGrid-footerContainer,
-html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-footerContainer {
+.ds-datagrid-container .MuiDataGrid-footerContainer {
   border-top: 1px solid #eaecf0 !important;
   background-color: #f8f9fa !important;
   color: #475467 !important;
@@ -1018,69 +1104,57 @@ html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-footerContainer {
   height: 52px !important;
 }
 
-.ds-datagrid-container .MuiTablePagination-root,
-html[data-theme='dark'] .ds-datagrid-container .MuiTablePagination-root {
+.ds-datagrid-container .MuiTablePagination-root {
   color: #475467 !important;
   font-family: var(--ds-font-grotesk, 'Space Grotesk', sans-serif) !important;
   font-size: 12px !important;
 }
 
-.ds-datagrid-container .MuiTablePagination-select,
-html[data-theme='dark'] .ds-datagrid-container .MuiTablePagination-select {
+.ds-datagrid-container .MuiTablePagination-select {
   color: #101828 !important;
   font-weight: 600 !important;
 }
 
-.ds-datagrid-container .MuiTablePagination-selectIcon,
-html[data-theme='dark'] .ds-datagrid-container .MuiTablePagination-selectIcon {
+.ds-datagrid-container .MuiTablePagination-selectIcon {
   color: #667085 !important;
 }
 
 .ds-datagrid-container .MuiTablePagination-selectLabel,
-.ds-datagrid-container .MuiTablePagination-displayedRows,
-html[data-theme='dark'] .ds-datagrid-container .MuiTablePagination-selectLabel,
-html[data-theme='dark'] .ds-datagrid-container .MuiTablePagination-displayedRows {
+.ds-datagrid-container .MuiTablePagination-displayedRows {
   font-family: var(--ds-font-grotesk, 'Space Grotesk', sans-serif) !important;
   letter-spacing: 0.02em !important;
   color: #475467 !important;
   font-size: 12px !important;
 }
 
-.ds-datagrid-container .MuiTablePagination-actions button,
-html[data-theme='dark'] .ds-datagrid-container .MuiTablePagination-actions button {
+.ds-datagrid-container .MuiTablePagination-actions button {
   color: #475467 !important;
 }
 
-.ds-datagrid-container .MuiTablePagination-actions button:hover,
-html[data-theme='dark'] .ds-datagrid-container .MuiTablePagination-actions button:hover {
+.ds-datagrid-container .MuiTablePagination-actions button:hover {
   background-color: #eaecf0 !important;
 }
 
-.ds-datagrid-container .MuiTablePagination-actions button.Mui-disabled,
-html[data-theme='dark'] .ds-datagrid-container .MuiTablePagination-actions button.Mui-disabled {
+.ds-datagrid-container .MuiTablePagination-actions button.Mui-disabled {
   color: #d0d5dd !important;
 }
 
 /* Checkbox */
-.ds-datagrid-container .MuiCheckbox-root,
-html[data-theme='dark'] .ds-datagrid-container .MuiCheckbox-root {
+.ds-datagrid-container .MuiCheckbox-root {
   color: #98a2b3 !important;
   padding: 6px !important;
 }
 
-.ds-datagrid-container .MuiCheckbox-root.Mui-checked,
-html[data-theme='dark'] .ds-datagrid-container .MuiCheckbox-root.Mui-checked {
+.ds-datagrid-container .MuiCheckbox-root.Mui-checked {
   color: #c83226 !important;
 }
 
-.ds-datagrid-container .MuiDataGrid-iconSeparator,
-html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-iconSeparator {
+.ds-datagrid-container .MuiDataGrid-iconSeparator {
   color: #eaecf0 !important;
 }
 
-/* Polished Action Buttons in DataTables (Consistent in Light & Dark Modes) */
-.ds-table-action-btn,
-html[data-theme='dark'] .ds-table-action-btn {
+/* Polished Action Buttons in DataTables (Light Mode) */
+.ds-table-action-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1100,65 +1174,56 @@ html[data-theme='dark'] .ds-table-action-btn {
   box-sizing: border-box;
 }
 
-.ds-table-btn-edit,
-html[data-theme='dark'] .ds-table-btn-edit {
+.ds-table-btn-edit {
   background-color: #ffffff !important;
   border: 1px solid #d0d5dd !important;
   color: #344054 !important;
 }
 
-.ds-table-btn-edit:hover,
-html[data-theme='dark'] .ds-table-btn-edit:hover {
+.ds-table-btn-edit:hover {
   background-color: #101828 !important;
   border-color: #101828 !important;
   color: #ffffff !important;
 }
 
-.ds-table-btn-trash,
-html[data-theme='dark'] .ds-table-btn-trash {
+.ds-table-btn-trash {
   background-color: #ffffff !important;
   border: 1px solid #fecdca !important;
   color: #b42318 !important;
 }
 
-.ds-table-btn-trash:hover,
-html[data-theme='dark'] .ds-table-btn-trash:hover {
+.ds-table-btn-trash:hover {
   background-color: #d92d20 !important;
   border-color: #d92d20 !important;
   color: #ffffff !important;
 }
 
-.ds-table-btn-view,
-html[data-theme='dark'] .ds-table-btn-view {
+.ds-table-btn-view {
   background-color: #ffffff !important;
   border: 1px solid #bfdbfe !important;
   color: #1d4ed8 !important;
 }
 
-.ds-table-btn-view:hover,
-html[data-theme='dark'] .ds-table-btn-view:hover {
+.ds-table-btn-view:hover {
   background-color: #1d4ed8 !important;
   border-color: #1d4ed8 !important;
   color: #ffffff !important;
 }
 
-.ds-table-btn-restore,
-html[data-theme='dark'] .ds-table-btn-restore {
+.ds-table-btn-restore {
   background-color: #ffffff !important;
   border: 1px solid #a7f3d0 !important;
   color: #047857 !important;
 }
 
-.ds-table-btn-restore:hover,
-html[data-theme='dark'] .ds-table-btn-restore:hover {
+.ds-table-btn-restore:hover {
   background-color: #047857 !important;
   border-color: #047857 !important;
   color: #ffffff !important;
 }
 
 /* Polished Table Status Badges */
-.ds-table-badge,
-html[data-theme='dark'] .ds-table-badge {
+.ds-table-badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -1172,8 +1237,7 @@ html[data-theme='dark'] .ds-table-badge {
   line-height: 1.2;
 }
 
-.ds-table-badge-dot,
-html[data-theme='dark'] .ds-table-badge-dot {
+.ds-table-badge-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
@@ -1181,59 +1245,275 @@ html[data-theme='dark'] .ds-table-badge-dot {
   flex-shrink: 0;
 }
 
-.ds-badge-success,
-html[data-theme='dark'] .ds-badge-success {
+.ds-badge-success {
   background-color: #ecfdf3 !important;
   color: #027a48 !important;
   border: 1px solid #abefc6 !important;
 }
-.ds-badge-success .ds-table-badge-dot,
-html[data-theme='dark'] .ds-badge-success .ds-table-badge-dot {
+.ds-badge-success .ds-table-badge-dot {
   background-color: #12b76a !important;
 }
 
-.ds-badge-warning,
-html[data-theme='dark'] .ds-badge-warning {
+.ds-badge-warning {
   background-color: #fffbeb !important;
   color: #b54708 !important;
   border: 1px solid #fedf89 !important;
 }
-.ds-badge-warning .ds-table-badge-dot,
-html[data-theme='dark'] .ds-badge-warning .ds-table-badge-dot {
+.ds-badge-warning .ds-table-badge-dot {
   background-color: #f79009 !important;
 }
 
-.ds-badge-info,
-html[data-theme='dark'] .ds-badge-info {
+.ds-badge-info {
   background-color: #eff8ff !important;
   color: #175cd3 !important;
   border: 1px solid #b2ddff !important;
 }
-.ds-badge-info .ds-table-badge-dot,
-html[data-theme='dark'] .ds-badge-info .ds-table-badge-dot {
+.ds-badge-info .ds-table-badge-dot {
   background-color: #2e90fa !important;
 }
 
-.ds-badge-danger,
-html[data-theme='dark'] .ds-badge-danger {
+.ds-badge-danger {
   background-color: #fef3f2 !important;
   color: #b42318 !important;
   border: 1px solid #fecdca !important;
 }
-.ds-badge-danger .ds-table-badge-dot,
-html[data-theme='dark'] .ds-badge-danger .ds-table-badge-dot {
+.ds-badge-danger .ds-table-badge-dot {
   background-color: #f04438 !important;
 }
 
-.ds-badge-neutral,
-html[data-theme='dark'] .ds-badge-neutral {
+.ds-badge-neutral {
   background-color: #f8f9fa !important;
   color: #475467 !important;
   border: 1px solid #eaecf0 !important;
 }
-.ds-badge-neutral .ds-table-badge-dot,
-html[data-theme='dark'] .ds-badge-neutral .ds-table-badge-dot {
+.ds-badge-neutral .ds-table-badge-dot {
   background-color: #667085 !important;
+}
+
+/* ==========================================================================
+   DARK MODE OVERRIDES FOR DATA TABLES & BADGES
+   ========================================================================== */
+html[data-theme='dark'] .ds-admin-table-card {
+  background-color: #121417 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #F6F5F1 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+}
+
+html[data-theme='dark'] .ds-admin-table-card h2 {
+  color: #F6F5F1 !important;
+}
+
+html[data-theme='dark'] .ds-admin-table-card p {
+  color: #9CA3AF !important;
+}
+
+html[data-theme='dark'] .ds-admin-table-card *[style*="color: rgb(16, 24, 40)"],
+html[data-theme='dark'] .ds-admin-table-card *[style*="color: #101828"] {
+  color: #F6F5F1 !important;
+}
+
+html[data-theme='dark'] .ds-admin-table-card *[style*="color: rgb(102, 112, 133)"],
+html[data-theme='dark'] .ds-admin-table-card *[style*="color: #667085"] {
+  color: #9CA3AF !important;
+}
+
+html[data-theme='dark'] .ds-datagrid-container {
+  background-color: #121417 !important;
+}
+
+html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-root {
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #F6F5F1 !important;
+  background-color: #121417 !important;
+}
+
+html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-main,
+html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-virtualScroller,
+html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-virtualScrollerContent {
+  background-color: #121417 !important;
+}
+
+html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-cell strong {
+  color: #F6F5F1 !important;
+}
+
+html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-columnHeaders {
+  background-color: #181B20 !important;
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.1) !important;
+  color: #9CA3AF !important;
+}
+
+html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-columnHeaderTitle {
+  color: #9CA3AF !important;
+}
+
+html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-row {
+  background-color: #121417 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-row:hover {
+  background-color: #1A1D21 !important;
+}
+
+html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-row.Mui-selected {
+  background-color: rgba(200, 50, 38, 0.2) !important;
+}
+
+html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-row.Mui-selected:hover {
+  background-color: rgba(200, 50, 38, 0.3) !important;
+}
+
+html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-cell {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+  color: #F6F5F1 !important;
+}
+
+html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-footerContainer {
+  background-color: #181B20 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #9CA3AF !important;
+}
+
+html[data-theme='dark'] .ds-datagrid-container .MuiTablePagination-root {
+  color: #9CA3AF !important;
+}
+
+html[data-theme='dark'] .ds-datagrid-container .MuiTablePagination-select {
+  color: #F6F5F1 !important;
+}
+
+html[data-theme='dark'] .ds-datagrid-container .MuiTablePagination-selectIcon {
+  color: #9CA3AF !important;
+}
+
+html[data-theme='dark'] .ds-datagrid-container .MuiTablePagination-selectLabel,
+html[data-theme='dark'] .ds-datagrid-container .MuiTablePagination-displayedRows {
+  color: #9CA3AF !important;
+}
+
+html[data-theme='dark'] .ds-datagrid-container .MuiTablePagination-actions button {
+  color: #F6F5F1 !important;
+}
+
+html[data-theme='dark'] .ds-datagrid-container .MuiTablePagination-actions button:hover {
+  background-color: #24292F !important;
+}
+
+html[data-theme='dark'] .ds-datagrid-container .MuiTablePagination-actions button.Mui-disabled {
+  color: #4B5563 !important;
+}
+
+html[data-theme='dark'] .ds-datagrid-container .MuiCheckbox-root {
+  color: #6B7280 !important;
+}
+
+html[data-theme='dark'] .ds-datagrid-container .MuiCheckbox-root.Mui-checked {
+  color: #E03E30 !important;
+}
+
+html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-iconSeparator {
+  color: rgba(255, 255, 255, 0.1) !important;
+}
+
+html[data-theme='dark'] .ds-table-action-btn {
+  background-color: #181B20 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #D1D5DB !important;
+}
+
+html[data-theme='dark'] .ds-table-btn-edit {
+  background-color: #181B20 !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  color: #E5E7EB !important;
+}
+
+html[data-theme='dark'] .ds-table-btn-edit:hover {
+  background-color: #24292F !important;
+  border-color: #F6F5F1 !important;
+  color: #FFFFFF !important;
+}
+
+html[data-theme='dark'] .ds-table-btn-trash {
+  background-color: rgba(220, 38, 38, 0.12) !important;
+  border-color: rgba(220, 38, 38, 0.35) !important;
+  color: #FCA5A5 !important;
+}
+
+html[data-theme='dark'] .ds-table-btn-trash:hover {
+  background-color: #DC2626 !important;
+  border-color: #DC2626 !important;
+  color: #FFFFFF !important;
+}
+
+html[data-theme='dark'] .ds-table-btn-view {
+  background-color: rgba(37, 99, 235, 0.12) !important;
+  border-color: rgba(37, 99, 235, 0.35) !important;
+  color: #93C5FD !important;
+}
+
+html[data-theme='dark'] .ds-table-btn-view:hover {
+  background-color: #2563EB !important;
+  border-color: #2563EB !important;
+  color: #FFFFFF !important;
+}
+
+html[data-theme='dark'] .ds-table-btn-restore {
+  background-color: rgba(5, 150, 105, 0.12) !important;
+  border-color: rgba(5, 150, 105, 0.35) !important;
+  color: #6EE7B7 !important;
+}
+
+html[data-theme='dark'] .ds-table-btn-restore:hover {
+  background-color: #059669 !important;
+  border-color: #059669 !important;
+  color: #FFFFFF !important;
+}
+
+html[data-theme='dark'] .ds-badge-success {
+  background-color: rgba(18, 183, 106, 0.15) !important;
+  color: #34D399 !important;
+  border: 1px solid rgba(18, 183, 106, 0.3) !important;
+}
+html[data-theme='dark'] .ds-badge-success .ds-table-badge-dot {
+  background-color: #34D399 !important;
+}
+
+html[data-theme='dark'] .ds-badge-warning {
+  background-color: rgba(247, 144, 9, 0.15) !important;
+  color: #FBBF24 !important;
+  border: 1px solid rgba(247, 144, 9, 0.3) !important;
+}
+html[data-theme='dark'] .ds-badge-warning .ds-table-badge-dot {
+  background-color: #FBBF24 !important;
+}
+
+html[data-theme='dark'] .ds-badge-info {
+  background-color: rgba(46, 144, 250, 0.15) !important;
+  color: #60A5FA !important;
+  border: 1px solid rgba(46, 144, 250, 0.3) !important;
+}
+html[data-theme='dark'] .ds-badge-info .ds-table-badge-dot {
+  background-color: #60A5FA !important;
+}
+
+html[data-theme='dark'] .ds-badge-danger {
+  background-color: rgba(240, 68, 56, 0.15) !important;
+  color: #F87171 !important;
+  border: 1px solid rgba(240, 68, 56, 0.3) !important;
+}
+html[data-theme='dark'] .ds-badge-danger .ds-table-badge-dot {
+  background-color: #F87171 !important;
+}
+
+html[data-theme='dark'] .ds-badge-neutral {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  color: #9CA3AF !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+html[data-theme='dark'] .ds-badge-neutral .ds-table-badge-dot {
+  background-color: #9CA3AF !important;
 }
 .ds-badge-neutral .ds-table-badge-dot {
   background-color: #6b7280;

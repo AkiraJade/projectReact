@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../actions/userActions';
+import { useTheme } from '../../context/ThemeContext';
 import './Navbar.css';
 
 const Navbar = ({ cartItems = [] }) => {
@@ -30,18 +31,7 @@ const Navbar = ({ cartItems = [] }) => {
     setUserMenuOpen(false);
   }, [location.pathname]);
 
-  const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('ds_theme') || 'light';
-  });
-
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('ds_theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'light' ? 'dark' : 'light');
-  };
+  const { theme, toggleTheme } = useTheme();
 
   const handleLogout = () => {
     dispatch(logout());

@@ -254,21 +254,21 @@ const UpdateProduct = () => {
                             onChange={onChange}
                             multiple
                         />
-                        <div style={{ fontSize: '24px', color: '#6B7280', marginBottom: '6px' }}>📁</div>
-                        <div style={{ fontSize: '13.5px', fontWeight: 600, color: '#111827' }}>
+                        <div style={{ fontSize: '24px', marginBottom: '6px' }}>📁</div>
+                        <div className="ds-file-dropzone-title">
                             Click to replace or upload additional images
                         </div>
-                        <div style={{ fontSize: '12px', color: '#6B7280', marginTop: '2px' }}>
+                        <div className="ds-file-dropzone-subtitle">
                             PNG, JPG or WebP images
                         </div>
                     </div>
 
                     {oldImages && oldImages.length > 0 && (
                         <div style={{ marginTop: '14px' }}>
-                            <div style={{ fontSize: '11.5px', color: '#6B7280', marginBottom: '6px', fontWeight: 600, textTransform: 'uppercase' }}>Current Stored Images</div>
+                            <div style={{ fontSize: '11.5px', color: 'var(--ds-admin-text-muted)', marginBottom: '6px', fontWeight: 600, textTransform: 'uppercase' }}>Current Stored Images</div>
                             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                                 {oldImages.map(img => (
-                                    <img key={img.public_id || img.url} src={img.url} alt={img.url} style={{ width: '64px', height: '64px', objectFit: 'cover', borderRadius: '6px', border: '1px solid #E5E7EB' }} />
+                                    <img key={img.public_id || img.url} src={img.url} alt={img.url} style={{ width: '64px', height: '64px', objectFit: 'cover', borderRadius: '6px', border: '1px solid var(--ds-admin-border-input)' }} />
                                 ))}
                             </div>
                         </div>
@@ -276,10 +276,10 @@ const UpdateProduct = () => {
 
                     {imagesPreview.length > 0 && (
                         <div style={{ marginTop: '14px' }}>
-                            <div style={{ fontSize: '11.5px', color: '#6B7280', marginBottom: '6px', fontWeight: 600, textTransform: 'uppercase' }}>New Images Staged</div>
+                            <div style={{ fontSize: '11.5px', color: 'var(--ds-admin-text-muted)', marginBottom: '6px', fontWeight: 600, textTransform: 'uppercase' }}>New Images Staged</div>
                             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                                 {imagesPreview.map((img, i) => (
-                                    <img src={img} key={i} alt="Images Preview" style={{ width: '64px', height: '64px', objectFit: 'cover', borderRadius: '6px', border: '1px solid #E5E7EB' }} />
+                                    <img src={img} key={i} alt="Images Preview" style={{ width: '64px', height: '64px', objectFit: 'cover', borderRadius: '6px', border: '1px solid var(--ds-admin-border-input)' }} />
                                 ))}
                             </div>
                         </div>
@@ -290,16 +290,7 @@ const UpdateProduct = () => {
                     <button
                         type="button"
                         onClick={() => navigate('/admin/products')}
-                        style={{
-                            padding: '11px 20px',
-                            background: '#FFFFFF',
-                            border: '1px solid #D1D5DB',
-                            borderRadius: '8px',
-                            color: '#374151',
-                            fontSize: '13px',
-                            fontWeight: 600,
-                            cursor: 'pointer'
-                        }}
+                        className="ds-admin-btn-secondary"
                     >
                         Cancel
                     </button>

@@ -125,15 +125,15 @@ const ProcessOrder = () => {
                     alignItems: 'center',
                     gap: '8px',
                     padding: '8px 14px',
-                    background: '#FFFFFF',
+                    background: 'var(--ds-admin-surface)',
                     borderRadius: '8px',
-                    border: '1px solid #EAECF0',
+                    border: '1px solid var(--ds-admin-border)',
                     fontSize: '12.5px',
-                    color: '#4B5563',
+                    color: 'var(--ds-admin-text-muted)',
                     boxShadow: '0 1px 2px rgba(16, 24, 40, 0.04)'
                 }}>
                     <EmailIcon fontSize="small" sx={{ color: '#059669' }} />
-                    <span>Auto-Dispatches PDF Receipt to: <strong style={{ color: '#111827' }}>{order?.user?.email || 'Customer'}</strong></span>
+                    <span>Auto-Dispatches PDF Receipt to: <strong style={{ color: 'var(--ds-admin-text-main)' }}>{order?.user?.email || 'Customer'}</strong></span>
                 </div>
             </div>
 
@@ -145,25 +145,25 @@ const ProcessOrder = () => {
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                         {/* Summary & Shipping Card */}
                         <div className="ds-card" style={{ padding: '24px' }}>
-                            <h3 style={{ fontSize: '13px', letterSpacing: '0.04em', textTransform: 'uppercase', color: '#111827', margin: '0 0 16px 0', fontWeight: 700 }}>
+                            <h3 style={{ fontSize: '13px', letterSpacing: '0.04em', textTransform: 'uppercase', color: 'var(--ds-admin-text-main)', margin: '0 0 16px 0', fontWeight: 700 }}>
                                 Customer & Shipping Destination
                             </h3>
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px', fontSize: '13.5px' }}>
                                 <div>
-                                    <span style={{ display: 'block', color: '#6B7280', fontSize: '11.5px', textTransform: 'uppercase', fontWeight: 600, marginBottom: '2px' }}>Customer Name</span>
-                                    <span style={{ color: '#111827', fontWeight: 600 }}>{order?.user?.name || 'N/A'}</span>
+                                    <span style={{ display: 'block', color: 'var(--ds-admin-text-muted)', fontSize: '11.5px', textTransform: 'uppercase', fontWeight: 600, marginBottom: '2px' }}>Customer Name</span>
+                                    <span style={{ color: 'var(--ds-admin-text-main)', fontWeight: 600 }}>{order?.user?.name || 'N/A'}</span>
                                 </div>
                                 <div>
-                                    <span style={{ display: 'block', color: '#6B7280', fontSize: '11.5px', textTransform: 'uppercase', fontWeight: 600, marginBottom: '2px' }}>Email Address</span>
-                                    <span style={{ color: '#111827' }}>{order?.user?.email || 'N/A'}</span>
+                                    <span style={{ display: 'block', color: 'var(--ds-admin-text-muted)', fontSize: '11.5px', textTransform: 'uppercase', fontWeight: 600, marginBottom: '2px' }}>Email Address</span>
+                                    <span style={{ color: 'var(--ds-admin-text-main)' }}>{order?.user?.email || 'N/A'}</span>
                                 </div>
                                 <div>
-                                    <span style={{ display: 'block', color: '#6B7280', fontSize: '11.5px', textTransform: 'uppercase', fontWeight: 600, marginBottom: '2px' }}>Contact Phone</span>
-                                    <span style={{ color: '#111827' }}>{shippingInfo?.phoneNo || 'N/A'}</span>
+                                    <span style={{ display: 'block', color: 'var(--ds-admin-text-muted)', fontSize: '11.5px', textTransform: 'uppercase', fontWeight: 600, marginBottom: '2px' }}>Contact Phone</span>
+                                    <span style={{ color: 'var(--ds-admin-text-main)' }}>{shippingInfo?.phoneNo || 'N/A'}</span>
                                 </div>
                                 <div>
-                                    <span style={{ display: 'block', color: '#6B7280', fontSize: '11.5px', textTransform: 'uppercase', fontWeight: 600, marginBottom: '2px' }}>Delivery Address</span>
-                                    <span style={{ color: '#111827', lineHeight: '1.4' }}>{shippingDetails}</span>
+                                    <span style={{ display: 'block', color: 'var(--ds-admin-text-muted)', fontSize: '11.5px', textTransform: 'uppercase', fontWeight: 600, marginBottom: '2px' }}>Delivery Address</span>
+                                    <span style={{ color: 'var(--ds-admin-text-main)', lineHeight: '1.4' }}>{shippingDetails}</span>
                                 </div>
                             </div>
                         </div>
@@ -171,10 +171,10 @@ const ProcessOrder = () => {
                         {/* Order Items */}
                         <div className="ds-card" style={{ padding: '24px' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                                <h3 style={{ fontSize: '13px', letterSpacing: '0.04em', textTransform: 'uppercase', color: '#111827', margin: 0, fontWeight: 700 }}>
+                                <h3 style={{ fontSize: '13px', letterSpacing: '0.04em', textTransform: 'uppercase', color: 'var(--ds-admin-text-main)', margin: 0, fontWeight: 700 }}>
                                     Line Items
                                 </h3>
-                                <span style={{ fontSize: '12px', color: '#6B7280' }}>
+                                <span style={{ fontSize: '12px', color: 'var(--ds-admin-text-muted)' }}>
                                     {order?.orderItems?.length || 0} product(s)
                                 </span>
                             </div>
@@ -188,8 +188,8 @@ const ProcessOrder = () => {
                                             justifyContent: 'space-between',
                                             alignItems: 'center',
                                             padding: '14px 16px',
-                                            background: '#F9FAFB',
-                                            border: '1px solid #EAECF0',
+                                            background: 'var(--ds-admin-surface-elevated)',
+                                            border: '1px solid var(--ds-admin-border)',
                                             borderRadius: '8px'
                                         }}
                                     >
@@ -197,18 +197,18 @@ const ProcessOrder = () => {
                                             <img
                                                 src={item.image}
                                                 alt={item.name}
-                                                style={{ width: '52px', height: '44px', objectFit: 'cover', borderRadius: '6px', border: '1px solid #E5E7EB', background: '#FFFFFF' }}
+                                                style={{ width: '52px', height: '44px', objectFit: 'cover', borderRadius: '6px', border: '1px solid var(--ds-admin-border-input)', background: 'var(--ds-admin-surface)' }}
                                             />
                                             <div>
-                                                <Link to={`/product/${item.product}`} style={{ color: '#111827', fontWeight: 600, fontSize: '14px', textDecoration: 'none' }}>
+                                                <Link to={`/product/${item.product}`} style={{ color: 'var(--ds-admin-text-main)', fontWeight: 600, fontSize: '14px', textDecoration: 'none' }}>
                                                     {item.name}
                                                 </Link>
-                                                <div style={{ fontSize: '12px', color: '#6B7280', marginTop: '2px' }}>
+                                                <div style={{ fontSize: '12px', color: 'var(--ds-admin-text-muted)', marginTop: '2px' }}>
                                                     Unit Price: ${Number(item.price).toFixed(2)} × Qty: {item.quantity}
                                                 </div>
                                             </div>
                                         </div>
-                                        <span style={{ fontWeight: 700, color: '#111827', fontSize: '14.5px', fontFamily: 'monospace' }}>
+                                        <span style={{ fontWeight: 700, color: 'var(--ds-admin-text-main)', fontSize: '14.5px', fontFamily: 'monospace' }}>
                                             ${(Number(item.price) * Number(item.quantity)).toFixed(2)}
                                         </span>
                                     </div>
@@ -221,12 +221,12 @@ const ProcessOrder = () => {
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                         {/* Status Management */}
                         <div className="ds-card" style={{ padding: '24px' }}>
-                            <h3 style={{ fontSize: '13px', letterSpacing: '0.04em', textTransform: 'uppercase', color: '#111827', margin: '0 0 16px 0', fontWeight: 700 }}>
+                            <h3 style={{ fontSize: '13px', letterSpacing: '0.04em', textTransform: 'uppercase', color: 'var(--ds-admin-text-main)', margin: '0 0 16px 0', fontWeight: 700 }}>
                                 Fulfillment Workflow
                             </h3>
 
                             <div style={{ marginBottom: '18px' }}>
-                                <label style={{ display: 'block', fontSize: '11.5px', color: '#4B5563', letterSpacing: '0.04em', textTransform: 'uppercase', marginBottom: '8px', fontWeight: 700 }}>
+                                <label style={{ display: 'block', fontSize: '11.5px', color: 'var(--ds-admin-text-muted)', letterSpacing: '0.04em', textTransform: 'uppercase', marginBottom: '8px', fontWeight: 700 }}>
                                     Current Fulfillment Stage:
                                 </label>
                                 <select
@@ -235,10 +235,10 @@ const ProcessOrder = () => {
                                     style={{
                                         width: '100%',
                                         padding: '11px 14px',
-                                        background: '#FFFFFF',
-                                        border: '1.5px solid #D1D5DB',
+                                        background: 'var(--ds-admin-surface)',
+                                        border: '1.5px solid var(--ds-admin-border-input)',
                                         borderRadius: '8px',
-                                        color: '#111827',
+                                        color: 'var(--ds-admin-text-main)',
                                         fontSize: '13.5px',
                                         fontWeight: 600,
                                         outline: 'none',
@@ -258,7 +258,7 @@ const ProcessOrder = () => {
                                 disabled={updating || status === order?.orderStatus}
                                 onClick={updateOrderHandler}
                                 sx={{
-                                    background: '#C83226',
+                                    background: 'var(--ds-admin-accent, #C83226)',
                                     color: '#FFFFFF',
                                     fontWeight: 700,
                                     letterSpacing: '0.05em',
@@ -267,13 +267,13 @@ const ProcessOrder = () => {
                                     borderRadius: '8px',
                                     boxShadow: 'none',
                                     '&:hover': { background: '#B3261B', boxShadow: 'none' },
-                                    '&:disabled': { background: '#E5E7EB', color: '#9CA3AF' }
+                                    '&:disabled': { background: 'var(--ds-admin-surface-elevated)', color: 'var(--ds-admin-text-muted)' }
                                 }}
                             >
                                 {updating ? 'Updating & Generating PDF...' : 'Update Order Status'}
                             </Button>
 
-                            <p style={{ fontSize: '11.5px', color: '#6B7280', margin: '14px 0 0', lineHeight: '1.5' }}>
+                            <p style={{ fontSize: '11.5px', color: 'var(--ds-admin-text-muted)', margin: '14px 0 0', lineHeight: '1.5' }}>
                                 Changing the status automatically triggers an updated Dosnoventa PDF receipt dispatch to the rider's email.
                             </p>
                         </div>
