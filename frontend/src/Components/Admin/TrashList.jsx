@@ -144,6 +144,26 @@ const TrashList = () => {
     }
   };
 
+  const handleBulkPurge = async () => {
+    if (selectedIds.length === 0) return;
+    setActionLoading(true);
+    try {
+      const config = getAdminConfig();
+      const { data } = await axios.delete(
+        `${import.meta.env.VITE_API}/admin/products/bulk/permanent`,
+        { ...config, data: { ids: selectedIds } }
+      );
+      toast.success(data.message || `${selectedIds.length} item(s) permanently purged`, { position: 'bottom-right' });
+      setSelectedIds([]);
+      fetchTrashItems();
+    } catch (err) {
+      toast.error(err?.response?.data?.message || 'Bulk purge failed', { position: 'bottom-right' });
+    } finally {
+      setActionLoading(false);
+      setConfirmDialog({ open: false, title: '', message: '', actionType: null, targetId: null, extraData: null });
+    }
+  };
+
   const productColumns = [
     {
       field: 'name',
@@ -535,26 +555,73 @@ const TrashList = () => {
 
       {/* Bulk Actions Bar (for products) */}
       {activeTab === 'products' && selectedIds.length > 0 && (
-        <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 2, p: 1.5, background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '4px' }}>
-          <span style={{ fontSize: '13px', color: '#991b1b', fontWeight: 600 }}>
+        <Box sx={{
+          mb: 2,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: 2,
+          p: '12px 16px',
+          background: '#FEF2F2',
+          border: '1px solid #FECACA',
+          borderRadius: '6px'
+        }}>
+          <span style={{ fontSize: '13px', color: '#991B1B', fontWeight: 700, letterSpacing: '0.02em' }}>
             {selectedIds.length} product(s) selected
           </span>
-          <Button
-            variant="contained"
-            color="error"
-            size="small"
-            startIcon={<RestoreFromTrashIcon />}
-            onClick={() => setConfirmDialog({
-              open: true,
-              title: 'Bulk Restore Products',
-              message: `Are you sure you want to restore ${selectedIds.length} selected products back to the catalog?`,
-              actionType: 'bulkRestore',
-            })}
-            disabled={actionLoading}
-            sx={{ fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase', fontSize: '11px' }}
-          >
-            {actionLoading ? 'RESTORING...' : `RESTORE SELECTED (${selectedIds.length})`}
-          </Button>
+          <Box sx={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+            <Button
+              variant="contained"
+              size="small"
+              startIcon={<RestoreFromTrashIcon />}
+              onClick={() => setConfirmDialog({
+                open: true,
+                title: 'Bulk Restore Products',
+                message: `Are you sure you want to restore ${selectedIds.length} selected product(s) back to the active catalog?`,
+                actionType: 'bulkRestore',
+              })}
+              disabled={actionLoading}
+              sx={{
+                background: '#16A34A',
+                color: '#FFFFFF',
+                fontWeight: 700,
+                letterSpacing: '0.05em',
+                textTransform: 'uppercase',
+                fontSize: '11px',
+                padding: '6px 14px',
+                boxShadow: 'none',
+                '&:hover': { background: '#15803D' }
+              }}
+            >
+              {actionLoading ? 'RESTORING...' : `RESTORE SELECTED (${selectedIds.length})`}
+            </Button>
+            <Button
+              variant="contained"
+              size="small"
+              startIcon={<DeleteForeverIcon />}
+              onClick={() => setConfirmDialog({
+                open: true,
+                title: 'Permanent Purge Confirmation',
+                message: `Are you sure you want to PERMANENTLY purge ${selectedIds.length} selected product(s) from the database? This action is irreversible.`,
+                actionType: 'bulkPurge',
+              })}
+              disabled={actionLoading}
+              sx={{
+                background: '#DC2626',
+                color: '#FFFFFF',
+                fontWeight: 700,
+                letterSpacing: '0.05em',
+                textTransform: 'uppercase',
+                fontSize: '11px',
+                padding: '6px 14px',
+                boxShadow: 'none',
+                '&:hover': { background: '#B91C1C' }
+              }}
+            >
+              {actionLoading ? 'PURGING...' : `PURGE ALL SELECTED (${selectedIds.length})`}
+            </Button>
+          </Box>
         </Box>
       )}
 
@@ -630,7 +697,7 @@ const TrashList = () => {
           },
         }}
       >
-        <DialogTitle sx={{ fontFamily: 'monospace', fontWeight: 800, letterSpacing: '1px', textTransform: 'uppercase', color: confirmDialog.actionType === 'permanent' ? '#ef4444' : '#fff' }}>
+        <DialogTitle sx={{ fontFamily: 'monospace', fontWeight: 800, letterSpacing: '1px', textTransform: 'uppercase', color: (confirmDialog.actionType === 'permanent' || confirmDialog.actionType === 'bulkPurge') ? '#ef4444' : '#fff' }}>
           {confirmDialog.title}
         </DialogTitle>
         <DialogContent>
@@ -654,14 +721,16 @@ const TrashList = () => {
                 handlePermanentDelete(confirmDialog.targetId, confirmDialog.extraData);
               } else if (confirmDialog.actionType === 'bulkRestore') {
                 handleBulkRestore();
+              } else if (confirmDialog.actionType === 'bulkPurge') {
+                handleBulkPurge();
               }
             }}
             variant="contained"
-            color={confirmDialog.actionType === 'permanent' ? 'error' : 'success'}
+            color={(confirmDialog.actionType === 'permanent' || confirmDialog.actionType === 'bulkPurge') ? 'error' : 'success'}
             disabled={actionLoading}
             sx={{ fontFamily: 'monospace', fontWeight: 700 }}
           >
-            {actionLoading ? 'PROCESSING...' : confirmDialog.actionType === 'permanent' ? 'CONFIRM PURGE' : 'CONFIRM RESTORE'}
+            {actionLoading ? 'PROCESSING...' : (confirmDialog.actionType === 'permanent' || confirmDialog.actionType === 'bulkPurge') ? 'CONFIRM PURGE' : 'CONFIRM RESTORE'}
           </Button>
         </DialogActions>
       </Dialog>

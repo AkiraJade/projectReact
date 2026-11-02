@@ -823,6 +823,61 @@ exports.bulkRestoreProducts = async (req, res, next) => {
     }
 };
 
+// Admin: Bulk permanent purge products => DELETE /api/v1/admin/products/bulk/permanent
+exports.bulkPermanentDeleteProducts = async (req, res, next) => {
+    try {
+        const { ids } = req.body;
+        if (!ids || !Array.isArray(ids) || ids.length === 0) {
+            return res.status(400).json({ success: false, message: 'No product IDs provided' });
+        }
+
+        let purgedCount = 0;
+        let blockedCount = 0;
+
+        for (const id of ids) {
+            // Check if product is referenced in customer orders
+            const hasOrders = await Order.findOne({ 'orderItems.product': id });
+            if (hasOrders) {
+                blockedCount++;
+                continue;
+            }
+
+            const product = await Product.findById(id);
+            if (!product) continue;
+
+            // Clean up Cloudinary images safely
+            if (product.images && product.images.length > 0) {
+                for (let i = 0; i < product.images.length; i++) {
+                    if (product.images[i].public_id && !product.images[i].public_id.startsWith('http') && !product.images[i].public_id.includes('sample')) {
+                        try {
+                            await cloudinary.v2.uploader.destroy(product.images[i].public_id);
+                        } catch (err) {
+                            console.log('Error destroying image from Cloudinary:', err.message);
+                        }
+                    }
+                }
+            }
+
+            await Product.findByIdAndDelete(id);
+            purgedCount++;
+        }
+
+        let message = `${purgedCount} product(s) permanently purged from database.`;
+        if (blockedCount > 0) {
+            message += ` (${blockedCount} item(s) preserved because they are referenced in historical orders).`;
+        }
+
+        return res.status(200).json({
+            success: true,
+            message,
+            purgedCount,
+            blockedCount
+        });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: err.message });
+    }
+};
+
 // Admin: Get overall counts of trashed items => GET /api/v1/admin/trash/counts
 exports.getTrashCounts = async (req, res, next) => {
     try {

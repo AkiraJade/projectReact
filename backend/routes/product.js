@@ -14,6 +14,7 @@ const {
     getTrashProducts,
     bulkDeleteProducts,
     bulkRestoreProducts,
+    bulkPermanentDeleteProducts,
     getProductReviews,
     createProductReview,
     deleteReview,
@@ -33,6 +34,7 @@ router.get('/admin/trash/reviews', isAuthenticatedUser, authorizeRoles('admin'),
 // Bulk operations
 router.delete('/admin/products/bulk', isAuthenticatedUser, authorizeRoles('admin'), bulkDeleteProducts);
 router.put('/admin/products/bulk/restore', isAuthenticatedUser, authorizeRoles('admin'), bulkRestoreProducts);
+router.delete('/admin/products/bulk/permanent', isAuthenticatedUser, authorizeRoles('admin'), bulkPermanentDeleteProducts);
 
 // Admin Product CRUD & restore
 router.post('/admin/product/new', isAuthenticatedUser, authorizeRoles('admin'), upload.array('images', 10), newProduct);
