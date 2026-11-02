@@ -46,19 +46,18 @@ const Register = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { isAuthenticated, error, loading } = useSelector((state) => state.auth || {});
+  const { isAuthenticated, registerMessage, error, loading } = useSelector((state) => state.auth || {});
 
   useEffect(() => {
-    if (isAuthenticated) {
-      toast.success('Welcome to the brotherhood.');
-      navigate('/');
+    if (registerMessage) {
+      toast.success('Account created! Please check your email to verify your account before logging in.');
     }
 
     if (error) {
       toast.error(error);
       dispatch(clearErrors());
     }
-  }, [isAuthenticated, error, dispatch, navigate]);
+  }, [registerMessage, error, dispatch, navigate]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;

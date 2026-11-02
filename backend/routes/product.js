@@ -48,7 +48,7 @@ router.get('/products', getProducts);
 
 // Reviews endpoints
 router.put('/review', isAuthenticatedUser, createProductReview);
-router.get('/reviews', isAuthenticatedUser, getProductReviews);
+router.get('/reviews', getProductReviews);
 router.delete('/reviews', isAuthenticatedUser, deleteReview);
 router.put('/admin/review/restore', isAuthenticatedUser, authorizeRoles('admin'), restoreReview);
 router.delete('/admin/review/permanent', isAuthenticatedUser, authorizeRoles('admin'), permanentDeleteReview);

@@ -3,8 +3,8 @@
    ========================================================================= */
 
 .ds-cart-page {
-  background-color: var(--ds-bg-dark, #0a0a0a);
-  color: var(--ds-text-light, #f5f5f5);
+  background-color: var(--ds-bg-base, #f8f8fa);
+  color: var(--ds-text-primary, #121417);
   min-height: 100vh;
   padding-bottom: 7rem;
 }
@@ -12,7 +12,7 @@
 /* 1. Header Section */
 .ds-cart-header-section {
   padding: 5rem 0 2.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--ds-border-light, rgba(0, 0, 0, 0.08));
 }
 
 .ds-cart-page-title {
@@ -23,7 +23,7 @@
   letter-spacing: -0.02em;
   text-transform: uppercase;
   margin: 0.75rem 0 0;
-  color: #ffffff;
+  color: var(--ds-text-primary, #121417);
 }
 
 /* 2. Main Section */
@@ -35,15 +35,15 @@
 .ds-cart-empty-state {
   text-align: center;
   padding: 6rem 2rem;
-  border: 1px dashed rgba(255, 255, 255, 0.14);
+  border: 1px dashed var(--ds-border-active, rgba(0, 0, 0, 0.22));
   max-width: 680px;
   margin: 2rem auto;
-  background: #111111;
+  background: var(--ds-bg-surface, #ffffff);
 }
 
 .ds-cart-empty-icon {
   font-size: 3.5rem;
-  color: rgba(255, 255, 255, 0.25);
+  color: var(--ds-text-muted, #6b7280);
   display: block;
   margin-bottom: 1.5rem;
 }
@@ -54,11 +54,12 @@
   letter-spacing: -0.01em;
   text-transform: uppercase;
   margin-bottom: 1rem;
+  color: var(--ds-text-primary, #121417);
 }
 
 .ds-cart-empty-sub {
   font-size: 1.05rem;
-  color: rgba(255, 255, 255, 0.65);
+  color: var(--ds-text-secondary, #4b5563);
   max-width: 480px;
   margin: 0 auto 2.5rem;
   line-height: 1.6;
@@ -100,7 +101,7 @@
   justify-content: space-between;
   align-items: center;
   padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--ds-border-light, rgba(0, 0, 0, 0.08));
   margin-bottom: 1.5rem;
 }
 
@@ -108,7 +109,7 @@
   font-size: 0.75rem;
   letter-spacing: 0.15em;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--ds-text-muted, #6b7280);
   text-transform: uppercase;
 }
 
@@ -116,7 +117,7 @@
   font-size: 0.72rem;
   letter-spacing: 0.15em;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--ds-text-primary, #121417);
   text-decoration: none;
   transition: opacity 0.2s ease;
 }
@@ -136,13 +137,13 @@
   grid-template-columns: 140px 1fr;
   gap: 1.75rem;
   padding: 1.75rem;
-  background: #111111;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--ds-bg-surface, #ffffff);
+  border: 1px solid var(--ds-border-light, #e5e7eb);
   transition: border-color 0.25s ease;
 }
 
 .ds-cart-item-row:hover {
-  border-color: rgba(255, 255, 255, 0.2);
+  border-color: var(--ds-border-active, rgba(0, 0, 0, 0.22));
 }
 
 @media (max-width: 580px) {
@@ -156,8 +157,8 @@
 .ds-cart-thumb-box {
   width: 100%;
   aspect-ratio: 1 / 1;
-  background: #181818;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--ds-bg-surface-elevated, #f1f2f5);
+  border: 1px solid var(--ds-border-light, #e5e7eb);
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -199,19 +200,19 @@
 }
 
 .ds-cart-item-title a {
-  color: #ffffff;
+  color: var(--ds-text-primary, #121417);
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .ds-cart-item-title a:hover {
-  color: #cccccc;
+  color: var(--ds-text-secondary, #4b5563);
 }
 
 .ds-cart-remove-btn {
   background: transparent;
   border: none;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--ds-text-muted, #6b7280);
   font-size: 0.68rem;
   letter-spacing: 0.12em;
   font-weight: 700;
@@ -235,14 +236,14 @@
 .ds-cart-spec-label {
   font-size: 0.72rem;
   letter-spacing: 0.1em;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--ds-text-muted, #6b7280);
   text-transform: uppercase;
 }
 
 .ds-cart-stock-notice {
   font-size: 0.72rem;
   letter-spacing: 0.1em;
-  color: #38ef7d;
+  color: #10b981;
   text-transform: uppercase;
   font-weight: 600;
 }
@@ -253,7 +254,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid var(--ds-border-light, #e5e7eb);
   padding-top: 1.25rem;
   flex-wrap: wrap;
 }
@@ -266,7 +267,7 @@
 .ds-unit-price-label {
   font-size: 0.62rem;
   letter-spacing: 0.14em;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--ds-text-muted, #6b7280);
   text-transform: uppercase;
   margin-bottom: 0.2rem;
 }
@@ -274,21 +275,21 @@
 .ds-cart-unit-price strong {
   font-size: 0.95rem;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--ds-text-primary, #121417);
 }
 
 /* Quantity Stepper */
 .ds-cart-stepper-container {
   display: inline-flex;
   align-items: center;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: #0a0a0a;
+  border: 1px solid var(--ds-border-active, rgba(0, 0, 0, 0.22));
+  background: var(--ds-bg-surface-elevated, #f1f2f5);
 }
 
 .ds-stepper-btn {
   background: transparent;
   border: none;
-  color: #ffffff;
+  color: var(--ds-text-primary, #121417);
   width: 34px;
   height: 34px;
   display: flex;
@@ -301,7 +302,7 @@
 }
 
 .ds-stepper-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--ds-bg-subtle, #e5e7eb);
 }
 
 .ds-stepper-btn:disabled {
@@ -314,7 +315,7 @@
   text-align: center;
   font-size: 0.85rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--ds-text-primary, #121417);
   padding: 0 0.4rem;
 }
 
@@ -327,7 +328,7 @@
 .ds-subtotal-label {
   font-size: 0.62rem;
   letter-spacing: 0.14em;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--ds-text-muted, #6b7280);
   text-transform: uppercase;
   margin-bottom: 0.2rem;
 }
@@ -335,7 +336,7 @@
 .ds-subtotal-val {
   font-size: 1.15rem;
   font-weight: 800;
-  color: #ffffff;
+  color: var(--ds-text-primary, #121417);
 }
 
 /* 6. Right Column: Sticky Summary */
@@ -345,8 +346,8 @@
 }
 
 .ds-cart-summary-card {
-  background: #111111;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--ds-bg-surface, #ffffff);
+  border: 1px solid var(--ds-border-light, #e5e7eb);
   padding: 2.25rem 2rem;
 }
 
@@ -356,8 +357,9 @@
   letter-spacing: -0.01em;
   text-transform: uppercase;
   margin: 0 0 1.75rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--ds-border-light, #e5e7eb);
   padding-bottom: 1rem;
+  color: var(--ds-text-primary, #121417);
 }
 
 .ds-summary-rows {
@@ -376,18 +378,18 @@
 
 .ds-summary-label {
   letter-spacing: 0.12em;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--ds-text-secondary, #4b5563);
   text-transform: uppercase;
   font-weight: 600;
 }
 
 .ds-summary-value {
   font-weight: 700;
-  color: #ffffff;
+  color: var(--ds-text-primary, #121417);
 }
 
 .ds-free-badge {
-  color: #38ef7d;
+  color: #10b981;
   font-size: 0.72rem;
   letter-spacing: 0.12em;
   font-weight: 800;
@@ -395,7 +397,7 @@
 
 .ds-summary-divider {
   height: 1px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--ds-border-light, #e5e7eb);
   margin: 0.5rem 0;
 }
 
@@ -408,13 +410,13 @@
   letter-spacing: 0.15em;
   font-weight: 800;
   text-transform: uppercase;
-  color: #ffffff;
+  color: var(--ds-text-primary, #121417);
 }
 
 .ds-total-value {
   font-size: 1.5rem;
   font-weight: 900;
-  color: #ffffff;
+  color: var(--ds-text-primary, #121417);
 }
 
 .ds-checkout-btn {
@@ -433,7 +435,7 @@
 .ds-summary-perks {
   margin-top: 2rem;
   padding-top: 1.75rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid var(--ds-border-light, #e5e7eb);
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
@@ -445,12 +447,12 @@
   gap: 0.65rem;
   font-size: 0.68rem;
   letter-spacing: 0.1em;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--ds-text-secondary, #4b5563);
   font-weight: 600;
   text-transform: uppercase;
 }
 
 .ds-perk-icon {
-  color: #38ef7d;
+  color: #10b981;
   font-weight: 900;
 }

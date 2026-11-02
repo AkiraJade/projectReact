@@ -9,6 +9,7 @@ import { Button, Chip, Box } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { getAdminConfig } from '../../Utils/helpers';
+import { exportToCsv } from '../../Utils/exportCsv';
 import axios from 'axios';
 
 const OrdersList = () => {
@@ -109,16 +110,27 @@ const OrdersList = () => {
         {
             field: 'customer',
             headerName: 'Customer',
-            flex: 1,
-            minWidth: 140,
+            flex: 1.2,
+            minWidth: 160,
             renderCell: (params) => (
-                <span style={{
-                    fontSize: '13.5px',
-                    fontWeight: 600,
-                    color: '#101828'
-                }}>
-                    {params.value}
-                </span>
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%', lineHeight: 1.3 }}>
+                    <span style={{
+                        fontSize: '13.5px',
+                        fontWeight: 600,
+                        color: 'var(--ds-admin-text-main, #101828)'
+                    }}>
+                        {params.value}
+                    </span>
+                    {params.row.destination && (
+                        <span style={{
+                            fontSize: '11px',
+                            color: 'var(--ds-admin-text-muted, #667085)',
+                            marginTop: '2px'
+                        }}>
+                            📍 {params.row.destination}
+                        </span>
+                    )}
+                </div>
             )
         },
         {
@@ -196,14 +208,42 @@ const OrdersList = () => {
         }
     ];
 
-    const rows = allOrders.map((order) => ({
-        id: order._id,
-        rawId: order._id,
-        customer: order.user?.name || order.shippingInfo?.city || 'Guest Rider',
-        numofItems: order.orderItems?.length || 0,
-        amount: order.totalPrice,
-        status: order.orderStatus,
-    }));
+    const rows = allOrders.map((order) => {
+        const customerName = (typeof order.user === 'object' && order.user?.name)
+            ? order.user.name
+            : (order.shippingInfo?.recipientName || order.shippingInfo?.name || 'Guest Rider');
+        const customerEmail = typeof order.user === 'object' ? order.user?.email : '';
+        const destination = [order.shippingInfo?.city, order.shippingInfo?.country].filter(Boolean).join(', ');
+
+        return {
+            id: order._id,
+            rawId: order._id,
+            customer: customerName,
+            customerEmail: customerEmail,
+            destination: destination,
+            numofItems: order.orderItems?.length || 0,
+            amount: order.totalPrice,
+            status: order.orderStatus,
+        };
+    });
+
+    const handleExportCSV = () => {
+        const exportColumns = [
+            { label: 'Order Reference', key: (o) => `#ORD-${String(o._id).slice(-8).toUpperCase()}` },
+            { label: 'Order ID', key: '_id' },
+            { label: 'Customer Name', key: (o) => o.user?.name || o.shippingInfo?.recipientName || 'Guest Rider' },
+            { label: 'Customer Email', key: (o) => o.user?.email || '' },
+            { label: 'Items Count', key: (o) => o.orderItems?.length || 0 },
+            { label: 'Items Detail', key: (o) => (o.orderItems || []).map(i => `${i.name} (x${i.quantity})`).join('; ') },
+            { label: 'Total Amount ($)', key: (o) => Number(o.totalPrice || 0).toFixed(2) },
+            { label: 'Fulfillment Status', key: (o) => o.orderStatus || 'Processing' },
+            { label: 'Payment Status', key: (o) => o.paymentInfo?.status || 'Paid' },
+            { label: 'Shipping City', key: (o) => o.shippingInfo?.city || '' },
+            { label: 'Shipping Country', key: (o) => o.shippingInfo?.country || '' },
+            { label: 'Order Date', key: (o) => o.createdAt ? new Date(o.createdAt).toLocaleString() : '' },
+        ];
+        exportToCsv('orders_fulfillment', exportColumns, allOrders);
+    };
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -218,6 +258,37 @@ const OrdersList = () => {
                     <p style={{ fontSize: '12.5px', color: '#667085', margin: '4px 0 0' }}>
                         Customer orders, build queue progress, and automated PDF delivery logs.
                     </p>
+                </div>
+                <div>
+                    <button
+                        type="button"
+                        onClick={handleExportCSV}
+                        style={{
+                            padding: '0 14px',
+                            height: '36px',
+                            fontSize: '11.5px',
+                            fontWeight: 600,
+                            fontFamily: 'var(--ds-font-grotesk, sans-serif)',
+                            letterSpacing: '0.06em',
+                            textTransform: 'uppercase',
+                            borderRadius: '4px',
+                            background: '#FFFFFF',
+                            border: '1px solid #D0D5DD',
+                            color: '#344054',
+                            cursor: 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '6px'
+                        }}
+                        title="Export orders list as CSV"
+                    >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line x1="12" y1="15" x2="12" y2="3" />
+                        </svg>
+                        Print CSV
+                    </button>
                 </div>
             </div>
 

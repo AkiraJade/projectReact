@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
-dotenv.config({ path: './config/.env' });
+dotenv.config({ path: '.env' });
 
 const User = require('../models/user');
 const Product = require('../models/product');
@@ -36,6 +36,7 @@ async function seedAll() {
         email: 'admin@gmail.com',
         password: 'password123',
         role: 'admin',
+        isVerified: true,
         avatar: {
           public_id: 'avatar_admin',
           url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop&crop=faces'
@@ -60,6 +61,7 @@ async function seedAll() {
         email: 'bar@gmail.com',
         password: 'password123',
         role: 'admin',
+        isVerified: true,
         avatar: {
           public_id: 'avatar_bar',
           url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=faces'
@@ -84,6 +86,7 @@ async function seedAll() {
         email: 'user@gmail.com',
         password: 'password123',
         role: 'user',
+        isVerified: true,
         avatar: {
           public_id: 'avatar_user',
           url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=faces'
@@ -120,6 +123,7 @@ async function seedAll() {
         email: 'user3@gmail.com',
         password: 'password123',
         role: 'user',
+        isVerified: true,
         avatar: {
           public_id: 'avatar_user3',
           url: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=200&h=200&fit=crop&crop=faces'
@@ -144,6 +148,7 @@ async function seedAll() {
         email: 'jaxnixongaming@gmail.com',
         password: 'password123',
         role: 'user',
+        isVerified: true,
         avatar: {
           public_id: 'avatar_rick',
           url: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=200&h=200&fit=crop&crop=faces'

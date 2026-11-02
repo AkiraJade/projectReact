@@ -244,11 +244,11 @@ const NewProduct = () => {
                             onChange={onChange}
                             multiple
                         />
-                        <div style={{ fontSize: '24px', marginBottom: '6px' }}>📁</div>
-                        <div className="ds-file-dropzone-title">
+                        <div style={{ fontSize: '24px', color: '#6B7280', marginBottom: '6px' }}>📁</div>
+                        <div style={{ fontSize: '13.5px', fontWeight: 600, color: '#111827' }}>
                             Click to upload product photography
                         </div>
-                        <div className="ds-file-dropzone-subtitle">
+                        <div style={{ fontSize: '12px', color: '#6B7280', marginTop: '2px' }}>
                             PNG, JPG or WebP images
                         </div>
                     </div>
@@ -260,7 +260,7 @@ const NewProduct = () => {
                                     src={img} 
                                     key={i} 
                                     alt="Images Preview" 
-                                    style={{ width: '64px', height: '64px', objectFit: 'cover', borderRadius: '6px', border: '1px solid var(--ds-admin-border-input)' }} 
+                                    style={{ width: '64px', height: '64px', objectFit: 'cover', borderRadius: '6px', border: '1px solid #E5E7EB' }} 
                                 />
                             ))}
                         </div>
@@ -271,7 +271,16 @@ const NewProduct = () => {
                     <button
                         type="button"
                         onClick={() => navigate('/admin/products')}
-                        className="ds-admin-btn-secondary"
+                        style={{
+                            padding: '11px 20px',
+                            background: '#FFFFFF',
+                            border: '1px solid #D1D5DB',
+                            borderRadius: '8px',
+                            color: '#374151',
+                            fontSize: '13px',
+                            fontWeight: 600,
+                            cursor: 'pointer'
+                        }}
                     >
                         Cancel
                     </button>

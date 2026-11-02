@@ -3,13 +3,13 @@
   display: flex;
   flex-direction: column;
   background-color: #0c0c0e;
-  border: 1px solid rgba(246, 245, 241, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   transition: border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
 }
 
 .ds-product-card:hover {
-  border-color: rgba(246, 245, 241, 0.22);
+  border-color: rgba(255, 255, 255, 0.22);
   transform: translateY(-4px);
 }
 
@@ -63,11 +63,11 @@
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--ds-text-primary);
+  color: #ffffff !important;
   background: rgba(10, 10, 12, 0.75);
   backdrop-filter: blur(8px);
   padding: 0.25rem 0.55rem;
-  border: 1px solid rgba(246, 245, 241, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .ds-card-stock-tag {
@@ -117,7 +117,7 @@
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--ds-text-muted);
+  color: rgba(255, 255, 255, 0.65) !important;
 }
 
 .ds-card-rating {
@@ -139,24 +139,24 @@
 }
 
 .ds-card-title a {
-  color: var(--ds-text-primary);
+  color: #ffffff !important;
   text-decoration: none;
   transition: color var(--ds-transition-fast);
 }
 
 .ds-card-title a:hover {
-  color: var(--ds-accent-red);
+  color: var(--ds-accent-red) !important;
 }
 
 .ds-card-tagline {
   font-family: var(--ds-font-grotesk);
   font-size: 0.72rem;
   letter-spacing: 0.08em;
-  color: var(--ds-text-secondary);
+  color: rgba(255, 255, 255, 0.75) !important;
   text-transform: uppercase;
   margin: 0 0 1.25rem 0;
   line-height: 1.4;
-  opacity: 0.75;
+  opacity: 0.85;
 }
 
 .ds-card-footer {
@@ -165,7 +165,7 @@
   align-items: flex-end;
   justify-content: space-between;
   padding-top: 1rem;
-  border-top: 1px solid rgba(246, 245, 241, 0.06);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .ds-card-price-block {
@@ -177,7 +177,7 @@
   font-family: var(--ds-font-grotesk);
   font-size: 0.58rem;
   letter-spacing: 0.14em;
-  color: var(--ds-text-muted);
+  color: rgba(255, 255, 255, 0.55) !important;
   text-transform: uppercase;
   margin-bottom: 0.15rem;
 }
@@ -186,7 +186,7 @@
   font-family: var(--ds-font-grotesk);
   font-size: 1.1rem;
   font-weight: 700;
-  color: var(--ds-text-primary);
+  color: #ffffff !important;
   letter-spacing: 0.02em;
 }
 
@@ -196,19 +196,21 @@
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--ds-text-primary);
+  color: #ffffff !important;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
   padding: 0.4rem 0.75rem;
-  border: 1px solid rgba(246, 245, 241, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.04);
   transition: all 0.25s ease;
 }
 
 .ds-card-inspect-btn:hover {
-  border-color: var(--ds-text-primary);
-  background: rgba(246, 245, 241, 0.06);
+  border-color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff !important;
 }
 
 .ds-card-inspect-btn:hover .ds-card-arrow {

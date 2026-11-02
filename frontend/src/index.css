@@ -176,8 +176,9 @@ body {
   letter-spacing: 0.15em;
   text-transform: uppercase;
   padding: 0.3rem 0.75rem;
-  border: 1px solid var(--ds-border-light);
-  background: rgba(18, 20, 23, 0.6);
+  border: 1px solid var(--ds-border-active);
+  background: var(--ds-bg-surface-elevated);
+  color: var(--ds-text-primary);
   backdrop-filter: blur(8px);
 }
 
@@ -299,9 +300,9 @@ body {
 
 .ds-input {
   width: 100%;
-  background-color: rgba(18, 20, 23, 0.75);
-  border: 1px solid var(--ds-border-light);
-  color: var(--ds-text-primary);
+  background-color: var(--ds-input-bg);
+  border: 1px solid var(--ds-input-border);
+  color: var(--ds-input-text);
   font-family: var(--ds-font-body);
   font-size: 0.95rem;
   padding: 1rem 1.15rem;
@@ -312,7 +313,7 @@ body {
 
 .ds-input:focus {
   border-color: var(--ds-text-primary);
-  background-color: #16181d;
+  background-color: var(--ds-bg-surface);
   box-shadow: 0 0 0 1px var(--ds-text-primary);
 }
 

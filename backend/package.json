@@ -1,16 +1,17 @@
 {
-  "name": "backend",
+  "name": "projectitcp318-backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "Dosnoventa Fixed Gear E-Commerce REST API (ITCP318)",
+  "main": "server.js",
   "scripts": {
-    "test": "node --test test/*.test.mjs",
-    "start": "nodemon server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "seed": "node utils/seedAllModules.js",
+    "test": "node --test test/*.test.mjs"
   },
-  "author": "",
+  "author": "DosNoventa Team",
   "license": "ISC",
-  "description": "",
   "dependencies": {
-    "bad-words": "^4.1.5",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.10.1",
     "cookie-parser": "^1.4.7",
@@ -18,6 +19,7 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
+    "mongodb": "^7.7.0",
     "mongoose": "^9.9.3",
     "multer": "^2.2.0",
     "nodemailer": "^9.0.5",

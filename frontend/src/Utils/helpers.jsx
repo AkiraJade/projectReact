@@ -2,32 +2,34 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export const authenticate = (data, next) => {
-    if (window !== 'undefined') {
-        // console.log('authenticate', response)
+    if (typeof window !== 'undefined') {
         sessionStorage.setItem('token', JSON.stringify(data.token));
         sessionStorage.setItem('user', JSON.stringify(data.user));
     }
-    next();
+    if (typeof next === 'function') next();
 };
 
 export const getUser = () => {
-    if (window !== 'undefined') {
-        if (sessionStorage.getItem('user')) {
-            console.log(JSON.parse(sessionStorage.getItem('user')))
-            return JSON.parse(sessionStorage.getItem('user'));
-        } else {
+    if (typeof window !== 'undefined') {
+        try {
+            const raw = sessionStorage.getItem('user') || localStorage.getItem('user');
+            return raw ? JSON.parse(raw) : false;
+        } catch (e) {
             return false;
         }
     }
+    return false;
 };
 
-// remove token from session storage
+// remove token from session and local storage
 export const logout = next => {
-    if (window !== 'undefined') {
+    if (typeof window !== 'undefined') {
         sessionStorage.removeItem('token');
         sessionStorage.removeItem('user');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
     }
-    next();
+    if (typeof next === 'function') next();
 };
 
 export const getToken = () => {
@@ -44,6 +46,14 @@ export const getToken = () => {
     }
     return false;
 };
+
+export const isOrderPaid = (status) => {
+    if (!status) return false;
+    const s = String(status).toLowerCase();
+    return s === 'paid' || s === 'succeeded';
+};
+
+// existing exports continue below
 
 export const getAdminConfig = () => {
     const token = getToken();

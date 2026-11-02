@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../actions/userActions';
-import { useTheme } from '../../context/ThemeContext';
 import './Navbar.css';
 
 const Navbar = ({ cartItems = [] }) => {
@@ -31,17 +30,29 @@ const Navbar = ({ cartItems = [] }) => {
     setUserMenuOpen(false);
   }, [location.pathname]);
 
-  const { theme, toggleTheme } = useTheme();
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('ds_theme') || 'light';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('ds_theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+  };
 
   const handleLogout = () => {
     dispatch(logout());
   };
 
   const cartCount = cartItems ? cartItems.length : 0;
+  const isHeroPage = location.pathname === '/' || location.pathname === '/shop' || location.pathname === '/stories' || location.pathname === '/company' || location.pathname.startsWith('/stories/');
 
   return (
     <>
-      <header className={`ds-navbar ${scrolled ? 'ds-navbar-scrolled' : ''}`}>
+      <header className={`ds-navbar ${scrolled ? 'ds-navbar-scrolled' : ''} ${isHeroPage && !scrolled ? 'ds-navbar-over-hero' : ''}`}>
         <div className="ds-navbar-container">
           {/* LEFT: DOSNOVENTA wordmark */}
           <div className="ds-navbar-brand">

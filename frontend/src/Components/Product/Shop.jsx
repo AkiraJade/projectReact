@@ -80,12 +80,10 @@ const Shop = () => {
     } catch (e) {}
   }, [dispatch]);
 
-  // Combine backend products with curated catalog fallback
+  // Use backend products if available; fallback to curated catalog only if backend is empty / offline
   const combinedProducts = useMemo(() => {
     if (apiProducts && apiProducts.length > 0) {
-      const apiIds = new Set(apiProducts.map((p) => p._id));
-      const filteredCurated = DOSNOVENTA_CATALOG.filter((p) => !apiIds.has(p._id));
-      return [...apiProducts, ...filteredCurated];
+      return apiProducts;
     }
     return DOSNOVENTA_CATALOG;
   }, [apiProducts]);

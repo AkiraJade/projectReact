@@ -917,3 +917,79 @@
     width: 100%;
   }
 }
+
+
+/* ==========================================================================
+   IMAGE OVERLAY TEXT COLOR LOCK
+   Ensures text over photographic / video backgrounds always remains crisp white,
+   regardless of whether Light Mode or Dark Mode is selected.
+   ========================================================================== */
+
+/* 1. Hero Section (all text floats above dark hero image/video) */
+.ds-hero-section .ds-hero-svg-text {
+  fill: #ffffff !important;
+}
+
+.ds-hero-section .ds-hero-statement {
+  color: #ffffff !important;
+}
+
+.ds-hero-section .ds-hero-tertiary-label,
+.ds-hero-section .editorial-label {
+  color: rgba(255, 255, 255, 0.78) !important;
+}
+
+.ds-hero-section .ds-spec-val {
+  color: #ffffff !important;
+}
+
+.ds-hero-section .ds-hero-scroll-cue {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.ds-hero-section .ds-hero-bottom-bar {
+  border-top: 1px solid rgba(255, 255, 255, 0.18) !important;
+}
+
+.ds-hero-section .ds-hero-cta {
+  background: #ffffff !important;
+  color: #0b0c0e !important;
+  border: 1px solid #ffffff !important;
+}
+
+.ds-hero-section .ds-hero-cta:hover {
+  background: var(--ds-accent-red) !important;
+  color: #ffffff !important;
+  border-color: var(--ds-accent-red) !important;
+}
+
+/* 2. Asymmetric Gallery Item Captions (floats above urban photography) */
+.ds-gallery-caption .editorial-label {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.ds-gallery-title {
+  color: #ffffff !important;
+}
+
+/* 3. Global Expeditions City Cards (floats above city photography) */
+.ds-city-name {
+  color: #ffffff !important;
+}
+
+.ds-city-tag {
+  color: rgba(255, 255, 255, 0.78) !important;
+}
+
+.ds-city-number {
+  color: var(--ds-accent-red) !important;
+}
+
+/* 4. Final CTA Section (floats above background action photo) */
+.ds-final-title {
+  color: #ffffff !important;
+}
+
+.ds-final-subtitle {
+  color: rgba(255, 255, 255, 0.85) !important;
+}

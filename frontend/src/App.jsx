@@ -24,6 +24,7 @@ import Register from './Components/User/Register'
 import Login from './Components/User/Login'
 import NewPassword from './Components/User/NewPassword';
 import ForgotPassword from './Components/User/ForgotPassword';
+import VerifyEmail from './Components/User/VerifyEmail';
 import Profile from './Components/User/Profile';
 import Addresses from './Components/User/Addresses';
 import UpdateProfile from './Components/User/UpdateProfile';
@@ -164,11 +165,12 @@ function App() {
             <Route path="/stories/:slug" element={<StoryDetail />} />
             <Route path="/company" element={<Company />} />
             <Route path="/product/:id" element={<ProductDetails cartItems={state.cartItems} addItemToCart={addItemToCart} />} />
-            <Route path="/search/:keyword" element={<Home />} />
+            <Route path="/search/:keyword" element={<Shop />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/password/forgot" element={<ForgotPassword />} />
             <Route path="/password/reset/:token" element={<NewPassword />} />
+            <Route path="/verify/:token" element={<VerifyEmail />} />
             <Route path="/me" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/me/addresses" element={<ProtectedRoute><Addresses /></ProtectedRoute>} />
             <Route path="/me/update" element={<ProtectedRoute><UpdateProfile /></ProtectedRoute>} />

@@ -1,53 +1,37 @@
-import React, { useState, } from 'react'
-
-import MetaData from '../Layout/MetaData'
-import axios from 'axios'
+import React, { useState, useEffect } from 'react';
+import MetaData from '../Layout/MetaData';
 import { toast } from 'react-toastify';
-
 import 'react-toastify/dist/ReactToastify.css';
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from 'react-redux'
-import { forgotPassword } from '../../actions/userActions';
-
-
+import { useDispatch, useSelector } from 'react-redux';
+import { forgotPassword, clearErrors } from '../../actions/userActions';
 
 const ForgotPassword = () => {
     const dispatch = useDispatch();
-    const { error, loading, message } = useSelector(state => state.forgotPassword)
-    const [email, setEmail] = useState('')
-    // const [loading, setLoading] = useState('')
-    // const navigate = useNavigate()
-    // const forgotPassword = async (formData) => {
-    //     const config = {
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         }
-    //     }
-    //     try {
-    //         const { data } = await axios.post(`http://localhost:4001/api/v1/password/forgot`, formData, config)
-    //         console.log(data.message)
+    const { error, loading, message } = useSelector(state => state.forgotPassword || {});
+    const [email, setEmail] = useState('');
 
-    //         setLoading(false)
-    //         toast.success(data.message, {
-    //             position: 'bottom-center'
-    //         });
-    //         navigate('/login')
-    //     } catch (error) {
-    //         toast.error(error.response.data.message, {
-    //             position: 'top-right'
-    //         });
-    //     }
-    // }
-
+    useEffect(() => {
+        if (error) {
+            toast.error(error, {
+                position: 'bottom-right'
+            });
+            dispatch(clearErrors());
+        }
+        if (message) {
+            toast.success(message, {
+                position: 'bottom-right'
+            });
+        }
+    }, [dispatch, error, message]);
 
     const submitHandler = (e) => {
         e.preventDefault();
-        const formData = new FormData();
-        formData.set('email', email);
-        dispatch(forgotPassword(formData))
-    }
-
-
+        if (!email.trim()) {
+            toast.error('Please enter your email address', { position: 'bottom-right' });
+            return;
+        }
+        dispatch(forgotPassword({ email: email.trim() }));
+    };
 
     return (
         <>
@@ -64,6 +48,8 @@ const ForgotPassword = () => {
                                 className="form-control"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
+                                placeholder="name@example.com"
+                                required
                             />
                         </div>
 
@@ -71,16 +57,14 @@ const ForgotPassword = () => {
                             id="forgot_password_button"
                             type="submit"
                             className="btn btn-block py-3"
-                            disabled={loading ? true : false} >
-                            Send Email
+                            disabled={loading ? true : false}>
+                            {loading ? 'Sending Recovery Email...' : 'Send Email'}
                         </button>
-
                     </form>
                 </div>
             </div>
-
         </>
-    )
-}
+    );
+};
 
-export default ForgotPassword
+export default ForgotPassword;

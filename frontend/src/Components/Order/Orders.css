@@ -47,8 +47,8 @@
 
 /* Empty State */
 .ds-orders-empty {
-  background: #141618;
-  border: 1px dashed rgba(255, 255, 255, 0.2);
+  background: var(--ds-bg-surface, #ffffff);
+  border: 1px dashed var(--ds-border-active, rgba(0, 0, 0, 0.2));
   padding: 4rem 2rem;
   text-align: center;
   margin: 2rem 0;
@@ -68,12 +68,12 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   margin: 0 0 0.75rem;
-  color: #fff;
+  color: var(--ds-text-primary, #121417);
 }
 
 .ds-empty-desc {
   font-size: 0.92rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--ds-text-secondary, #4b5563);
   max-width: 480px;
   margin: 0 auto 2rem;
   line-height: 1.6;
@@ -81,8 +81,8 @@
 
 .ds-btn-gold {
   display: inline-block;
-  background: #f6f5f1;
-  color: #0c0d0e;
+  background: var(--ds-text-primary, #121417);
+  color: var(--ds-bg-base, #f8f8fa);
   font-family: var(--ds-font-mono, monospace);
   font-size: 0.8rem;
   font-weight: 800;
@@ -94,9 +94,9 @@
 }
 
 .ds-btn-gold:hover {
-  background: #fff;
+  opacity: 0.9;
   transform: translateY(-2px);
-  color: #0c0d0e;
+  color: var(--ds-bg-base, #f8f8fa);
 }
 
 /* Orders Cards List */
@@ -147,7 +147,7 @@
 .ds-order-date {
   font-family: var(--ds-font-mono, monospace);
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--ds-text-muted, #6b7280);
   letter-spacing: 0.05em;
 }
 
@@ -211,8 +211,8 @@
   width: 52px;
   height: 44px;
   object-fit: cover;
-  background: #0c0d0e;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--ds-bg-surface-elevated, #f1f2f5);
+  border: 1px solid var(--ds-border-light, #e5e7eb);
   border-radius: 2px;
 }
 
@@ -222,20 +222,20 @@
 }
 
 .ds-preview-name {
-  color: #f6f5f1;
+  color: var(--ds-text-primary, #121417);
   font-size: 0.92rem;
   font-weight: 600;
   text-decoration: none;
 }
 
 .ds-preview-name:hover {
-  color: #e5b94f;
+  color: var(--ds-accent-red, #c83226);
 }
 
 .ds-preview-qty {
   font-family: var(--ds-font-mono, monospace);
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--ds-text-muted, #6b7280);
   margin-top: 0.2rem;
 }
 
@@ -243,7 +243,7 @@
   font-family: var(--ds-font-mono, monospace);
   font-size: 0.9rem;
   font-weight: 600;
-  color: #fff;
+  color: var(--ds-text-primary, #121417);
 }
 
 /* Card Bottom */
@@ -254,17 +254,17 @@
   flex-wrap: wrap;
   gap: 1rem;
   padding-top: 1.25rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid var(--ds-border-light, #e5e7eb);
 }
 
 .ds-order-total {
   font-size: 0.88rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--ds-text-secondary, #4b5563);
 }
 
 .ds-order-total strong {
   font-size: 1.15rem;
-  color: #fff;
+  color: var(--ds-text-primary, #121417);
   font-weight: 800;
   font-family: var(--ds-font-mono, monospace);
   margin-left: 0.4rem;
@@ -276,17 +276,17 @@
   font-weight: 700;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: #f6f5f1;
+  color: var(--ds-text-primary, #121417);
   text-decoration: none;
   padding: 0.6rem 1.25rem;
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  border: 1px solid var(--ds-border-active, rgba(0, 0, 0, 0.25));
   transition: all 0.2s ease;
 }
 
 .ds-view-order-btn:hover {
-  background: #f6f5f1;
-  color: #0c0d0e;
-  border-color: #f6f5f1;
+  background: var(--ds-text-primary, #121417);
+  color: var(--ds-bg-base, #f8f8fa);
+  border-color: var(--ds-text-primary, #121417);
 }
 
 /* Details Page Dossier Styles */
@@ -298,8 +298,8 @@
 }
 
 .ds-dossier-card {
-  background: #141618;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--ds-bg-surface, #ffffff);
+  border: 1px solid var(--ds-border-light, #e5e7eb);
   padding: 2rem;
   margin-bottom: 2rem;
 }
@@ -309,8 +309,8 @@
   font-size: 0.85rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.85);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--ds-text-primary, #121417);
+  border-bottom: 1px solid var(--ds-border-light, #e5e7eb);
   padding-bottom: 0.75rem;
   margin: 0 0 1.25rem;
 }
@@ -323,13 +323,13 @@
 }
 
 .ds-dossier-row .label {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--ds-text-muted, #6b7280);
   font-family: var(--ds-font-mono, monospace);
   font-size: 0.75rem;
 }
 
 .ds-dossier-row .value {
-  color: #fff;
+  color: var(--ds-text-primary, #121417);
   font-weight: 600;
 }
 

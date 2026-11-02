@@ -1,7 +1,8 @@
 {
-  "name": "frontend",
+  "name": "projectitcp318-frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Dosnoventa Fixed Gear Bicycles Web Client (ITCP318)",
   "type": "module",
   "scripts": {
     "dev": "vite",

@@ -193,8 +193,8 @@
   justify-content: center;
   gap: 0.6rem;
   padding: 0.85rem;
-  background: rgba(18, 20, 23, 0.6);
-  border: 1px solid var(--ds-border-light);
+  background: var(--ds-bg-surface);
+  border: 1px solid var(--ds-border-active);
   color: var(--ds-text-primary);
   font-family: var(--ds-font-grotesk);
   font-size: 0.75rem;
@@ -205,7 +205,7 @@
 }
 
 .ds-social-btn:hover {
-  border-color: var(--ds-border-active);
+  border-color: var(--ds-text-primary);
   background: var(--ds-bg-surface-elevated);
 }
 
@@ -303,4 +303,14 @@
     color: #ef4444;
     letter-spacing: 0.3px;
     font-family: var(--ds-font-grotesk, sans-serif);
+}
+
+
+/* Ensure text over photography in auth photo column always stays white */
+.ds-auth-photo-overlay .editorial-label {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.ds-auth-photo-heading {
+  color: #ffffff !important;
 }

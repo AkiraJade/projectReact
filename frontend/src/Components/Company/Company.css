@@ -286,3 +286,26 @@
   gap: 1.25rem;
   flex-wrap: wrap;
 }
+
+.ds-company-page .ds-btn:not(.ds-btn-outline) {
+  background-color: #ffffff;
+  color: #0a0a0a !important;
+  border-color: #ffffff;
+}
+
+.ds-company-page .ds-btn:not(.ds-btn-outline):hover {
+  background-color: transparent;
+  color: #ffffff !important;
+  border-color: #ffffff;
+}
+
+.ds-company-page .ds-btn-outline {
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.ds-company-page .ds-btn-outline:hover {
+  background-color: #ffffff;
+  color: #0a0a0a !important;
+  border-color: #ffffff;
+}

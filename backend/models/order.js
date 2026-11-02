@@ -83,8 +83,7 @@ const orderSchema = new mongoose.Schema({
     paymentInfo: {
         method: {
             type: String,
-            required: true,
-            enum: ['COD', 'GCash', 'PayMaya', 'CreditCard', 'DebitCard']
+            default: 'COD'
         },
         id: {
             type: String
@@ -126,7 +125,7 @@ const orderSchema = new mongoose.Schema({
     orderStatus: {
         type: String,
         required: true,
-        enum: ['Pending', 'Processing', 'Assembling', 'Ready for Pickup', 'Out for Delivery', 'Delivered', 'Cancelled'],
+        enum: ['Pending', 'Processing', 'Assembled', 'Assembling', 'Ready for Pickup', 'Out for Delivery', 'Delivered', 'Cancelled'],
         default: 'Processing'
     },
     statusHistory: [
@@ -163,7 +162,6 @@ const orderSchema = new mongoose.Schema({
 
 orderSchema.pre('save', function() {
     this.updatedAt = Date.now();
-    
 });
 
 module.exports = mongoose.model('Order', orderSchema)

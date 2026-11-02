@@ -125,12 +125,12 @@ const ReviewSection = ({ productId }) => {
     };
 
     return (
-        <div style={{ maxWidth: '900px', margin: '0 auto', color: '#1a1a1a' }}>
-            <div style={{ borderBottom: '2px solid #1a1a1a', paddingBottom: '12px', marginBottom: '32px' }}>
+        <div style={{ maxWidth: '900px', margin: '0 auto', color: 'var(--ds-text-primary)' }}>
+            <div style={{ borderBottom: '2px solid var(--ds-border-active)', paddingBottom: '12px', marginBottom: '32px' }}>
                 <span style={{ fontSize: '11px', letterSpacing: '3px', color: '#C83226', fontWeight: 600 }}>
                     RIDER VERIFIED REVIEWS
                 </span>
-                <h2 style={{ fontSize: '24px', letterSpacing: '1px', fontWeight: 700, margin: '6px 0 0' }}>
+                <h2 style={{ fontSize: '24px', letterSpacing: '1px', fontWeight: 700, margin: '6px 0 0', color: 'var(--ds-text-primary)' }}>
                     RATINGS & FEEDBACK {reviews.length > 0 ? `(${reviews.length})` : ''}
                 </h2>
             </div>
@@ -139,15 +139,15 @@ const ReviewSection = ({ productId }) => {
             {isAuthenticated ? (
                 isVerifiedBuyer ? (
                     <div style={{
-                        background: '#f8f8fa',
-                        border: '1px solid #e5e7eb',
+                        background: 'var(--ds-bg-surface)',
+                        border: '1px solid var(--ds-border-light)',
                         borderRadius: '8px',
                         padding: '28px',
                         marginBottom: '40px'
                     }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                <h3 style={{ fontSize: '15px', fontWeight: 700, margin: 0, letterSpacing: '1px' }}>
+                                <h3 style={{ fontSize: '15px', fontWeight: 700, margin: 0, letterSpacing: '1px', color: 'var(--ds-text-primary)' }}>
                                     {userReview ? 'UPDATE YOUR REVIEW' : 'RATE & REVIEW THIS MACHINE'}
                                 </h3>
                                 <span style={{
@@ -162,7 +162,7 @@ const ReviewSection = ({ productId }) => {
                                     ✓ VERIFIED BUYER
                                 </span>
                             </div>
-                            <span style={{ fontSize: '11px', letterSpacing: '1px', color: '#6b7280' }}>
+                            <span style={{ fontSize: '11px', letterSpacing: '1px', color: 'var(--ds-text-muted)' }}>
                                 RIDER VERIFIED
                             </span>
                         </div>
@@ -194,7 +194,7 @@ const ReviewSection = ({ productId }) => {
 
                         <form onSubmit={handleSubmit}>
                             <div style={{ marginBottom: '20px' }}>
-                                <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, letterSpacing: '1px', marginBottom: '8px' }}>
+                                <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, letterSpacing: '1px', marginBottom: '8px', color: 'var(--ds-text-secondary)' }}>
                                     YOUR RATING (1–5 STARS) *
                                 </label>
                                 <Rating
@@ -208,7 +208,7 @@ const ReviewSection = ({ productId }) => {
                             </div>
 
                             <div style={{ marginBottom: '20px' }}>
-                                <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, letterSpacing: '1px', marginBottom: '8px' }}>
+                                <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, letterSpacing: '1px', marginBottom: '8px', color: 'var(--ds-text-secondary)' }}>
                                     REVIEW DETAILS *
                                 </label>
                                 <textarea
@@ -220,16 +220,17 @@ const ReviewSection = ({ productId }) => {
                                     style={{
                                         width: '100%',
                                         padding: '12px',
-                                        border: '1px solid #d1d5db',
+                                        border: '1px solid var(--ds-input-border)',
                                         borderRadius: '6px',
                                         fontSize: '14px',
                                         lineHeight: 1.6,
                                         fontFamily: 'inherit',
-                                        background: '#fff',
+                                        background: 'var(--ds-input-bg)',
+                                        color: 'var(--ds-input-text)',
                                         boxSizing: 'border-box'
                                     }}
                                 />
-                                <span style={{ fontSize: '11px', color: '#6b7280', marginTop: '4px', display: 'block' }}>
+                                <span style={{ fontSize: '11px', color: 'var(--ds-text-muted)', marginTop: '4px', display: 'block' }}>
                                     Notice: Inappropriate language and profanity will be automatically filtered.
                                 </span>
                             </div>
@@ -239,8 +240,8 @@ const ReviewSection = ({ productId }) => {
                                 type="submit"
                                 disabled={submitting}
                                 style={{
-                                    background: '#1a1a1a',
-                                    color: '#fff',
+                                    background: 'var(--ds-text-primary)',
+                                    color: 'var(--ds-bg-base)',
                                     border: 'none',
                                     padding: '12px 28px',
                                     borderRadius: '4px',
@@ -257,8 +258,8 @@ const ReviewSection = ({ productId }) => {
                     </div>
                 ) : (
                     <div style={{
-                        background: '#f8f8fa',
-                        border: '1px solid #e5e7eb',
+                        background: 'var(--ds-bg-surface)',
+                        border: '1px solid var(--ds-border-light)',
                         borderRadius: '8px',
                         padding: '24px',
                         marginBottom: '40px',
@@ -280,15 +281,15 @@ const ReviewSection = ({ productId }) => {
                             }}>
                                 VERIFIED PURCHASE REQUIRED
                             </span>
-                            <div style={{ fontSize: '14px', color: '#4b5563' }}>
+                            <div style={{ fontSize: '14px', color: 'var(--ds-text-secondary)' }}>
                                 Only riders who have ordered this product through Dosnoventa can submit a review.
                             </div>
                         </div>
                         <a
                             href="/shop"
                             style={{
-                                background: '#1a1a1a',
-                                color: '#fff',
+                                background: 'var(--ds-text-primary)',
+                                color: 'var(--ds-bg-base)',
                                 padding: '8px 18px',
                                 borderRadius: '4px',
                                 fontSize: '12px',
@@ -304,25 +305,25 @@ const ReviewSection = ({ productId }) => {
                 )
             ) : (
                 <div style={{
-                    background: '#f8f8fa',
-                    border: '1px solid #e5e7eb',
+                    background: 'var(--ds-bg-surface)',
+                    border: '1px solid var(--ds-border-light)',
                     borderRadius: '8px',
                     padding: '24px',
                     marginBottom: '40px',
                     fontSize: '14px',
-                    color: '#4b5563',
+                    color: 'var(--ds-text-secondary)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between'
                 }}>
                     <div>
-                        <strong>Want to review this product?</strong> Only verified customers who ordered this item can submit a review.
+                        <strong style={{ color: 'var(--ds-text-primary)' }}>Want to review this product?</strong> Only verified customers who ordered this item can submit a review.
                     </div>
                     <a
                         href="/login"
                         style={{
-                            background: '#1a1a1a',
-                            color: '#fff',
+                            background: 'var(--ds-text-primary)',
+                            color: 'var(--ds-bg-base)',
                             padding: '8px 18px',
                             borderRadius: '4px',
                             fontSize: '12px',
@@ -338,14 +339,14 @@ const ReviewSection = ({ productId }) => {
 
             {/* Existing Reviews List */}
             {loading ? (
-                <div style={{ textAlign: 'center', padding: '32px 0', color: '#9ca3af' }}>
+                <div style={{ textAlign: 'center', padding: '32px 0', color: 'var(--ds-text-muted)' }}>
                     Loading reviews...
                 </div>
             ) : reviews.length > 0 ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                     {reviews.map((rev) => (
                         <div key={rev._id} style={{
-                            borderBottom: '1px solid #e5e7eb',
+                            borderBottom: '1px solid var(--ds-border-light)',
                             paddingBottom: '20px'
                         }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
@@ -353,8 +354,8 @@ const ReviewSection = ({ productId }) => {
                                     width: '36px',
                                     height: '36px',
                                     borderRadius: '50%',
-                                    background: '#1a1a1a',
-                                    color: '#fff',
+                                    background: 'var(--ds-text-primary)',
+                                    color: 'var(--ds-bg-base)',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
@@ -364,7 +365,7 @@ const ReviewSection = ({ productId }) => {
                                     {rev.name ? rev.name.charAt(0).toUpperCase() : 'R'}
                                 </div>
                                 <div>
-                                    <div style={{ fontWeight: 600, fontSize: '14px', color: '#111827' }}>
+                                    <div style={{ fontWeight: 600, fontSize: '14px', color: 'var(--ds-text-primary)' }}>
                                         {rev.name}
                                         <span style={{
                                             marginLeft: '8px',
@@ -388,7 +389,7 @@ const ReviewSection = ({ productId }) => {
                                 </div>
                             </div>
                             <p style={{
-                                color: '#374151',
+                                color: 'var(--ds-text-secondary)',
                                 fontSize: '14px',
                                 lineHeight: 1.6,
                                 margin: '8px 0 0 48px'
@@ -399,7 +400,7 @@ const ReviewSection = ({ productId }) => {
                     ))}
                 </div>
             ) : (
-                <div style={{ textAlign: 'center', padding: '32px 0', color: '#9ca3af', fontStyle: 'italic', fontSize: '14px' }}>
+                <div style={{ textAlign: 'center', padding: '32px 0', color: 'var(--ds-text-muted)', fontStyle: 'italic', fontSize: '14px' }}>
                     No reviews yet for this product. Be the first verified buyer to rate it.
                 </div>
             )}

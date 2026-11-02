@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import MetaData from '../Layout/MetaData';
 import Loader from '../Layout/Loader';
 import { getAdminConfig } from '../../Utils/helpers';
+import { exportToCsv } from '../../Utils/exportCsv';
 import axios from 'axios';
 import {
   ResponsiveContainer,
@@ -79,6 +80,25 @@ const Analytics = () => {
     fetchRangeSales(selectedRange);
   }, [selectedRange]);
 
+  const handleExportSalesCSV = () => {
+    const exportColumns = [
+      { label: 'Date', key: 'date' },
+      { label: 'Orders Placed', key: (d) => Number(d.orders || 0) },
+      { label: 'Total Revenue ($)', key: (d) => Number(d.total || 0).toFixed(2) },
+    ];
+    exportToCsv(`sales_revenue_trends_${selectedRange.toLowerCase()}`, exportColumns, salesData);
+  };
+
+  const handleExportCustomersCSV = () => {
+    const exportColumns = [
+      { label: 'Customer ID', key: '_id' },
+      { label: 'Customer Name', key: (c) => c.userDetails?.name || 'Rider' },
+      { label: 'Customer Email', key: (c) => c.userDetails?.email || '' },
+      { label: 'Lifetime Value ($)', key: (c) => Number(c.total || 0).toFixed(2) },
+    ];
+    exportToCsv('top_customers_lifetime_value', exportColumns, customerSales);
+  };
+
   if (loading) {
     return <Loader />;
   }
@@ -90,43 +110,43 @@ const Analytics = () => {
       {/* Analytics Summary Stats Row */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
         <div style={{
-          background: 'var(--ds-admin-surface)',
-          border: '1px solid var(--ds-admin-border)',
+          background: '#16181A',
+          border: '1px solid #282A2E',
           borderRadius: '8px',
           padding: '20px'
         }}>
-          <span style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--ds-admin-text-muted)' }}>
+          <span style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '1px', color: '#9CA3AF' }}>
             Period Revenue ({selectedRange})
           </span>
-          <div style={{ fontSize: '26px', fontWeight: 700, color: 'var(--ds-admin-text-main)', marginTop: '6px' }}>
+          <div style={{ fontSize: '26px', fontWeight: 700, color: '#F9FAFB', marginTop: '6px' }}>
             ${totalRevenue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </div>
         </div>
 
         <div style={{
-          background: 'var(--ds-admin-surface)',
-          border: '1px solid var(--ds-admin-border)',
+          background: '#16181A',
+          border: '1px solid #282A2E',
           borderRadius: '8px',
           padding: '20px'
         }}>
-          <span style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--ds-admin-text-muted)' }}>
+          <span style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '1px', color: '#9CA3AF' }}>
             Orders Placed ({selectedRange})
           </span>
-          <div style={{ fontSize: '26px', fontWeight: 700, color: 'var(--ds-admin-text-main)', marginTop: '6px' }}>
+          <div style={{ fontSize: '26px', fontWeight: 700, color: '#F9FAFB', marginTop: '6px' }}>
             {totalOrders}
           </div>
         </div>
 
         <div style={{
-          background: 'var(--ds-admin-surface)',
-          border: '1px solid var(--ds-admin-border)',
+          background: '#16181A',
+          border: '1px solid #282A2E',
           borderRadius: '8px',
           padding: '20px'
         }}>
-          <span style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--ds-admin-text-muted)' }}>
+          <span style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '1px', color: '#9CA3AF' }}>
             Average Order Value
           </span>
-          <div style={{ fontSize: '26px', fontWeight: 700, color: 'var(--ds-admin-text-main)', marginTop: '6px' }}>
+          <div style={{ fontSize: '26px', fontWeight: 700, color: '#F9FAFB', marginTop: '6px' }}>
             ${totalOrders > 0 ? (totalRevenue / totalOrders).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}
           </div>
         </div>
@@ -134,32 +154,32 @@ const Analytics = () => {
 
       {/* Main Chart Card */}
       <div style={{
-        background: 'var(--ds-admin-surface)',
-        border: '1px solid var(--ds-admin-border)',
+        background: '#16181A',
+        border: '1px solid #282A2E',
         borderRadius: '8px',
         padding: '24px'
       }}>
         {/* Controls Bar */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' }}>
           <div>
-            <h2 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--ds-admin-text-main)', margin: 0 }}>
+            <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#F9FAFB', margin: 0 }}>
               REVENUE & SALES VOLUME
             </h2>
-            <p style={{ fontSize: '12px', color: 'var(--ds-admin-text-muted)', margin: '4px 0 0' }}>
+            <p style={{ fontSize: '12px', color: '#9CA3AF', margin: '4px 0 0' }}>
               Historical timeline of completed customer checkouts
             </p>
           </div>
 
           <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
             {/* Chart Type Toggle */}
-            <div style={{ display: 'flex', background: 'var(--ds-admin-surface-elevated)', border: '1px solid var(--ds-admin-border)', borderRadius: '6px', padding: '2px' }}>
+            <div style={{ display: 'flex', background: '#0D0E10', border: '1px solid #282A2E', borderRadius: '6px', padding: '2px' }}>
               <button
                 type="button"
                 onClick={() => setChartType('line')}
                 style={{
                   border: 'none',
-                  background: chartType === 'line' ? 'var(--ds-admin-accent)' : 'transparent',
-                  color: chartType === 'line' ? '#fff' : 'var(--ds-admin-text-muted)',
+                  background: chartType === 'line' ? '#C83226' : 'transparent',
+                  color: chartType === 'line' ? '#fff' : '#9CA3AF',
                   padding: '5px 12px',
                   borderRadius: '4px',
                   fontSize: '11px',
@@ -174,8 +194,8 @@ const Analytics = () => {
                 onClick={() => setChartType('bar')}
                 style={{
                   border: 'none',
-                  background: chartType === 'bar' ? 'var(--ds-admin-accent)' : 'transparent',
-                  color: chartType === 'bar' ? '#fff' : 'var(--ds-admin-text-muted)',
+                  background: chartType === 'bar' ? '#C83226' : 'transparent',
+                  color: chartType === 'bar' ? '#fff' : '#9CA3AF',
                   padding: '5px 12px',
                   borderRadius: '4px',
                   fontSize: '11px',
@@ -188,7 +208,7 @@ const Analytics = () => {
             </div>
 
             {/* Range Toggle */}
-            <div style={{ display: 'flex', background: 'var(--ds-admin-surface-elevated)', border: '1px solid var(--ds-admin-border)', borderRadius: '6px', padding: '2px' }}>
+            <div style={{ display: 'flex', background: '#0D0E10', border: '1px solid #282A2E', borderRadius: '6px', padding: '2px' }}>
               {['7D', '30D', '90D'].map((rangeKey) => (
                 <button
                   key={rangeKey}
@@ -196,9 +216,8 @@ const Analytics = () => {
                   onClick={() => setSelectedRange(rangeKey)}
                   style={{
                     border: 'none',
-                    background: selectedRange === rangeKey ? 'var(--ds-admin-surface)' : 'transparent',
-                    color: selectedRange === rangeKey ? 'var(--ds-admin-text-main)' : 'var(--ds-admin-text-muted)',
-                    boxShadow: selectedRange === rangeKey ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
+                    background: selectedRange === rangeKey ? '#282A2E' : 'transparent',
+                    color: selectedRange === rangeKey ? '#F9FAFB' : '#9CA3AF',
                     padding: '5px 12px',
                     borderRadius: '4px',
                     fontSize: '11px',
@@ -210,32 +229,62 @@ const Analytics = () => {
                 </button>
               ))}
             </div>
+
+            {/* Print CSV Button */}
+            <button
+              type="button"
+              onClick={handleExportSalesCSV}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                background: '#0D0E10',
+                border: '1px solid #282A2E',
+                color: '#F9FAFB',
+                padding: '5px 14px',
+                borderRadius: '6px',
+                fontSize: '11px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                fontFamily: 'var(--ds-font-grotesk, sans-serif)',
+                letterSpacing: '0.04em',
+                textTransform: 'uppercase'
+              }}
+              title="Export sales timeline as CSV"
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              Print CSV
+            </button>
           </div>
         </div>
 
         {/* Chart Viewport */}
         <div style={{ width: '100%', height: '340px' }}>
           {chartLoading ? (
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', color: 'var(--ds-admin-text-muted)', fontSize: '13px' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', color: '#9CA3AF', fontSize: '13px' }}>
               Loading analytics window...
             </div>
           ) : salesData.length === 0 ? (
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', color: 'var(--ds-admin-text-muted)', fontSize: '13px' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', color: '#6B7280', fontSize: '13px' }}>
               No sales transactions recorded for this {selectedRange} period.
             </div>
           ) : chartType === 'line' ? (
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={salesData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--ds-admin-border-subtle)" />
-                <XAxis dataKey="date" tickLine={false} axisLine={false} tick={{ fill: 'var(--ds-admin-text-muted)', fontSize: 11 }} dy={8} />
-                <YAxis tickLine={false} axisLine={false} tick={{ fill: 'var(--ds-admin-text-muted)', fontSize: 11 }} tickFormatter={(val) => `$${val >= 1000 ? (val / 1000).toFixed(0) + 'k' : val}`} />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#282A2E" />
+                <XAxis dataKey="date" tickLine={false} axisLine={false} tick={{ fill: '#9CA3AF', fontSize: 11 }} dy={8} />
+                <YAxis tickLine={false} axisLine={false} tick={{ fill: '#9CA3AF', fontSize: 11 }} tickFormatter={(val) => `$${val >= 1000 ? (val / 1000).toFixed(0) + 'k' : val}`} />
                 <Tooltip
                   content={({ active, payload, label }) => {
                     if (active && payload && payload.length) {
                       return (
-                        <div style={{ background: 'var(--ds-admin-surface)', border: '1px solid var(--ds-admin-border)', borderRadius: '6px', padding: '10px 14px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
-                          <div style={{ color: 'var(--ds-admin-text-muted)', fontSize: '11px' }}>{label}</div>
-                          <div style={{ color: 'var(--ds-admin-text-main)', fontWeight: 700, fontSize: '14px', marginTop: '2px' }}>
+                        <div style={{ background: '#0D0E10', border: '1px solid #374151', borderRadius: '6px', padding: '10px 14px' }}>
+                          <div style={{ color: '#9CA3AF', fontSize: '11px' }}>{label}</div>
+                          <div style={{ color: '#F9FAFB', fontWeight: 700, fontSize: '14px', marginTop: '2px' }}>
                             ${Number(payload[0].value || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                           </div>
                         </div>
@@ -250,23 +299,23 @@ const Analytics = () => {
                   stroke="#C83226"
                   strokeWidth={2.5}
                   dot={{ r: 3, fill: '#C83226' }}
-                  activeDot={{ r: 6, fill: '#C83226', stroke: 'var(--ds-admin-surface)', strokeWidth: 2 }}
+                  activeDot={{ r: 6, fill: '#C83226', stroke: '#FFFFFF', strokeWidth: 2 }}
                 />
               </LineChart>
             </ResponsiveContainer>
           ) : (
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={salesData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--ds-admin-border-subtle)" />
-                <XAxis dataKey="date" tickLine={false} axisLine={false} tick={{ fill: 'var(--ds-admin-text-muted)', fontSize: 11 }} dy={8} />
-                <YAxis tickLine={false} axisLine={false} tick={{ fill: 'var(--ds-admin-text-muted)', fontSize: 11 }} tickFormatter={(val) => `$${val >= 1000 ? (val / 1000).toFixed(0) + 'k' : val}`} />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#282A2E" />
+                <XAxis dataKey="date" tickLine={false} axisLine={false} tick={{ fill: '#9CA3AF', fontSize: 11 }} dy={8} />
+                <YAxis tickLine={false} axisLine={false} tick={{ fill: '#9CA3AF', fontSize: 11 }} tickFormatter={(val) => `$${val >= 1000 ? (val / 1000).toFixed(0) + 'k' : val}`} />
                 <Tooltip
                   content={({ active, payload, label }) => {
                     if (active && payload && payload.length) {
                       return (
-                        <div style={{ background: 'var(--ds-admin-surface)', border: '1px solid var(--ds-admin-border)', borderRadius: '6px', padding: '10px 14px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
-                          <div style={{ color: 'var(--ds-admin-text-muted)', fontSize: '11px' }}>{label}</div>
-                          <div style={{ color: 'var(--ds-admin-text-main)', fontWeight: 700, fontSize: '14px', marginTop: '2px' }}>
+                        <div style={{ background: '#0D0E10', border: '1px solid #374151', borderRadius: '6px', padding: '10px 14px' }}>
+                          <div style={{ color: '#9CA3AF', fontSize: '11px' }}>{label}</div>
+                          <div style={{ color: '#F9FAFB', fontWeight: 700, fontSize: '14px', marginTop: '2px' }}>
                             ${Number(payload[0].value || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                           </div>
                         </div>
@@ -285,14 +334,44 @@ const Analytics = () => {
       {/* Top Customers Breakdown */}
       {customerSales.length > 0 && (
         <div style={{
-          background: 'var(--ds-admin-surface)',
-          border: '1px solid var(--ds-admin-border)',
+          background: '#16181A',
+          border: '1px solid #282A2E',
           borderRadius: '8px',
           padding: '24px'
         }}>
-          <h2 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--ds-admin-text-main)', margin: '0 0 16px 0' }}>
-            TOP RIDERS BY LIFETIME VALUE
-          </h2>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '12px' }}>
+            <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#F9FAFB', margin: 0 }}>
+              TOP RIDERS BY LIFETIME VALUE
+            </h2>
+            <button
+              type="button"
+              onClick={handleExportCustomersCSV}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                background: '#0D0E10',
+                border: '1px solid #282A2E',
+                color: '#F9FAFB',
+                padding: '5px 14px',
+                borderRadius: '6px',
+                fontSize: '11px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                fontFamily: 'var(--ds-font-grotesk, sans-serif)',
+                letterSpacing: '0.04em',
+                textTransform: 'uppercase'
+              }}
+              title="Export top riders by lifetime value as CSV"
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              Print CSV
+            </button>
+          </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px' }}>
             {customerSales.slice(0, 6).map((cs, idx) => (
               <div
@@ -302,16 +381,16 @@ const Analytics = () => {
                   justifyContent: 'space-between',
                   alignItems: 'center',
                   padding: '12px 16px',
-                  background: 'var(--ds-admin-surface-elevated)',
-                  border: '1px solid var(--ds-admin-border)',
+                  background: '#0D0E10',
+                  border: '1px solid #282A2E',
                   borderRadius: '6px'
                 }}
               >
                 <div>
-                  <div style={{ color: 'var(--ds-admin-text-main)', fontWeight: 600, fontSize: '13px' }}>
+                  <div style={{ color: '#F9FAFB', fontWeight: 600, fontSize: '13px' }}>
                     {cs.userDetails?.name || 'Rider'}
                   </div>
-                  <div style={{ color: 'var(--ds-admin-text-muted)', fontSize: '11px' }}>Verified Customer</div>
+                  <div style={{ color: '#9CA3AF', fontSize: '11px' }}>Verified Customer</div>
                 </div>
                 <div style={{ color: '#10B981', fontWeight: 700, fontSize: '14px' }}>
                   ${Number(cs.total || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}

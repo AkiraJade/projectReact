@@ -24,6 +24,7 @@ const ProductCard = ({ product }) => {
             alt={product.name}
             className="ds-card-image"
             loading="lazy"
+            onError={(e) => { e.target.onerror = null; e.target.src = '/images/Dosnoventa_company_x.webp'; }}
           />
           <div className="ds-card-badge-row">
             <span className="ds-card-category-tag">{product.category}</span>

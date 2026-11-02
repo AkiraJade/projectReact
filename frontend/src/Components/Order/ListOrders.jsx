@@ -60,7 +60,7 @@ const ListOrders = () => {
       headerName: 'Order Reference',
       flex: 1.2,
       renderCell: (params) => (
-        <span style={{ fontFamily: 'monospace', fontWeight: 600, color: '#f6f5f1' }}>
+        <span style={{ fontFamily: 'monospace', fontWeight: 600, color: 'var(--ds-text-primary)' }}>
           #ORD-{String(params.value).slice(-8).toUpperCase()}
         </span>
       ),
@@ -80,7 +80,7 @@ const ListOrders = () => {
       align: 'right',
       headerAlign: 'right',
       renderCell: (params) => (
-        <strong style={{ color: '#fff', fontFamily: 'monospace' }}>{params.value}</strong>
+        <strong style={{ color: 'var(--ds-text-primary)', fontFamily: 'monospace' }}>{params.value}</strong>
       ),
     },
     {
@@ -98,7 +98,7 @@ const ListOrders = () => {
       headerName: 'Date',
       width: 140,
       renderCell: (params) => (
-        <span style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.6)' }}>
+        <span style={{ fontSize: '12px', color: 'var(--ds-text-muted)' }}>
           {params.value}
         </span>
       ),
@@ -115,13 +115,13 @@ const ListOrders = () => {
         <Link
           to={`/order/${params.id}`}
           style={{
-            color: '#f6f5f1',
+            color: 'var(--ds-text-primary)',
             textDecoration: 'none',
             fontSize: '11px',
             fontFamily: 'monospace',
             letterSpacing: '1px',
             padding: '4px 8px',
-            border: '1px solid rgba(255, 255, 255, 0.3)',
+            border: '1px solid var(--ds-border-active)',
             borderRadius: '2px',
           }}
         >
@@ -183,9 +183,9 @@ const ListOrders = () => {
                 type="button"
                 onClick={() => setViewMode('cards')}
                 style={{
-                  background: viewMode === 'cards' ? '#f6f5f1' : 'transparent',
-                  color: viewMode === 'cards' ? '#0c0d0e' : '#f6f5f1',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  background: viewMode === 'cards' ? 'var(--ds-text-primary)' : 'var(--ds-bg-surface)',
+                  color: viewMode === 'cards' ? 'var(--ds-bg-base)' : 'var(--ds-text-primary)',
+                  border: '1px solid var(--ds-border-active)',
                   padding: '6px 14px',
                   fontFamily: 'monospace',
                   fontSize: '11px',
@@ -200,9 +200,9 @@ const ListOrders = () => {
                 type="button"
                 onClick={() => setViewMode('table')}
                 style={{
-                  background: viewMode === 'table' ? '#f6f5f1' : 'transparent',
-                  color: viewMode === 'table' ? '#0c0d0e' : '#f6f5f1',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  background: viewMode === 'table' ? 'var(--ds-text-primary)' : 'var(--ds-bg-surface)',
+                  color: viewMode === 'table' ? 'var(--ds-bg-base)' : 'var(--ds-text-primary)',
+                  border: '1px solid var(--ds-border-active)',
                   padding: '6px 14px',
                   fontFamily: 'monospace',
                   fontSize: '11px',
@@ -287,37 +287,37 @@ const ListOrders = () => {
                 sx={{
                   width: '100%',
                   minHeight: 400,
-                  background: '#141618',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  background: 'var(--ds-bg-surface)',
+                  border: '1px solid var(--ds-border-light)',
                   borderRadius: '4px',
                   p: 2,
                   mb: 4,
                   '& .MuiDataGrid-root': {
                     border: 'none',
-                    color: '#f6f5f1',
+                    color: 'var(--ds-text-primary)',
                     fontFamily: 'inherit',
                   },
                   '& .MuiDataGrid-cell': {
-                    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderBottom: '1px solid var(--ds-border-light)',
                   },
                   '& .MuiDataGrid-columnHeaders': {
-                    backgroundColor: '#0c0d0e',
-                    borderBottom: '1px solid rgba(255, 255, 255, 0.15)',
-                    color: '#fff',
+                    backgroundColor: 'var(--ds-bg-surface-elevated)',
+                    borderBottom: '1px solid var(--ds-border-active)',
+                    color: 'var(--ds-text-primary)',
                     fontFamily: 'monospace',
                     fontSize: '11px',
                     letterSpacing: '1px',
                     textTransform: 'uppercase',
                   },
                   '& .MuiDataGrid-footerContainer': {
-                    borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-                    color: '#f6f5f1',
+                    borderTop: '1px solid var(--ds-border-light)',
+                    color: 'var(--ds-text-primary)',
                   },
                   '& .MuiTablePagination-root': {
-                    color: 'rgba(255, 255, 255, 0.7)',
+                    color: 'var(--ds-text-secondary)',
                   },
                   '& .MuiSvgIcon-root': {
-                    color: '#f6f5f1',
+                    color: 'var(--ds-text-primary)',
                   },
                 }}
               >

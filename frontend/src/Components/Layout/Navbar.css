@@ -103,8 +103,8 @@
 .ds-nav-item:hover,
 .ds-nav-item:focus-visible {
   color: var(--ds-text-primary);
-  border-color: rgba(246, 245, 241, 0.18);
-  background: rgba(246, 245, 241, 0.03);
+  border-color: var(--ds-border-active);
+  background: var(--ds-bg-subtle);
 }
 
 .ds-nav-item:hover .ds-nav-index,
@@ -136,7 +136,7 @@
 .ds-nav-auth:hover,
 .ds-nav-auth:focus-visible {
   color: var(--ds-text-primary);
-  border-color: rgba(246, 245, 241, 0.2);
+  border-color: var(--ds-border-active);
 }
 
 .ds-nav-cart {
@@ -150,8 +150,8 @@
   align-items: center;
   gap: 0.35rem;
   padding: 0.35rem 0.75rem;
-  border: 1px solid rgba(246, 245, 241, 0.15);
-  background: rgba(18, 20, 23, 0.4);
+  border: 1px solid var(--ds-border-active);
+  background: var(--ds-bg-surface-elevated);
   transition: all var(--ds-transition-fast);
   outline: none;
 }
@@ -159,7 +159,7 @@
 .ds-nav-cart:hover,
 .ds-nav-cart:focus-visible {
   border-color: var(--ds-text-primary);
-  background: rgba(246, 245, 241, 0.08);
+  background: var(--ds-bg-subtle);
 }
 
 .ds-cart-divider {
@@ -397,4 +397,85 @@
   .ds-mobile-toggle {
     display: flex;
   }
+}
+
+
+/* ==========================================================================
+   TRANSPARENT NAVBAR OVER DARK HERO MEDIA (HOMEPAGE, STORIES, COMPANY)
+   Ensures text, buttons, and badges always stay white in any theme.
+   ========================================================================== */
+.ds-navbar-over-hero {
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.15) 70%, transparent 100%) !important;
+  border-bottom: 1px solid transparent !important;
+}
+
+.ds-navbar-over-hero .ds-brand-name {
+  color: #ffffff !important;
+}
+
+.ds-navbar-over-hero .ds-brand-city {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.ds-navbar-over-hero .ds-nav-item {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.ds-navbar-over-hero .ds-nav-item:hover,
+.ds-navbar-over-hero .ds-nav-item:focus-visible {
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.ds-navbar-over-hero .ds-nav-index {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.ds-navbar-over-hero .ds-nav-auth {
+  color: #ffffff !important;
+}
+
+.ds-navbar-over-hero .ds-nav-auth:hover {
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: #ffffff !important;
+}
+
+.ds-navbar-over-hero .ds-nav-cart {
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  background: rgba(18, 20, 23, 0.5) !important;
+}
+
+.ds-navbar-over-hero .ds-nav-cart:hover {
+  border-color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.15) !important;
+}
+
+.ds-navbar-over-hero .ds-cart-divider {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.ds-navbar-over-hero .ds-cart-count {
+  color: var(--ds-accent-red) !important;
+}
+
+.ds-navbar-over-hero .ds-theme-toggle-btn {
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  background: rgba(18, 20, 23, 0.5) !important;
+}
+
+.ds-navbar-over-hero .ds-theme-toggle-btn:hover {
+  border-color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.15) !important;
+}
+
+.ds-navbar-over-hero .ds-user-name {
+  color: #ffffff !important;
+  border-bottom-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.ds-navbar-over-hero .ds-toggle-bar {
+  background-color: #ffffff !important;
 }

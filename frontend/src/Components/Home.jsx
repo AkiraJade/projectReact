@@ -32,9 +32,7 @@ const Home = () => {
 
   const allHomeProducts = useMemo(() => {
     if (apiProducts && apiProducts.length > 0) {
-      const apiIds = new Set(apiProducts.map((p) => p._id));
-      const filteredCurated = DOSNOVENTA_CATALOG.filter((p) => !apiIds.has(p._id));
-      return [...apiProducts, ...filteredCurated].filter((p) => p.isPublished !== false);
+      return apiProducts.filter((p) => p.isPublished !== false);
     }
     return DOSNOVENTA_CATALOG.filter((p) => p.isPublished !== false);
   }, [apiProducts]);

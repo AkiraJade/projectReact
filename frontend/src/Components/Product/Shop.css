@@ -3,8 +3,8 @@
    ========================================================================= */
 
 .ds-shop-page {
-  background-color: var(--ds-bg-primary, #0c0c0e);
-  color: var(--ds-text-primary, #ffffff);
+  background-color: #0c0c0e;
+  color: #ffffff;
   min-height: 100vh;
   padding-top: var(--ds-nav-height, 72px);
 }

@@ -106,6 +106,7 @@ const ProductDetails = ({ addItemToCart, cartItems = [] }) => {
                 src={currentImage}
                 alt={product.name}
                 className="ds-product-featured-img"
+                onError={(e) => { e.target.onerror = null; e.target.src = '/images/Dosnoventa_company_x.webp'; }}
               />
               <div className="ds-gallery-overlay-badge">
                 <span>{product.material || 'ATELIER QUALITY'}</span>
@@ -122,7 +123,7 @@ const ProductDetails = ({ addItemToCart, cartItems = [] }) => {
                     className={`ds-thumb-btn ${selectedImageIndex === idx ? 'is-active' : ''}`}
                     onClick={() => setSelectedImageIndex(idx)}
                   >
-                    <img src={img.url} alt={`${product.name} thumbnail ${idx + 1}`} />
+                    <img src={img.url} alt={`${product.name} thumbnail ${idx + 1}`} onError={(e) => { e.target.onerror = null; e.target.src = '/images/Dosnoventa_company_x.webp'; }} />
                   </button>
                 ))}
               </div>

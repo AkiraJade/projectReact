@@ -23,7 +23,9 @@ const {
     updateAddress,
     deleteAddress,
     setDefaultAddress,
-    socialLogin
+    socialLogin,
+    verifyEmail,
+    resendVerification
 } = require('../controllers/auth');
 const { isAuthenticatedUser, authorizeRoles } = require('../middlewares/auth');
 
@@ -61,6 +63,8 @@ router.route('/admin/user/:id')
     .delete(isAuthenticatedUser, authorizeRoles('admin'), deleteUser)
     .put(isAuthenticatedUser, authorizeRoles('admin'), updateUser);
 
+router.get('/verify/:token', verifyEmail);
+router.post('/resend-verification', resendVerification);
 router.get('/logout', logout);
 
 module.exports = router;

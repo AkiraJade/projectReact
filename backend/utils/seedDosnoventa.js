@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const Product = require('../models/product');
 
-dotenv.config({ path: './config/.env' });
+dotenv.config({ path: path.join(__dirname, '../.env') });
 
 const products = [
   {

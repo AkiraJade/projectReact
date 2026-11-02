@@ -113,10 +113,32 @@ exports.registerUser = async (req, res, next) => {
             password,
             avatar: avatarData,
             addresses: userAddresses,
-            role: 'user'
+            role: 'user',
+            isVerified: false
         });
 
-        sendToken(user, 201, res);
+        // Generate email verification token (hashed token)
+        const rawToken = crypto.randomBytes(32).toString('hex');
+        const hashedToken = crypto.createHash('sha256').update(rawToken).digest('hex');
+        user.verificationToken = hashedToken;
+        user.verificationTokenExpire = Date.now() + 24 * 60 * 60 * 1000; // 24h
+        await user.save({ validateBeforeSave: false });
+
+        // Send verification email
+        const frontendUrl = process.env.FRONTEND_URL || `${req.protocol}://${req.get('host')}`;
+        const verificationUrl = `${frontendUrl}/verify/${rawToken}`;
+        try {
+            await sendEmail({
+                email: user.email,
+                subject: 'Verify Your Email - Dosnoventa',
+                message: `<p>Hello ${user.name},</p>\n                          <p>Please verify your email by clicking the link below:</p>\n                          <a href="${verificationUrl}">Verify Email</a>`
+            });
+        } catch (emailErr) {
+            console.error('Verification email failed:', emailErr);
+        }
+
+        // Respond without auth token; user must verify first
+        return res.status(201).json({ success: true, message: 'Registration successful. Please check your email to verify your account.' });
     } catch (err) {
         return res.status(400).json({ success: false, message: err.message });
     }
@@ -151,14 +173,10 @@ exports.loginUser = async (req, res, next) => {
     if (user.isDeleted === true || user.status === 'deactivated') {
         return res.status(401).json({ message: 'Your account has been deactivated or removed. Please contact support.' });
     }
-    // const token = user.getJwtToken();
-
-    // res.status(201).json({
-    //     success: true,
-    //     token,
-    //     user
-    // });
-    user = await User.findOne({ email })
+    if (!user.isVerified) {
+        return res.status(401).json({ message: 'Please verify your email before logging in.' });
+    }
+    // Token generation (user already loaded)
     sendToken(user, 200, res)
 }
 
@@ -172,12 +190,13 @@ exports.forgotPassword = async (req, res, next) => {
     const resetToken = user.getResetPasswordToken();
     await user.save({ validateBeforeSave: false });
     // Create reset password url
-    const resetUrl = `${req.protocol}://localhost:5173/password/reset/${resetToken}`;
-    const message = `Your password reset token is as follow:\n\n${resetUrl}\n\nIf you have not requested this email, then ignore it.`
+    const frontendUrl = process.env.FRONTEND_URL || `${req.protocol}://${req.get('host')}`;
+    const resetUrl = `${frontendUrl}/password/reset/${resetToken}`;
+    const message = `Your password reset token is as follows:\n\n${resetUrl}\n\nIf you have not requested this email, then ignore it.`;
     try {
         await sendEmail({
             email: user.email,
-            subject: 'ShopIT Password Recovery',
+            subject: 'Dosnoventa Password Recovery',
             message
         })
 
@@ -498,6 +517,12 @@ exports.updatePassword = async (req, res, next) => {
         }
         user.password = req.body.password;
         await user.save();
+        // 🔐 Notify user that their password was changed
+        await sendEmail({
+            email: user.email,
+            subject: 'Your Password Was Updated',
+            message: `<p>Hello ${user.name},</p><p>Your account password has been successfully updated. If you did not perform this change, please contact support immediately.</p>`
+        });
         const token = user.getJwtToken();
 
         return res.status(200).json({
@@ -682,6 +707,27 @@ exports.logout = async (req, res, next) => {
     })
 }
 
+// Email verification endpoint
+exports.verifyEmail = async (req, res, next) => {
+    try {
+        const { token } = req.params;
+        const user = await User.findOne({
+            verificationToken: token,
+            verificationTokenExpire: { $gt: Date.now() }
+        });
+        if (!user) {
+            return res.status(400).json({ success: false, message: 'Invalid or expired verification token.' });
+        }
+        user.isVerified = true;
+        user.verificationToken = undefined;
+        user.verificationTokenExpire = undefined;
+        await user.save();
+        return res.status(200).json({ success: true, message: 'Email verified successfully. You can now log in.' });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: err.message });
+    }
+};
+
 // Social Login (Firebase) => /api/v1/auth/social-login
 exports.socialLogin = async (req, res, next) => {
     try {
@@ -707,7 +753,8 @@ exports.socialLogin = async (req, res, next) => {
                     public_id: 'default_avatar',
                     url: 'https://res.cloudinary.com/dgneiaky7/image/upload/v1788417006/avatars/sycta145jvdzqjukfgxw.png'
                 },
-                role: 'user'
+                role: 'user',
+                isVerified: true
             });
         }
 
@@ -718,10 +765,12 @@ exports.socialLogin = async (req, res, next) => {
             { expiresIn: process.env.JWT_EXPIRES_TIME || '7d' }
         );
 
+        const isProduction = process.env.NODE_ENV === 'PRODUCTION';
         const options = {
-            expires: new Date(Date.now() + process.env.COOKIE_EXPIRES_TIME * 24 * 60 * 60 * 1000),
+            expires: new Date(Date.now() + (Number(process.env.COOKIE_EXPIRES_TIME) || 7) * 24 * 60 * 60 * 1000),
             httpOnly: true,
-            sameSite: 'lax'
+            secure: isProduction,
+            sameSite: isProduction ? 'none' : 'lax'
         };
 
         res.status(200).cookie('token', token, options).json({
@@ -732,4 +781,56 @@ exports.socialLogin = async (req, res, next) => {
     } catch (err) {
         res.status(500).json({ success: false, message: err.message });
     }
+};
+
+// Email verification endpoint
+exports.verifyEmail = async (req, res, next) => {
+    const token = req.params.token;
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+    const user = await User.findOne({
+        verificationToken: hashedToken,
+        verificationTokenExpire: { $gt: Date.now() }
+    });
+    if (!user) {
+        return res.status(400).json({ message: 'Invalid or expired verification token' });
+    }
+    user.isVerified = true;
+    user.verificationToken = undefined;
+    user.verificationTokenExpire = undefined;
+    await user.save();
+    return res.status(200).json({ success: true, message: 'Email verified successfully' });
+};
+
+// Resend verification email endpoint
+exports.resendVerification = async (req, res, next) => {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ success: false, message: 'Email is required.' });
+
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ success: false, message: 'No account found with that email.' });
+    if (user.isVerified) return res.status(400).json({ success: false, message: 'This account is already verified. Please log in.' });
+
+    // Generate new raw token and store hashed
+    const rawToken = crypto.randomBytes(32).toString('hex');
+    const hashedToken = crypto.createHash('sha256').update(rawToken).digest('hex');
+    user.verificationToken = hashedToken;
+    user.verificationTokenExpire = Date.now() + 24 * 60 * 60 * 1000; // 24h
+    await user.save({ validateBeforeSave: false });
+
+    const frontendUrl = process.env.FRONTEND_URL || `${req.protocol}://${req.get('host')}`;
+    const verificationUrl = `${frontendUrl}/verify/${rawToken}`;
+    try {
+        await sendEmail({
+            email: user.email,
+            subject: 'Verify Your Email - Dosnoventa',
+            message: `<p>Hello ${user.name},</p>
+                      <p>Here is your new verification link. It expires in 24 hours.</p>
+                      <a href="${verificationUrl}">Verify Email</a>`
+        });
+    } catch (emailErr) {
+        console.error('Resend verification email failed:', emailErr);
+        return res.status(500).json({ success: false, message: 'Failed to send email. Try again later.' });
+    }
+
+    return res.status(200).json({ success: true, message: 'Verification email resent. Please check your inbox.' });
 };

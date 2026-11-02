@@ -1,54 +1,52 @@
-product = require("../models/product");
-class APIFeatures {
+const Product = require("../models/product");
 
+class APIFeatures {
     constructor(query, queryStr) {
         this.query = query;
-        this.queryStr = queryStr;
+        this.queryStr = queryStr || {};
     }
-    // http://localhost:2173?keyword=apple&price[]
-    // http://localhost:4001/api/v1/products?page=1&keyword=apple&price[lte]=1000&price[gte]=10
+
     search() {
         const keyword = this.queryStr.keyword ? {
             name: {
                 $regex: this.queryStr.keyword,
                 $options: 'i'
             }
-        } : {}
-        console.log(this.query, this.queryStr);
+        } : {};
         this.query = this.query.find({ ...keyword });
         return this;
     }
 
     filter() {
-        // { 'price[gte]': '100', 'price[lte]': '1000' }
         const queryCopy = { ...this.queryStr };
-        // console.log(queryCopy);
-        // Removing fields from the query
-        const removeFields = ['keyword', 'page']
+
+        // Removing fields that are handled separately
+        const removeFields = ['keyword', 'page', 'limit'];
         removeFields.forEach(el => delete queryCopy[el]);
 
         let priceFilter = {};
-        if (queryCopy['price[gte]'] || queryCopy['price[lte]']) {
+        if (queryCopy['price[gte]'] !== undefined || queryCopy['price[lte]'] !== undefined) {
             priceFilter.price = {};
-            if (queryCopy['price[gte]']) {
+            if (queryCopy['price[gte]'] !== undefined) {
                 priceFilter.price.$gte = Number(queryCopy['price[gte]']);
             }
-            if (queryCopy['price[lte]']) {
+            if (queryCopy['price[lte]'] !== undefined) {
                 priceFilter.price.$lte = Number(queryCopy['price[lte]']);
             }
-            // priceFilter {
-            //     price: {
-            //         $gte: 100,
-            //         $lte: 1000
-            //     }
-            // }
             delete queryCopy['price[gte]'];
             delete queryCopy['price[lte]'];
+        } else if (queryCopy.price && typeof queryCopy.price === 'object') {
+            priceFilter.price = {};
+            if (queryCopy.price.gte !== undefined) {
+                priceFilter.price.$gte = Number(queryCopy.price.gte);
+            }
+            if (queryCopy.price.lte !== undefined) {
+                priceFilter.price.$lte = Number(queryCopy.price.lte);
+            }
+            delete queryCopy.price;
         }
 
-        console.log(queryCopy);
-
-        this.query = this.query.find(priceFilter);
+        this.query = this.query.find({ ...queryCopy, ...priceFilter });
         return this;
     }
 
@@ -60,4 +58,5 @@ class APIFeatures {
         return this;
     }
 }
-module.exports = APIFeatures
+
+module.exports = APIFeatures;

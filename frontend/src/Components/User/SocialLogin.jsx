@@ -61,7 +61,14 @@ const SocialLogin = () => {
             );
 
             if (data.success) {
-                localStorage.setItem('token', data.token);
+                if (data.token) {
+                    sessionStorage.setItem('token', JSON.stringify(data.token));
+                    localStorage.setItem('token', data.token);
+                }
+                if (data.user) {
+                    sessionStorage.setItem('user', JSON.stringify(data.user));
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                }
                 dispatch(loadUser());
                 navigate('/');
             }

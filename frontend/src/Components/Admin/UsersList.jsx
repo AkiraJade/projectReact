@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { DataGrid } from '@mui/x-data-grid';
 import { Box } from '@mui/material';
 import { getAdminConfig } from '../../Utils/helpers';
+import { exportToCsv } from '../../Utils/exportCsv';
 
 const UsersList = () => {
   const [loading, setLoading] = useState(true);
@@ -160,6 +161,19 @@ const UsersList = () => {
     role: user.role,
   }));
 
+  const handleExportCSV = () => {
+    const exportColumns = [
+      { label: 'User ID', key: '_id' },
+      { label: 'Name', key: 'name' },
+      { label: 'Email', key: 'email' },
+      { label: 'Role', key: (u) => (u.role || 'user').toUpperCase() },
+      { label: 'Account Status', key: (u) => u.status || 'active' },
+      { label: 'Email Verified', key: (u) => u.isVerified ? 'Yes' : 'No' },
+      { label: 'Registration Date', key: (u) => u.createdAt ? new Date(u.createdAt).toLocaleDateString() : '' },
+    ];
+    exportToCsv('riders_accounts_directory', exportColumns, allUsers);
+  };
+
   return (
     <div className="ds-card ds-admin-table-card" style={{ padding: '24px 28px' }}>
       <MetaData title="Customers Directory — DOSNOVENTA" />
@@ -182,7 +196,36 @@ const UsersList = () => {
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '12px' }}>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
+          <button
+            type="button"
+            onClick={handleExportCSV}
+            style={{
+              padding: '0 14px',
+              height: '36px',
+              fontSize: '11.5px',
+              fontWeight: 600,
+              fontFamily: 'var(--ds-font-grotesk, sans-serif)',
+              letterSpacing: '0.06em',
+              textTransform: 'uppercase',
+              borderRadius: '4px',
+              background: '#FFFFFF',
+              border: '1px solid #D0D5DD',
+              color: '#344054',
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+            title="Export accounts directory as CSV"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            Print CSV
+          </button>
           <Link
             to="/admin/trash"
             className="ds-table-action-btn ds-table-btn-edit"

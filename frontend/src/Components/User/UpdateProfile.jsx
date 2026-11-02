@@ -161,7 +161,7 @@ const UpdateProfile = () => {
                       onChange={handleAvatarChange}
                       style={{ display: 'none' }}
                     />
-                    <p style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.5)', marginTop: '0.4rem', margin: 0 }}>
+                    <p style={{ fontSize: '0.72rem', color: 'var(--ds-text-muted)', marginTop: '0.4rem', margin: 0 }}>
                       JPG, PNG, or WebP. Maximum 5MB.
                     </p>
                   </div>
@@ -207,7 +207,7 @@ const UpdateProfile = () => {
               </div>
 
               {/* Submit Button */}
-              <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '1.5rem' }}>
+              <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end', borderTop: '1px solid var(--ds-border-light)', paddingTop: '1.5rem' }}>
                 <Link to="/me" className="ds-btn ds-btn-outline">
                   CANCEL
                 </Link>
