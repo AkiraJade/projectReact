@@ -999,6 +999,11 @@ html[data-theme='dark'] .ds-datagrid-container .MuiDataGrid-cell {
   padding: 0 16px !important;
   font-size: 13px !important;
   box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+.ds-datagrid-container .MuiDataGrid-cell > div {
+  width: 100%;
 }
 
 .ds-datagrid-container .MuiDataGrid-cell:focus,

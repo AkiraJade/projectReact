@@ -102,11 +102,13 @@ const ProductReviews = () => {
         {
             field: 'id',
             headerName: 'Review ID',
-            width: 130,
+            width: 120,
             renderCell: (params) => (
-                <span style={{ fontFamily: 'monospace', fontSize: '11px', color: '#667085' }}>
-                    #{String(params.value).slice(-8).toUpperCase()}
-                </span>
+                <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+                    <span style={{ fontFamily: 'monospace', fontSize: '11px', color: '#667085' }}>
+                        #{String(params.value).slice(-8).toUpperCase()}
+                    </span>
+                </div>
             )
         },
         {
@@ -115,18 +117,21 @@ const ProductReviews = () => {
             flex: 1.1,
             minWidth: 160,
             renderCell: (params) => (
-                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%', lineHeight: 1.3, minWidth: 0 }}>
                     <span style={{
                         fontWeight: 700,
                         fontSize: '13px',
                         color: 'var(--ds-admin-text-main, #101828)',
                         textTransform: 'uppercase',
-                        letterSpacing: '0.02em'
+                        letterSpacing: '0.02em',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis'
                     }}>
                         {params.value || 'Dosnoventa Product'}
                     </span>
                     {params.row.productId && (
-                        <span style={{ fontFamily: 'monospace', fontSize: '10.5px', color: '#667085', marginTop: '2px' }}>
+                        <span style={{ fontFamily: 'monospace', fontSize: '10.5px', color: '#667085', marginTop: '3px' }}>
                             ID: {String(params.row.productId).slice(-8)}
                         </span>
                     )}
@@ -139,11 +144,26 @@ const ProductReviews = () => {
             flex: 1,
             minWidth: 140,
             renderCell: (params) => (
-                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                    <span style={{ fontWeight: 600, color: 'var(--ds-admin-text-main, #101828)', fontSize: '13.5px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%', lineHeight: 1.3, minWidth: 0 }}>
+                    <span style={{
+                        fontWeight: 600,
+                        color: 'var(--ds-admin-text-main, #101828)',
+                        fontSize: '13.5px',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis'
+                    }}>
                         {params.row.userName}
                     </span>
-                    <span style={{ fontSize: '10.5px', color: '#16A34A', fontWeight: 600, marginTop: '2px' }}>
+                    <span style={{
+                        fontSize: '11px',
+                        color: '#16A34A',
+                        fontWeight: 600,
+                        marginTop: '3px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px'
+                    }}>
                         ✓ Verified Rider
                     </span>
                 </div>
@@ -154,7 +174,7 @@ const ProductReviews = () => {
             headerName: 'Rating',
             width: 140,
             renderCell: (params) => (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', height: '100%' }}>
                     <Rating
                         value={Number(params.value) || 0}
                         readOnly
@@ -175,14 +195,23 @@ const ProductReviews = () => {
             flex: 2,
             minWidth: 220,
             renderCell: (params) => (
-                <span style={{
-                    fontSize: '13px',
-                    color: 'var(--ds-admin-text-muted, #344054)',
-                    whiteSpace: 'normal',
-                    lineHeight: '1.4'
-                }}>
-                    “{params.value}”
-                </span>
+                <div style={{ display: 'flex', alignItems: 'center', height: '100%', width: '100%' }}>
+                    <span
+                        title={params.value}
+                        style={{
+                            fontSize: '13px',
+                            color: 'var(--ds-admin-text-muted, #344054)',
+                            lineHeight: '1.4',
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis'
+                        }}
+                    >
+                        “{params.value}”
+                    </span>
+                </div>
             )
         },
         {
@@ -194,16 +223,18 @@ const ProductReviews = () => {
             align: 'right',
             headerAlign: 'right',
             renderCell: (params) => (
-                <button
-                    type="button"
-                    disabled={deletingId === params.id}
-                    onClick={() => deleteReviewHandler(params.id, params.row.productId)}
-                    className="ds-table-action-btn ds-table-btn-trash"
-                    title="Move review to trash"
-                >
-                    <DeleteOutlineIcon style={{ fontSize: '14px' }} />
-                    Trash
-                </button>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', height: '100%', width: '100%' }}>
+                    <button
+                        type="button"
+                        disabled={deletingId === params.id}
+                        onClick={() => deleteReviewHandler(params.id, params.row.productId)}
+                        className="ds-table-action-btn ds-table-btn-trash"
+                        title="Move review to trash"
+                    >
+                        <DeleteOutlineIcon style={{ fontSize: '14px' }} />
+                        Trash
+                    </button>
+                </div>
             )
         }
     ];
@@ -379,7 +410,7 @@ const ProductReviews = () => {
                         <DataGrid
                             rows={rows}
                             columns={columns}
-                            rowHeight={72}
+                            rowHeight={76}
                             columnHeaderHeight={48}
                             pageSizeOptions={[5, 10, 25]}
                             initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
