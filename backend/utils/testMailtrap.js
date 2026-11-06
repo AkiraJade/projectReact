@@ -2,7 +2,7 @@
 // Quick script to verify Mailtrap configuration.
 // Run with: node utils/testMailtrap.js
 
-require('dotenv').config(); // load .env variables
+require('dotenv').config({ path: require('path').join(__dirname, '../config/.env') }); // load .env variables
 const sendEmail = require('./sendEmail');
 
 (async () => {

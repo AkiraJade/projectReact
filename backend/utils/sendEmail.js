@@ -137,12 +137,14 @@ function buildEmailHtml({ subject, message }) {
 // Generic email sender (used for password reset, verification, etc.)
 const sendEmail = async options => {
     const transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST,
-        port: process.env.SMTP_PORT,
+        host: process.env.SMTP_HOST || 'sandbox.smtp.mailtrap.io',
+        port: Number(process.env.SMTP_PORT) || 2525,
         auth: {
             user: process.env.SMTP_EMAIL,
             pass: process.env.SMTP_PASSWORD
-        }
+        },
+        connectionTimeout: 10000,
+        greetingTimeout: 10000
     });
 
     const message = {
@@ -158,12 +160,14 @@ const sendEmail = async options => {
 // Order status update email with item list, subtotals, grand total, and optional PDF attachment
 const sendOrderStatusEmail = async ({ email, customerName, order, pdfBuffer }) => {
     const transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST,
-        port: process.env.SMTP_PORT,
+        host: process.env.SMTP_HOST || 'sandbox.smtp.mailtrap.io',
+        port: Number(process.env.SMTP_PORT) || 2525,
         auth: {
             user: process.env.SMTP_EMAIL,
             pass: process.env.SMTP_PASSWORD
-        }
+        },
+        connectionTimeout: 10000,
+        greetingTimeout: 10000
     });
 
     const statusMessages = {
@@ -242,7 +246,7 @@ const sendOrderStatusEmail = async ({ email, customerName, order, pdfBuffer }) =
                             <tr><td style="padding:10px 12px; text-align:right; border-top:2px solid #1a1a1a; font-size:16px; color:#1a1a1a;">GRAND TOTAL: <strong>$${Number(order.totalPrice).toFixed(2)}</strong></td></tr>
                         </table>
 
-                        <p style="color:#888; font-size:12px; margin-top:32px;">A PDF receipt is attached to this email for your records. <a href="http://localhost:4001/api/v1/order/${order._id}/receipt" style="color:#1a73e8; text-decoration:none;">Download PDF receipt</a></p>
+                        <p style="color:#888; font-size:12px; margin-top:32px;">A PDF receipt is attached to this email for your records. <a href="${process.env.BACKEND_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:4001')}/api/v1/order/${order._id}/receipt" style="color:#1a73e8; text-decoration:none;">Download PDF receipt</a></p>
                     </td></tr>
 
                     <!-- Footer -->
