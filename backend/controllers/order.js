@@ -106,15 +106,29 @@ exports.newOrder = async (req, res, next) => {
 
         // 📧 Send order confirmation email with receipt PDF
         try {
-            const pdfBuffer = await generateReceiptPDF(order, req.user.name);
-            await sendOrderStatusEmail({
-                email: req.user.email,
-                customerName: req.user.name,
-                order,
-                pdfBuffer
-            });
+            const recipientEmail = req.user?.email || order.shippingInfo?.email;
+            const recipientName = req.user?.name || order.shippingInfo?.recipientName || order.shippingInfo?.name || 'Valued Rider';
+
+            if (recipientEmail) {
+                let pdfBuffer = null;
+                try {
+                    pdfBuffer = await generateReceiptPDF(order, recipientName);
+                } catch (pdfErr) {
+                    console.error('Receipt PDF generation warning (email will still send):', pdfErr.message);
+                }
+
+                await sendOrderStatusEmail({
+                    email: recipientEmail,
+                    customerName: recipientName,
+                    order,
+                    pdfBuffer
+                });
+                console.log(`[Email] Order confirmation successfully dispatched to ${recipientEmail}`);
+            } else {
+                console.warn('[Email] Skipped sending confirmation: no recipient email found on user or shippingInfo');
+            }
         } catch (emailErr) {
-            console.error('Order confirmation email error:', emailErr.message);
+            console.error('[Email] Order confirmation dispatch failed:', emailErr.message || emailErr);
         }
 
         res.status(201).json({
@@ -281,18 +295,27 @@ exports.updateOrder = async (req, res, next) => {
         // Send email notification to customer about status update
         try {
             const populatedOrder = await Order.findById(order._id).populate('user', 'name email');
-            if (populatedOrder && populatedOrder.user && populatedOrder.user.email) {
-                const pdfBuffer = await generateReceiptPDF(populatedOrder, populatedOrder.user.name);
+            const recipientEmail = populatedOrder?.user?.email || order.shippingInfo?.email;
+            const recipientName = populatedOrder?.user?.name || order.shippingInfo?.recipientName || 'Valued Rider';
+
+            if (recipientEmail) {
+                let pdfBuffer = null;
+                try {
+                    pdfBuffer = await generateReceiptPDF(populatedOrder, recipientName);
+                } catch (pdfErr) {
+                    console.error('Receipt PDF generation warning (email will still send):', pdfErr.message);
+                }
+
                 await sendOrderStatusEmail({
-                    email: populatedOrder.user.email,
-                    customerName: populatedOrder.user.name,
+                    email: recipientEmail,
+                    customerName: recipientName,
                     order: populatedOrder,
                     pdfBuffer
                 });
+                console.log(`[Email] Order status update (${newStatus}) sent to ${recipientEmail}`);
             }
         } catch (emailErr) {
-            // Don't fail the request if email fails
-            console.error('Order status email error:', emailErr.message);
+            console.error('[Email] Order status email error:', emailErr.message || emailErr);
         }
 
         res.status(200).json({
